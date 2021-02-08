@@ -9,10 +9,12 @@ function createWindow () {
     }
   })
 
-  win.loadFile('index.html')
+  win.loadURL('http://localhost:3000')
+  //win.webContents.openDevTools()
 }
 
 app.whenReady().then(createWindow)
+
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
