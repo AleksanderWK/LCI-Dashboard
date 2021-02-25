@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+  useEffect(() => {
+    const electron = window.require("electron");
+    const ipc = electron.ipcRenderer;
+  
+    ipc.on("newHello", (event : any, value : any) => {
+      console.log(value);
+    })
+    
+    ipc.send("newValue", 123);
+  }, [])
+
   return (
     <div className="App">
       <header className="App-header">
