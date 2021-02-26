@@ -8,11 +8,11 @@ function App() {
     const electron = window.require("electron");
     const ipc = electron.ipcRenderer;
   
-    ipc.on("newHello", (event : any, value : any) => {
-      console.log(value);
+    ipc.on("newData", (event : any, data : any) => {
+      console.log(data);
     })
     
-    ipc.send("newValue", 123);
+    ipc.send("readyConnection", true);
   }, [])
 
   return (
