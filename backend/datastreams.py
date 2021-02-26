@@ -21,6 +21,8 @@ class Datastreams:
     eye_tracking = None
     skeleton = None
 
+    terminated = False
+
     def __init__(self, studentID):
         self.acc = pd.read_csv("./data/empatica/" + studentID + "/ACC.csv")
         self.bvp = pd.read_csv("./data/empatica/" + studentID + "/BVP.csv")
@@ -34,6 +36,7 @@ class Datastreams:
 
     
     def generate_frequency_datastream(self, data, time, current_data, loop):
+        if self.terminated: return
         freq = data.loc[0][0]
         #print(data.loc[time][0])
         current_data.append(data.loc[time])
@@ -41,6 +44,7 @@ class Datastreams:
 
 
     def generate_eye_tracking_datastream(self, data, row, current_data, loop):
+        if self.terminated: return
         data_row = data.loc[row]
         end_time = data_row[2]
         next_end_time = data.loc[row + 1][2]
@@ -50,6 +54,7 @@ class Datastreams:
 
 
     def generate_skeleton_datastream(self, data, row, current_data, loop):
+        if self.terminated: return
         row_counter = row
         time = data.loc[row][4]
         init_time = time
@@ -81,3 +86,7 @@ class Datastreams:
         self.current_temp_data.clear()
         self.current_eye_tracking_data.clear()
         self.current_skeleton_data.clear()
+
+    def terminate(self):
+        self.clear_current_data()
+        self.terminated = True

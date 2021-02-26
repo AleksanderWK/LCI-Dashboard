@@ -9,6 +9,7 @@ verify_ssl = true
 pandas = "*"
 websockets = "*"
 websocket-client = "*"
+autobahn = {extras = ["asyncio"],version = "*"}
 
 [requires]
 python_version = "3.8"
