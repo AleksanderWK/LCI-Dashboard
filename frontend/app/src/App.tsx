@@ -1,20 +1,23 @@
 import React from "react";
-import logo from "./logo.svg";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import "./App.css";
+import StartView from "./StartView";
 
 function App(): JSX.Element {
     return (
-        <div className="App">
-            <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                </p>
-                <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                    Learn React
-                </a>
-            </header>
-        </div>
+        <BrowserRouter>
+            <div className="App">
+                <div className="content">
+                    <Switch>
+                        {/*
+                        Add ned pages by adding a Route component. (Important! they need to be above the startview route)
+                        Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
+                        */}
+                        <Route path="/" component={StartView} />
+                    </Switch>
+                </div>
+            </div>
+        </BrowserRouter>
     );
 }
 
