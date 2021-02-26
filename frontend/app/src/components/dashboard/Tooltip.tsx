@@ -1,5 +1,5 @@
 import React from "react";
-import {createStyles, makeStyles, Theme, Tooltip, Typography} from "@material-ui/core";
+import {createStyles, makeStyles, Theme, Tooltip as MUITooltip, Typography} from "@material-ui/core";
 import {Device, Variable} from "../../constants";
 import {MMDVariables} from "../../constants";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
@@ -53,13 +53,13 @@ interface Props {
     variable: Variable;
 }
 
-export default function InfoTooltip(props: Props): JSX.Element {
+export default function Tooltip(props: Props): JSX.Element {
     const classes = useStyles();
 
     const variableInfo = MMDVariables[props.variable];
 
     return (
-        <Tooltip
+        <MUITooltip
             classes={{tooltip: classes.tooltip}}
             title={
                 <div>
@@ -75,6 +75,6 @@ export default function InfoTooltip(props: Props): JSX.Element {
             arrow={true}
         >
             {props.children}
-        </Tooltip>
+        </MUITooltip>
     );
 }
