@@ -1,10 +1,14 @@
-import React from "react";
+import React, {useState} from "react";
 import {
     Card,
     CardContent,
     createStyles,
     IconButton,
+    ListItemIcon,
     makeStyles,
+    Menu,
+    MenuItem,
+    MenuList,
     SvgIcon,
     SvgIconProps,
     Theme,
@@ -12,6 +16,9 @@ import {
 } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import DeleteOutlinedIcon from "@material-ui/icons/DeleteOutlined";
+import ZoomInIcon from "@material-ui/icons/ZoomIn";
+import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import {Variable} from "../../constants";
 import InfoTooltip from "./InfoTooltip";
 
@@ -39,6 +46,14 @@ const useStyles = makeStyles((theme: Theme) =>
             gridTemplateColumns: "24px 24px",
             gap: theme.spacing(1)
         },
+        menuList: {
+            padding: 0,
+            color: theme.palette.text.default,
+            "& .MuiListItemIcon-root": {
+                minWidth: 0,
+                paddingRight: theme.spacing(1)
+            }
+        },
         iconButton: {
             padding: 0
         },
@@ -62,6 +77,28 @@ interface Props {
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
+    const [detailedView, setDetailedView] = useState<boolean>(true);
+
+    const [menuAnchorEl, setMenuAnchorEl] = useState<HTMLElement | null>(null);
+
+    const handleMenuOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setMenuAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setMenuAnchorEl(null);
+    };
+
+    const showLess = () => {
+        setDetailedView(false);
+        handleMenuClose();
+    };
+
+    const showMore = () => {
+        setDetailedView(true);
+        handleMenuClose();
+    };
+
     return (
         <Card variant="outlined" className={classes.card}>
             <CardContent>
@@ -69,17 +106,62 @@ export default function Container(props: Props): JSX.Element {
                     <Typography variant="h2" noWrap={true}>
                         {props.variable}
                     </Typography>
+
                     <div className={classes.menu}>
                         <InfoTooltip variable={props.variable}>
                             <InfoOutlinedIcon color="action" />
                         </InfoTooltip>
-                        <IconButton aria-label="settings" className={classes.iconButton}>
+                        <IconButton aria-label="settings" className={classes.iconButton} onClick={handleMenuOpen}>
                             <MoreVertIcon color="action" />
                         </IconButton>
                     </div>
+
+                    <Menu
+                        anchorEl={menuAnchorEl}
+                        getContentAnchorEl={null}
+                        disableAutoFocusItem={true}
+                        keepMounted
+                        open={Boolean(menuAnchorEl)}
+                        onClose={handleMenuClose}
+                        anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "right"
+                        }}
+                        transformOrigin={{
+                            vertical: "top",
+                            horizontal: "right"
+                        }}
+                        elevation={3}
+                        transitionDuration={0}
+                    >
+                        <MenuList dense={true} className={classes.menuList}>
+                            {detailedView ? (
+                                <MenuItem onClick={showLess}>
+                                    <ListItemIcon>
+                                        <ZoomOutIcon />
+                                    </ListItemIcon>
+                                    <Typography variant="inherit">Show less</Typography>
+                                </MenuItem>
+                            ) : (
+                                <MenuItem onClick={showMore}>
+                                    <ListItemIcon>
+                                        <ZoomInIcon />
+                                    </ListItemIcon>
+                                    <Typography variant="inherit">Show more</Typography>
+                                </MenuItem>
+                            )}
+
+                            <MenuItem onClick={handleMenuClose}>
+                                <ListItemIcon>
+                                    <DeleteOutlinedIcon />
+                                </ListItemIcon>
+                                <Typography variant="inherit">Remove view</Typography>
+                            </MenuItem>
+                        </MenuList>
+                    </Menu>
                 </div>
 
-                {/* Insert chart/value component here */}
+                {detailedView ? <div>Insert chart component here</div> : <div>Insert value component here</div>}
             </CardContent>
             <ResizeIcon className={classes.resizeIcon} color="action" />
         </Card>
