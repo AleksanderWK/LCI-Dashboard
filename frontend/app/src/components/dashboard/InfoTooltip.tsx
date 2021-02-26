@@ -10,8 +10,8 @@ import FaceIcon from "@material-ui/icons/Face";
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         tooltip: {
-            maxWidth: "250px",
-            padding: theme.spacing(2)
+            maxWidth: "200px",
+            padding: theme.spacing(1)
         },
         description: {
             display: "block",
