@@ -6,7 +6,6 @@ class WebSocketClient:
     
     async def connect(self, uri):
         self.wscp = await websockets.connect(uri)
-        await self.wscp.send("message")
         await self.listen()
 
     async def send(self, message):

@@ -1,9 +1,10 @@
 const WebSocket = require("ws");
 const ipc = require("electron").ipcMain;
 
+let wss = null;
 function startServer(destWin) {
     
-    const wss = new WebSocket.Server({
+    wss = new WebSocket.Server({
       port: 8080,
       perMessageDeflate: {
         zlibDeflateOptions: {
@@ -28,16 +29,21 @@ function startServer(destWin) {
     
     wss.on('connection', function connection(ws) {
       console.log("Connected " + ws._socket.remoteAddress + ", " + ws._socket.remotePort);
-    
+      
       ws.on('message', function incoming(message) {
-        console.log('received: %s', message);
+        //console.log('received: %s', message);
         destWin.send("newData", 'received: ' + message)
+        
+        let variables = JSON.parse(message);
+        //console.log(variables.pd)
+        //console.log(variables);
+
       });
     
       ws.send('something');
 
       setTimeout(() => {
-        ws.send("Terminate");
+        terminateClient();
       }, 5000)
     });
     
@@ -47,6 +53,14 @@ function startServer(destWin) {
       console.log(clientID)
     });
     */
+}
+
+
+function terminateClient() {
+  wss.clients.forEach(client => {
+    let clientID = client._socket.remoteAddress + ":" + client._socket.remotePort;
+    console.log(clientID)
+  })
 }
 
 module.exports = {
