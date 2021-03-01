@@ -1,4 +1,5 @@
 import {createMuiTheme} from "@material-ui/core";
+import Raleway_ttf from "./assets/fonts/Raleway-VariableFont_wght.ttf";
 
 // Extend types for themes
 declare module "@material-ui/core/styles/createPalette" {
@@ -32,9 +33,10 @@ const theme = createMuiTheme({
         }
     },
     typography: {
+        fontFamily: Raleway_ttf,
         h1: {
-            fontSize: 24,
-            fontWeight: "bold"
+            fontSize: 22,
+            fontWeight: 600
         },
         h2: {
             fontSize: 18,
