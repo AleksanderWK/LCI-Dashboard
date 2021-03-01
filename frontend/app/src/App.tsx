@@ -1,6 +1,7 @@
 import React, {useEffect} from "react";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import "./App.css";
+import SessionView from "./SessionView";
 import StartView from "./StartView";
 
 function App(): JSX.Element {
@@ -24,6 +25,7 @@ function App(): JSX.Element {
                         Add ned pages by adding a Route component. (Important! they need to be above the startview route)
                         Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
                         */}
+                        <Route path="/session" component={SessionView} />
                         <Route path="/" component={StartView} />
                     </Switch>
                 </div>
