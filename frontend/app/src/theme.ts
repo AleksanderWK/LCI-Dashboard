@@ -8,6 +8,10 @@ declare module "@material-ui/core/styles/createPalette" {
         title: string;
         graphLabel: string;
     }
+
+    interface TypeBackground {
+        tooltip: string;
+    }
 }
 
 const theme = createMuiTheme({
@@ -19,7 +23,8 @@ const theme = createMuiTheme({
             main: "#00509E"
         },
         background: {
-            default: "#F6F7F8"
+            default: "#F6F7F8",
+            tooltip: "rgba(97, 97, 97, 0.9)"
         },
         text: {
             default: "#535353",
