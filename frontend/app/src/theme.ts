@@ -43,7 +43,7 @@ const theme = createMuiTheme({
             fontWeight: "bold"
         },
         caption: {
-            fontSize: 14,
+            fontSize: 12,
             lineHeight: 1.2,
             letterSpacing: "normal"
         }

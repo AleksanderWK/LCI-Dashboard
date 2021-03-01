@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useRef, useState} from "react";
 import {
     Card,
     CardContent,
@@ -13,7 +13,8 @@ import {
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {Variable} from "../../constants";
-import InfoTooltip from "./InfoTooltip";
+import Tooltip from "./Tooltip";
+import Menu from "./Menu";
 
 function ResizeIcon(props: SvgIconProps): JSX.Element {
     return (
@@ -42,6 +43,9 @@ const useStyles = makeStyles((theme: Theme) =>
         iconButton: {
             padding: 0
         },
+        infoIcon: {
+            cursor: "default"
+        },
         resizeIcon: {
             position: "absolute",
             right: "4px",
@@ -62,6 +66,12 @@ interface Props {
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
+    const [isDetailedView, setIsDetailedView] = useState<boolean>(true);
+
+    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+
+    const menuAnchorElement = useRef<HTMLDivElement | null>(null);
+
     return (
         <Card variant="outlined" className={classes.card}>
             <CardContent>
@@ -69,17 +79,40 @@ export default function Container(props: Props): JSX.Element {
                     <Typography variant="h2" noWrap={true}>
                         {props.variable}
                     </Typography>
-                    <div className={classes.menu}>
-                        <InfoTooltip variable={props.variable}>
-                            <InfoOutlinedIcon color="action" />
-                        </InfoTooltip>
-                        <IconButton aria-label="settings" className={classes.iconButton}>
+
+                    <div className={classes.menu} ref={menuAnchorElement}>
+                        <Tooltip variable={props.variable}>
+                            <IconButton
+                                aria-label="info"
+                                disableFocusRipple={true}
+                                disableRipple={true}
+                                disableTouchRipple={true}
+                                className={`${classes.iconButton} ${classes.infoIcon}`}
+                            >
+                                <InfoOutlinedIcon color="action" />
+                            </IconButton>
+                        </Tooltip>
+                        <IconButton
+                            aria-label="settings"
+                            className={classes.iconButton}
+                            onClick={() => setMenuOpen(true)}
+                        >
                             <MoreVertIcon color="action" />
                         </IconButton>
                     </div>
+
+                    <Menu
+                        open={menuOpen}
+                        anchorEl={menuAnchorElement.current}
+                        isDetailedView={isDetailedView}
+                        onShowMore={() => setIsDetailedView(true)}
+                        onShowLess={() => setIsDetailedView(false)}
+                        onRemoveView={() => null}
+                        onMenuClose={() => setMenuOpen(false)}
+                    />
                 </div>
 
-                {/* Insert chart/value component here */}
+                {isDetailedView ? <div>Insert chart component here</div> : <div>Insert value component here</div>}
             </CardContent>
             <ResizeIcon className={classes.resizeIcon} color="action" />
         </Card>
