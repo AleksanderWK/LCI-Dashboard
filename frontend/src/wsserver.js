@@ -35,6 +35,10 @@ function startServer(destWin) {
       });
     
       ws.send('something');
+
+      setTimeout(() => {
+        ws.send("Terminate");
+      }, 5000)
     });
     
     /*
