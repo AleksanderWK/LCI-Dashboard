@@ -85,6 +85,9 @@ export default function CreateSession(props: Props): JSX.Element {
     const [sessionSelections, setSessionSelections] = useState<sessionSelections>();
     const [studentConnected, setStudentConnected] = useState<boolean>(false);
     const [sessionToken, setSessionToken] = useState<number>();
+    const [sessionNameNotSet, setSessionNameNotSet] = useState(true);
+    const [studentNameNotSet, setStudentNameNotSet] = useState(true);
+    const [deviceNotSet, setDeviceNotSet] = useState(true);
 
     const handleSelectionChange = (selection: string, value: string) => {
         // Overwrite an attribute based on the selection parameter
@@ -113,9 +116,10 @@ export default function CreateSession(props: Props): JSX.Element {
             <TextField
                 className={classes.inputNewSessionName}
                 label={"Session Name"}
-                onChange={(event: React.ChangeEvent<{value: unknown}>) =>
-                    handleSelectionChange("sessionName", event.target.value as string)
-                }
+                onChange={(event: React.ChangeEvent<{value: unknown}>) => {
+                    handleSelectionChange("sessionName", event.target.value as string);
+                    setSessionNameNotSet(!event.target.value);
+                }}
             />
             <div className={classes.addStudentContainer}>
                 <FormControl>
@@ -132,9 +136,10 @@ export default function CreateSession(props: Props): JSX.Element {
                         }}
                         input={<Input />}
                         classes={{root: classes.inputSelectStudent}}
-                        onChange={(event: React.ChangeEvent<{value: unknown}>) =>
-                            handleSelectionChange("studentName", event.target.value as string)
-                        }
+                        onChange={(event: React.ChangeEvent<{value: unknown}>) => {
+                            handleSelectionChange("studentName", event.target.value as string);
+                            setStudentNameNotSet(!event.target.value);
+                        }}
                     >
                         {students.map((option) => (
                             <MenuItem key={option as string} value={option as string}>
@@ -158,9 +163,11 @@ export default function CreateSession(props: Props): JSX.Element {
                     row
                     aria-label="eye tracker decive"
                     name="eyetracker"
-                    onChange={(event: React.ChangeEvent<{value: unknown}>) =>
-                        handleSelectionChange("eyeTracker", event.target.value as string)
-                    }
+                    onChange={(event: React.ChangeEvent<{value: unknown}>) => {
+                        handleSelectionChange("eyeTracker", event.target.value as string);
+
+                        setDeviceNotSet(!event.target.value);
+                    }}
                 >
                     <FormControlLabel value="stationary" control={<Radio />} label="Stationary" />
                     <FormControlLabel value="mobile" control={<Radio />} label="Mobile" style={{marginLeft: "20px"}} />
@@ -182,15 +189,22 @@ export default function CreateSession(props: Props): JSX.Element {
                     </Typography>
                 )}
             </div>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handelCreateSession}
-                disabled={!studentConnected}
-                className={classes.btn}
-            >
-                Create session
-            </Button>
+            {!sessionNameNotSet && !studentNameNotSet && !deviceNotSet && studentConnected ? (
+                <Button variant="contained" color="primary" onClick={handelCreateSession} className={classes.btn}>
+                    Create session
+                </Button>
+            ) : (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handelCreateSession}
+                    disabled={true}
+                    name="submitBtn"
+                    className={classes.btn}
+                >
+                    Create session
+                </Button>
+            )}
         </div>
     );
 }
