@@ -1,4 +1,4 @@
-import react, {useState} from "react";
+import react, {useEffect, useState} from "react";
 import {
     Backdrop,
     createStyles,
@@ -11,6 +11,9 @@ import {
     Button
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
+import {useRecoilState} from "recoil";
+import {popupOpen} from "../../state/CreateSessionViewState/createSessionViewAtoms";
+import {students} from "../../state/data/studentAtoms";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,30 +50,35 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface Props {
-    open: boolean;
-    handlePopupClose: () => void;
-}
-
-export default function AddStudentPopup(props: Props): JSX.Element {
+export default function AddStudentPopup(): JSX.Element {
     const classes = useStyles();
 
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
     const [studentName, setStudentName] = useState<string>("");
+    const [inputError, setInputError] = useState<boolean>(false);
+    const [status, setPopupOpen] = useRecoilState(popupOpen);
+    const [student_list, setStudentList] = useRecoilState(students);
 
-    const handleClose = () => {
-        if (props.open) {
-            props.handlePopupClose();
+    const addStudent = () => {
+        //if student is in list already prevent action and show error on screen
+        if (student_list.includes(studentName)) {
+            setInputError(true);
+        } else {
+            //Add student and close popup
+            const newList = student_list.concat(studentName);
+            setStudentList(newList);
+            setPopupOpen(false);
         }
     };
 
-    const addStudent = () => {
-        //
-    };
+    //Remove error message if user starts rewriting error-triggering student name.
+    useEffect(() => {
+        setInputError(false);
+    }, [studentName]);
 
     return (
         <div>
-            <Backdrop className={classes.backdrop} open={props.open}>
+            <Backdrop className={classes.backdrop} open={status}>
                 <Card className={classes.root} onClick={(e) => e.stopPropagation()}>
                     <CardContent className={classes.cardContent}>
                         <Typography variant={"h1"}>Add Student</Typography>
@@ -81,9 +89,16 @@ export default function AddStudentPopup(props: Props): JSX.Element {
                                 setStudentName(event.target.value as string);
                                 setStudentNameNotSet(!event.target.value);
                             }}
+                            error={inputError}
                         />
                         <div className={classes.btnGroup}>
-                            <Button onClick={handleClose}>Cancel</Button>
+                            <Button
+                                onClick={() => {
+                                    setPopupOpen(false);
+                                }}
+                            >
+                                Cancel
+                            </Button>
                             {!studentNameNotSet ? (
                                 <Button
                                     variant="contained"
