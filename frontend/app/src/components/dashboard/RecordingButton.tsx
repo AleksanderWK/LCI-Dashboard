@@ -16,31 +16,31 @@ export default function RecordingButton(): JSX.Element {
         setIsRecording(false);
     }
 
-    return (
-        <div>
-            {!isRecording ? (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<PlayArrowIcon />}
-                    onClick={() => {
-                        handleStartRecordingClick();
-                    }}
-                >
-                    Start recording
-                </Button>
-            ) : (
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<StopIcon />}
-                    onClick={() => {
-                        handleStopRecordingClick();
-                    }}
-                >
-                    Stop recording
-                </Button>
-            )}
-        </div>
-    );
+    if (!isRecording) {
+        return (
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={<PlayArrowIcon />}
+                onClick={() => {
+                    handleStartRecordingClick();
+                }}
+            >
+                Start recording
+            </Button>
+        );
+    } else {
+        return (
+            <Button
+                variant="contained"
+                color="primary"
+                startIcon={<StopIcon />}
+                onClick={() => {
+                    handleStopRecordingClick();
+                }}
+            >
+                Stop recording
+            </Button>
+        );
+    }
 }
