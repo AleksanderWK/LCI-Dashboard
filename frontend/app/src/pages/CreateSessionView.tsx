@@ -1,8 +1,9 @@
-import react from "react";
+import react, {useState} from "react";
 import {makeStyles, createStyles, Theme, Grid} from "@material-ui/core";
 import logo from "../assets/Images/LCI_logo.png";
 import dashboardIllustration from "../assets/Images/dashboardIllustration.svg";
 import CreateSession from "../components/dashboard/CreateSession";
+import AddStudentPopup from "../components/dashboard/AddStudentPopup";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,14 +42,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function CreateSessionView(): JSX.Element {
     const classes = useStyles();
 
-    const togglePopup = (open: boolean) => {
-        //
-    };
+    const [popupOpen, togglePopup] = useState<boolean>(true);
 
     return (
         <div className={classes.pageContainer}>
             <img className={classes.pageLogo} src={logo} alt="The LCI-lab logo" />
             <div className={classes.pageContent}>
+                <AddStudentPopup
+                    open={popupOpen}
+                    handlePopupClose={() => {
+                        togglePopup(false);
+                    }}
+                />
                 <CreateSession
                     handleTogglePopup={(open) => {
                         togglePopup(open);
