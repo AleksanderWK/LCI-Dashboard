@@ -2,8 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {fireEvent, render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import CreateSessionView from "./pages/CreateSessionView";
-import CreateSession from "./components/dashboard/CreateSession";
+import CreateSessionView from "../../../pages/CreateSessionView";
+import CreateSession from "../CreateSession";
 
 it("create session view matches snapshot", () => {
     const {baseElement} = render(<CreateSessionView />);
