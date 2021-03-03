@@ -86,7 +86,7 @@ export default function CreateSession(): JSX.Element {
     const [deviceNotSet, setDeviceNotSet] = useState(true);
 
     const [status, setPopupOpen] = useRecoilState(popupOpen);
-    const student_list = useRecoilValue(students);
+    const studentList = useRecoilValue(students);
 
     const handleSelectionChange = (selection: string, value: string) => {
         // Overwrite an attribute based on the selection parameter
@@ -136,7 +136,7 @@ export default function CreateSession(): JSX.Element {
                             setStudentNameNotSet(!event.target.value);
                         }}
                     >
-                        {student_list.map((option: string) => (
+                        {studentList.map((option: string) => (
                             <MenuItem key={option} value={option} data-testid={option}>
                                 {option}
                             </MenuItem>
