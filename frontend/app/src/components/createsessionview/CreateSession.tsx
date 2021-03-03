@@ -18,6 +18,9 @@ import {
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import React from "react";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {popupOpen} from "../../state/CreateSessionViewState/createSessionViewAtoms";
+import {students} from "../../state/data/studentAtoms";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -72,15 +75,8 @@ export interface sessionSelections {
     eyeTracker: string;
 }
 
-interface Props {
-    handleTogglePopup: (open: boolean) => void;
-}
-
-export default function CreateSession(props: Props): JSX.Element {
+export default function CreateSession(): JSX.Element {
     const classes = useStyles();
-
-    //addStudentPopup will save previous student names, create session will fetch these names
-    const students: string[] = ["John Doe", "Jane Smith"];
 
     const [sessionSelections, setSessionSelections] = useState<sessionSelections>();
     const [studentConnected, setStudentConnected] = useState<boolean>(false);
@@ -88,6 +84,9 @@ export default function CreateSession(props: Props): JSX.Element {
     const [sessionNameNotSet, setSessionNameNotSet] = useState(true);
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
     const [deviceNotSet, setDeviceNotSet] = useState(true);
+
+    const [status, setPopupOpen] = useRecoilState(popupOpen);
+    const studentList = useRecoilValue(students);
 
     const handleSelectionChange = (selection: string, value: string) => {
         // Overwrite an attribute based on the selection parameter
@@ -98,10 +97,6 @@ export default function CreateSession(props: Props): JSX.Element {
 
         // Save updated menu values to state
         setSessionSelections(updatedSessionSelections);
-    };
-
-    const togglePopup = () => {
-        //toggles popup
     };
 
     const handelCreateSession = () => {
@@ -141,8 +136,8 @@ export default function CreateSession(props: Props): JSX.Element {
                             setStudentNameNotSet(!event.target.value);
                         }}
                     >
-                        {students.map((option) => (
-                            <MenuItem key={option as string} value={option as string}>
+                        {studentList.map((option: string) => (
+                            <MenuItem key={option} value={option} data-testid={option}>
                                 {option}
                             </MenuItem>
                         ))}
@@ -152,7 +147,9 @@ export default function CreateSession(props: Props): JSX.Element {
                     color="primary"
                     aria-label="add new student"
                     className={classes.addStudentBtn}
-                    onClick={togglePopup}
+                    onClick={() => {
+                        setPopupOpen(true);
+                    }}
                 >
                     <AddCircleRoundedIcon />
                 </IconButton>
