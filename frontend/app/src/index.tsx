@@ -5,12 +5,15 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import {MuiThemeProvider} from "@material-ui/core";
 import theme from "./theme";
+import {RecoilRoot} from "recoil";
 
 ReactDOM.render(
     <React.StrictMode>
-        <MuiThemeProvider theme={theme}>
-            <App />
-        </MuiThemeProvider>
+        <RecoilRoot>
+            <MuiThemeProvider theme={theme}>
+                <App />
+            </MuiThemeProvider>
+        </RecoilRoot>
     </React.StrictMode>,
     document.getElementById("root")
 );
