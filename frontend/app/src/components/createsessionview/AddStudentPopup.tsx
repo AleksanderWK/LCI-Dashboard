@@ -61,7 +61,7 @@ export default function AddStudentPopup(): JSX.Element {
 
     const addStudent = () => {
         //if student is in list already prevent action and show error on screen
-        if (student_list.includes(studentName)) {
+        if (student_list.includes(studentName) || studentName == "") {
             setInputError(true);
         } else {
             //Add student and close popup
@@ -85,6 +85,7 @@ export default function AddStudentPopup(): JSX.Element {
                         <TextField
                             className={classes.inputNewStudentName}
                             label={"Student Name"}
+                            inputProps={{"data-testid": "content-input"}}
                             onChange={(event: React.ChangeEvent<{value: unknown}>) => {
                                 setStudentName(event.target.value as string);
                                 setStudentNameNotSet(!event.target.value);
@@ -99,27 +100,16 @@ export default function AddStudentPopup(): JSX.Element {
                             >
                                 Cancel
                             </Button>
-                            {!studentNameNotSet ? (
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={addStudent}
-                                    className={classes.btn}
-                                    startIcon={<AddCircleRoundedIcon />}
-                                >
-                                    Add student
-                                </Button>
-                            ) : (
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    disabled={true}
-                                    className={classes.btn}
-                                    startIcon={<AddCircleRoundedIcon />}
-                                >
-                                    Add student
-                                </Button>
-                            )}
+
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={addStudent}
+                                className={classes.btn}
+                                startIcon={<AddCircleRoundedIcon />}
+                            >
+                                Add student
+                            </Button>
                         </div>
                     </CardContent>
                 </Card>

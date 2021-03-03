@@ -137,7 +137,7 @@ export default function CreateSession(): JSX.Element {
                         }}
                     >
                         {student_list.map((option: string) => (
-                            <MenuItem key={option} value={option}>
+                            <MenuItem key={option} value={option} data-testid={option}>
                                 {option}
                             </MenuItem>
                         ))}
