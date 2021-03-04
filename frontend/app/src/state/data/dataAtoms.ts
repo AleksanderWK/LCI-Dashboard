@@ -1,4 +1,4 @@
-import {atom, atomFamily, selector} from "recoil";
+import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {Variable} from "../../constants";
 
 interface Data {
@@ -60,4 +60,22 @@ const selectedStudentDataState = selector<Data>({
     }
 });
 
-export {selectedStudentIdState, dataState, selectedStudentDataState};
+/*
+ *  A selector that returns the last value for a given variable from the selected student's data
+ */
+const selectedStudentLastValueState = selectorFamily<number | null, Variable>({
+    key: "selectedStudentLastValue",
+    get: (variable: Variable) => ({get}) => {
+        const id = get(selectedStudentIdState);
+
+        const data = get(dataState(id))[variable];
+
+        if (data.length > 0) {
+            return data.slice(-1)[0][1];
+        } else {
+            return null;
+        }
+    }
+});
+
+export {selectedStudentIdState, dataState, selectedStudentDataState, selectedStudentLastValueState};
