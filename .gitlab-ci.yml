@@ -1,0 +1,29 @@
+# This file is a template, and might need editing before it works on your project.
+# Official framework image. Look for the different tagged releases at:
+# https://hub.docker.com/r/library/node/tags/
+image: node:latest
+
+cache:
+  paths:
+    - node_modules/
+
+before_script:
+  - cd frontend/app
+  - yarn install
+
+test:
+  stage: test
+  script:
+    - CI=true yarn test
+
+pages:
+  stage: deploy
+  script:
+    - CI=true yarn run build
+    - rm -rf public
+    - mv build public
+  artifacts:
+    paths:
+      - public # GitLab pages serve from a 'public' directory
+  only:
+    - master # run on master branch

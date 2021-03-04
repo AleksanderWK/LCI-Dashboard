@@ -1,11 +1,12 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import "./App.css";
-import SessionView from "./SessionView";
-import StartView from "./StartView";
+import SessionView from "./pages/SessionView";
+import StartView from "./pages/StartView";
+import CreateSessionView from "./pages/CreateSessionView";
 
 function App(): JSX.Element {
-    useEffect(() => {
+    /*useEffect(() => {
         const electron = window.require("electron");
         const ipc = electron.ipcRenderer;
 
@@ -15,7 +16,7 @@ function App(): JSX.Element {
 
         ipc.send("readyConnection", true);
     }, []);
-
+*/
     return (
         <BrowserRouter>
             <div className="App">
@@ -26,7 +27,7 @@ function App(): JSX.Element {
                         Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
                         */}
                         <Route path="/session" component={SessionView} />
-                        <Route path="/" component={StartView} />
+                        <Route path="/" component={CreateSessionView} />
                     </Switch>
                 </div>
             </div>
