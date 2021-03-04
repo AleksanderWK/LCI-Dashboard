@@ -15,6 +15,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {Variable} from "../../constants";
 import Tooltip from "./Tooltip";
 import Menu from "./Menu";
+import LineChart from "./LineChart";
 
 function ResizeIcon(props: SvgIconProps): JSX.Element {
     return (
@@ -27,6 +28,7 @@ function ResizeIcon(props: SvgIconProps): JSX.Element {
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
+            maxWidth: 500,
             position: "relative"
         },
         header: {
@@ -112,8 +114,9 @@ export default function Container(props: Props): JSX.Element {
                     />
                 </div>
 
-                {isDetailedView ? <div>Insert chart component here</div> : <div>Insert value component here</div>}
+                {isDetailedView ? <LineChart variable={props.variable} /> : <div>Insert value component here</div>}
             </CardContent>
+
             <ResizeIcon className={classes.resizeIcon} color="action" />
         </Card>
     );

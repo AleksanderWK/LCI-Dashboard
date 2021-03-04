@@ -1,3 +1,9 @@
+// Frequency in Hz (cycles per second)
+export const FREQUENCY = 2;
+
+// Maximum time interval to show on live charts in seconds
+export const LIVE_CHART_RANGE = 30;
+
 export enum Variable {
     CognitiveLoad = "Cognitive Load",
     PerceivedDifficulty = "Perceived Difficulty",
@@ -17,6 +23,11 @@ export enum Device {
     Wristband = "Wristband",
     VideoBody = "Video of Body",
     VideoFace = "Video of Face"
+}
+
+export enum EyeTrackingDevice {
+    Mobile = "Mobile",
+    Stationary = "Stationary"
 }
 
 export interface MMDVariableInfo {
