@@ -2,7 +2,7 @@ import react, {useEffect, useState} from "react";
 import {Backdrop, createStyles, makeStyles, Theme, Card, CardContent, Typography, Button} from "@material-ui/core";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {popupOpen} from "../../state/SessionViewState/SessionViewAtoms";
-import Link from "react-router";
+import {selectedStudentRecordingState} from "../../state/recording/recordingAtoms";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,20 +51,17 @@ export default function QuitSesson(props: Props): JSX.Element {
     const classes = useStyles();
 
     const [status, setPopupOpen] = useRecoilState(popupOpen);
-
-    const currentlyRecording = true; //const [currentlyRecording, setCurrentlyRecording] = useRecoilState(isRecording)
+    const [isRecording, setIsRecording] = useRecoilState(selectedStudentRecordingState);
 
     //stops recording, closes popup, and goes to the startview
     const quitSession = () => {
-        /*
-            setCurrentlyRecording(false);
-            setPopupOpen(false);
-        */
+        setIsRecording(false);
+        setPopupOpen(false);
     };
 
     return (
         <div>
-            <Backdrop className={classes.backdrop} open={true}>
+            <Backdrop className={classes.backdrop} open={status}>
                 <Card className={classes.root} onClick={(e) => e.stopPropagation()}>
                     <CardContent className={classes.cardContent}>
                         <Typography variant={"h1"}>Quit Session</Typography>
@@ -75,7 +72,7 @@ export default function QuitSesson(props: Props): JSX.Element {
                                 <span className={classes.emphasizedText}>{props.studentName}</span>?
                             </Typography>
 
-                            {currentlyRecording && (
+                            {isRecording && (
                                 <div>
                                     <br /> <Typography>This will also stop the ongoing recording</Typography>
                                 </div>
