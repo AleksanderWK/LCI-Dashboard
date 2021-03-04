@@ -1,22 +1,25 @@
 import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import React from "react";
-import {useEffect, useState} from "react";
+import React, {createRef, RefObject} from "react";
+import {useEffect} from "react";
+import {useRecoilValue} from "recoil";
+import {FREQUENCY, LIVE_CHART_RANGE, Variable} from "../../constants";
+import {selectedStudentDataState} from "../../state/data/dataAtoms";
 import theme from "../../theme";
 
 // Initial options for chart
 const options: Highcharts.Options = {
     chart: {
         marginLeft: 40,
-        height: 200,
-        animation: {
-            duration: 0
-        }
+        height: 200
     },
     title: {
         text: undefined
     },
     plotOptions: {
+        series: {
+            animation: false
+        },
         line: {
             marker: {
                 enabled: false
@@ -40,8 +43,12 @@ const options: Highcharts.Options = {
         {
             type: "line",
             name: "Cognitive Load",
-            data: [[new Date().getTime(), 50]],
-            color: theme.palette.secondary.main
+            color: theme.palette.secondary.main,
+            states: {
+                hover: {
+                    lineWidthPlus: 0
+                }
+            }
         }
     ],
     legend: {
@@ -61,9 +68,7 @@ const options: Highcharts.Options = {
     },
     xAxis: {
         type: "datetime",
-        minTickInterval: 1000 * 10,
-        minRange: 30000, // Show the last 30 seconds
-        maxRange: 30000,
+        minTickInterval: 1000 * 5, // Show xAxis labels minimum every 5 second
         lineWidth: 0,
         tickLength: 0
     },
@@ -81,59 +86,35 @@ const options: Highcharts.Options = {
     }
 };
 
-function LineChart(props: HighchartsReact.Props): JSX.Element {
-    let chart: Highcharts.Chart | undefined = undefined;
+interface Props {
+    variable: Variable;
+}
 
-    // Use setChartOptions (and spread operator) to change the intial chart options after mount
-    const [chartOptions] = useState<Highcharts.Options>(options);
+function LineChart(props: Props): JSX.Element {
+    const chart = createRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>();
 
-    const [intervalRunning, setIntervalRunning] = useState<boolean>(false);
+    const selectedStudentData = useRecoilValue(selectedStudentDataState);
 
     useEffect(() => {
-        if (process.env.NODE_ENV === "test") {
-            Highcharts.useSerialIds(true);
+        if (chart.current) {
+            // Update series data
+            chart.current.chart.series[0].setData([...selectedStudentData[props.variable]], false);
+
+            if (selectedStudentData[props.variable].length >= FREQUENCY * LIVE_CHART_RANGE) {
+                // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
+                chart.current.chart.xAxis[0].setExtremes(
+                    // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
+                    selectedStudentData[props.variable].slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
+                    undefined,
+                    true // Redraw graph
+                );
+            } else {
+                chart.current.chart.redraw();
+            }
         }
+    }, [selectedStudentData]);
 
-        if (chart && !intervalRunning) {
-            const addDataPoint = () => {
-                if (chart) {
-                    // Useless logic to compute the next data point
-                    const change = [1, 0, -1];
-                    const dataChange = change[Math.floor(Math.random() * change.length)];
-
-                    const newPoint = chart.series[0].data[chart.series[0].data.length - 1]!.y! + dataChange;
-
-                    // Add data point
-                    chart.series[0].addPoint(
-                        [new Date().getTime(), newPoint],
-                        true,
-                        chart.series[0].data.length > 60, // Graph starts moving after 60 data points have been added (30 seconds)
-                        true // Animations off (minimize CPU usage)
-                    );
-                }
-            };
-
-            // Add new data point every 100 ms
-            setInterval(() => {
-                addDataPoint();
-            }, 500);
-
-            setIntervalRunning(true);
-        }
-    }, [chart, chartOptions, intervalRunning]);
-
-    return (
-        <div>
-            <HighchartsReact
-                highcharts={Highcharts}
-                options={chartOptions}
-                callback={(c: Highcharts.Chart) => {
-                    chart = c;
-                }}
-                {...props}
-            />
-        </div>
-    );
+    return <HighchartsReact highcharts={Highcharts} options={options} ref={chart} />;
 }
 
 export default React.memo(LineChart);

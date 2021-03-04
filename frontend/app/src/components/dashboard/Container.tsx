@@ -114,8 +114,9 @@ export default function Container(props: Props): JSX.Element {
                     />
                 </div>
 
-                {isDetailedView ? <LineChart /> : <div>Insert value component here</div>}
+                {isDetailedView ? <LineChart variable={props.variable} /> : <div>Insert value component here</div>}
             </CardContent>
+
             <ResizeIcon className={classes.resizeIcon} color="action" />
         </Card>
     );

@@ -4,19 +4,33 @@ import {render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MMDVariables, Variable} from "../../../constants";
 import Container from "../Container";
+import {RecoilRoot} from "recoil";
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
-    ReactDOM.render(<Container variable={Variable.CognitiveLoad} />, div);
+    ReactDOM.render(
+        <RecoilRoot>
+            <Container variable={Variable.CognitiveLoad} />
+        </RecoilRoot>,
+        div
+    );
 });
 
 it("renders title", () => {
-    render(<Container variable={Variable.CognitiveLoad} />);
+    render(
+        <RecoilRoot>
+            <Container variable={Variable.CognitiveLoad} />
+        </RecoilRoot>
+    );
     expect(screen.getByText(Variable.CognitiveLoad)).toBeInTheDocument();
 });
 
 it("tooltip displays variable info", async () => {
-    render(<Container variable={Variable.CognitiveLoad} />);
+    render(
+        <RecoilRoot>
+            <Container variable={Variable.CognitiveLoad} />
+        </RecoilRoot>
+    );
     userEvent.hover(screen.getByLabelText("info"));
     await waitFor(() => {
         expect(screen.getByText(MMDVariables[Variable.CognitiveLoad].description)).toBeInTheDocument();
