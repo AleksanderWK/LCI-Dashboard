@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<body>
+  <div>
+    <div
+      class="makeStyles-numericWrapper-1"
+    >
+      <p
+        class="MuiTypography-root makeStyles-noData-3 MuiTypography-body1"
+      >
+        No data received
+      </p>
+    </div>
+  </div>
+</body>
+`;
