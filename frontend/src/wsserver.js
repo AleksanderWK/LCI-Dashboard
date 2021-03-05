@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const ipc = require("electron").ipcMain;
+const { insertSession } = require("./db/sessions.js");
 
 let wss = null;
 function startServer(destWin) {
@@ -32,11 +32,11 @@ function startServer(destWin) {
     );
 
     ws.on("message", function incoming(message) {
-      //console.log('received: %s', message);
+      //console.log("received: %s", message);
       destWin.send("newData", "received: " + message);
 
       let variables = JSON.parse(message);
-      console.log(variables);
+      insertSession(variables);
     });
 
     ws.send("something");
@@ -45,13 +45,6 @@ function startServer(destWin) {
       terminateClient();
     }, 5000);
   });
-
-  /*
-    wss.clients.forEach(client => {
-      let clientID = client._socket.remoteAddress + ":" + ws._socket.remotePort;
-      console.log(clientID)
-    });
-    */
 }
 
 function terminateClient() {
