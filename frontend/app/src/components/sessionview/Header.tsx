@@ -14,33 +14,23 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: "space-between",
             alignItems: "center"
         },
-        headerContentContainer: {
-            backgroundColor: "red"
-        },
+
         sessionInfoContainer: {
             marginLeft: "25px",
             height: "60px",
             display: "flex",
             flexDirection: "column",
-            justifyContent: "space-between"
-        },
-        sessionInfo: {
-            display: "flex",
             justifyContent: "space-between",
-            alignItems: "center"
+            width: "355px"
         },
+
         indicatorIcon: {
             width: "7.5px",
             height: "7.5px",
             borderRadius: "7.5px",
             backgroundColor: "#7BAF62"
         },
-        spacing1: {
-            width: "95px"
-        },
-        spacing2: {
-            width: "220px"
-        },
+
         btnGroup: {
             display: "grid",
             gridTemplateColumns: "225px 50px 50px",
@@ -54,6 +44,16 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         textColor: {
             color: theme.palette.text.default
+        },
+        infoRow: {
+            display: "grid",
+            gridTemplateColumns: "30px max-content 30px 30px max-content",
+            gridTemplateRows: "30px",
+            alignItems: "center",
+            justifyItems: "center"
+        },
+        header: {
+            width: "auto"
         }
     })
 );
@@ -94,19 +94,17 @@ export default function Header(props: Props): JSX.Element {
                 <img src={logo} alt="The LCI logo" />
 
                 <div className={classes.sessionInfoContainer}>
-                    <Typography variant={"h1"}>{props.sessionName}</Typography>
+                    <Typography variant={"h1"} noWrap className={classes.header}>
+                        {props.sessionName}
+                    </Typography>
 
-                    <div className={`${classes.sessionInfo} ${classes.spacing2}`}>
-                        <div className={`${classes.sessionInfo} ${classes.spacing1}`}>
-                            <div className={classes.indicatorIcon}></div>
-                            <Typography className={classes.textColor}>{props.studentName}</Typography>
-                        </div>
+                    <div className={`${classes.infoRow}`}>
+                        <div className={classes.indicatorIcon}></div>
+                        <Typography>{props.studentName}</Typography>
+                        <div></div>
+                        <TimerIcon className={classes.textColor} />
 
-                        <div className={`${classes.sessionInfo} ${classes.spacing1}`}>
-                            <TimerIcon className={classes.textColor} />
-
-                            <Typography className={classes.textColor}>{props.runtime}</Typography>
-                        </div>
+                        <Typography>{props.runtime}</Typography>
                     </div>
                 </div>
             </div>
