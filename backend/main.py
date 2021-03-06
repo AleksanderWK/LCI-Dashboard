@@ -1,8 +1,10 @@
 import asyncio
+import sys
 from datastreams import Datastreams
 from mmdvvector import MMDVVector
 from mmdvvector_calc import MMDVVectorCalculator
 from wsclient import WebSocketClient
+from tokendecode import decodeToken
 
 
 # Executed every second
@@ -22,11 +24,21 @@ def process_current_data():
 
 
 def setup():
-    asyncio.run_coroutine_threadsafe(ws.connect("ws://localhost:8080"), loop)
+    asyncio.run_coroutine_threadsafe(
+        ws.connect("ws://" + getHost() + ":8080"), loop)
     ws.onMessage = terminate
     ds.add_all_to_event_loop(loop)
     loop.call_later(1, process_current_data)
     loop.run_forever()
+
+
+def getHost():
+    if len(sys.argv) >= 2:
+        token = sys.argv[1]
+        ip, code = decodeToken(token)
+        return ip
+    else:
+        return "localhost"
 
 
 def terminate(ws, message):

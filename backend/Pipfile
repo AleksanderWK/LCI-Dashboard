@@ -10,6 +10,7 @@ pandas = "*"
 websockets = "*"
 websocket-client = "*"
 autobahn = {extras = ["asyncio"],version = "*"}
+python-baseconv = "*"
 
 [requires]
 python_version = "3.8"
