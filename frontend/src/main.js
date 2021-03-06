@@ -1,4 +1,3 @@
-require("./ipc");
 const { app, BrowserWindow } = require("electron");
 
 let win = null;
@@ -17,6 +16,10 @@ function createWindow() {
   win = window;
 }
 
+function getWindow() {
+  return win;
+}
+
 app.whenReady().then(createWindow);
 
 app.on("window-all-closed", () => {
@@ -33,4 +36,7 @@ app.on("activate", () => {
 
 module.exports = {
   win: win,
+  getWindow: getWindow,
 };
+
+require("./ipc");

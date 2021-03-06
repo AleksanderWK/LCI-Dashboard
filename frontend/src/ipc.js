@@ -1,11 +1,11 @@
 const ipc = require("electron").ipcMain;
-const win = require("./main").win;
 const { startServer } = require("./wsserver.js");
 const { getUserByName, getUsers, insertUser } = require("./db/users.js");
+const { win, getWindow } = require("./main.js");
 
 ipc.on("readyConnection", (event, ready) => {
   if (ready) {
-    startServer(win);
+    startServer(getWindow());
   }
 });
 

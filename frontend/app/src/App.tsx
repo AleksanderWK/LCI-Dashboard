@@ -5,15 +5,15 @@ import SessionView from "./pages/SessionView";
 import StartView from "./pages/StartView";
 import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
-import ipc from "./ipc";
+import ipc, {ipcOn, ipcSend} from "./ipc";
 
 function App(): JSX.Element {
     useEffect(() => {
-        ipc.on("newData", (event: any, data: any) => {
+        ipcOn("newData", (event: any, data: any) => {
             console.log(data);
         });
 
-        ipc.send("readyConnection", true);
+        ipcSend("readyConnection", true);
     }, []);
 
     return (

@@ -14,7 +14,7 @@ import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import {useRecoilState} from "recoil";
 import {popupOpen} from "../../state/CreateSessionViewState/createSessionViewAtoms";
 import {students, User} from "../../state/data/studentAtoms";
-import ipc, {ipcGet} from "../../ipc";
+import ipc, {ipcGet, ipcSend} from "../../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -66,7 +66,7 @@ export default function AddStudentPopup(): JSX.Element {
             setInputError(true);
         } else {
             //Add student and close popup
-            ipc.send("insertUser", {name: studentName});
+            ipcSend("insertUser", {name: studentName});
             const newList = student_list.concat(studentName);
             setStudentList(newList);
             setPopupOpen(false);
