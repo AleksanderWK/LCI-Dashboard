@@ -3,7 +3,7 @@ import Container from "../components/dashboard/Container";
 import {FREQUENCY, Variable} from "../constants";
 import {createStyles, makeStyles} from "@material-ui/core";
 import {useRecoilState, useResetRecoilState, useSetRecoilState} from "recoil";
-import {selectedStudentDataState} from "../state/data/dataAtoms";
+import {selectedSessionDataState} from "../state/data/dataAtoms";
 import Menu from "../components/sessionview/Menu/Menu";
 import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";
@@ -67,7 +67,7 @@ export default function SessionView(): JSX.Element {
 
     const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
 
-    const setSelectedStudentData = useSetRecoilState(selectedStudentDataState);
+    const setSelectedStudentData = useSetRecoilState(selectedSessionDataState);
 
     // Useless logic for computing the next data point for the dummy data
     const [prevPoint, setPrevPoint] = useState<number>(50);

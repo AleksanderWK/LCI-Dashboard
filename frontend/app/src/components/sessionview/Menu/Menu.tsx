@@ -3,8 +3,9 @@ import {createStyles, Fab, makeStyles, Theme, Tooltip} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import ClassroomButton from "./ClassroomButton";
 import StudentButton from "./StudentButton";
-import {useSetRecoilState} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import {createSessionPopupOpenState} from "../../../state/SessionViewState/SessionViewAtoms";
+import {selectedSessionIdState, sessionsState} from "../../../state/data/dataAtoms";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -51,26 +52,14 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-interface Session {
-    sessionId: number;
-    studentName: string;
-    recording: boolean;
-}
-
 export default function Menu(): JSX.Element {
     const classes = useStyles();
 
     const setCreateSessionPopupOpen = useSetRecoilState(createSessionPopupOpenState);
 
-    //const selectedSessionId = useRecoilValue(selectedSessionIdState);
-    const selectedSessionId = 1;
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
 
-    //const sessions = useRecoilValue(sessionsState);
-    const sessions: Array<Session> = [
-        {sessionId: 1, studentName: "John Doe", recording: true},
-        {sessionId: 2, studentName: "Jane Smith", recording: false},
-        {sessionId: 3, studentName: "Ola Nordmann", recording: false}
-    ];
+    const sessions = useRecoilValue(sessionsState);
 
     return (
         <div className={classes.menu}>
@@ -84,7 +73,7 @@ export default function Menu(): JSX.Element {
                         key={session.sessionId}
                         sessionId={session.sessionId}
                         selected={session.sessionId === selectedSessionId}
-                        studentName={session.studentName}
+                        studentName={session.student.name}
                         recording={session.recording}
                     />
                 ))}

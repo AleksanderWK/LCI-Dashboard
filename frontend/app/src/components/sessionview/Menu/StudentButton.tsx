@@ -1,5 +1,7 @@
 import {createStyles, makeStyles, Typography} from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
+import {useSetRecoilState} from "recoil";
+import {selectedSessionIdState} from "../../../state/data/dataAtoms";
 import MenuButton from "./MenuButton";
 
 const useStyles = makeStyles(() =>
@@ -41,7 +43,7 @@ interface Props {
 export default function StudentButton(props: Props): JSX.Element {
     const classes = useStyles();
 
-    // const setSelectedSessionId = useSetRecoilState(selectedSessionIdState);
+    const setSelectedSessionId = useSetRecoilState(selectedSessionIdState);
 
     const getInitials = (name: string) => {
         const names = name.split(" ");
@@ -59,8 +61,7 @@ export default function StudentButton(props: Props): JSX.Element {
             tooltip={props.studentName}
             onClick={() => {
                 if (!props.selected) {
-                    // setSelectedSessionId(props.sessionId);
-                    return;
+                    setSelectedSessionId(props.sessionId);
                 }
             }}
         >

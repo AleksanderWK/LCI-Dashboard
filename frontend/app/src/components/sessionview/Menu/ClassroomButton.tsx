@@ -1,4 +1,6 @@
 import {createStyles, makeStyles, SvgIcon, SvgIconProps} from "@material-ui/core";
+import {useSetRecoilState} from "recoil";
+import {selectedSessionIdState} from "../../../state/data/dataAtoms";
 import MenuButton from "./MenuButton";
 
 const useStyles = makeStyles(() =>
@@ -17,14 +19,14 @@ interface Props {
 export default function ClassroomButton(props: Props): JSX.Element {
     const classes = useStyles();
 
-    // const setSelectedSessionId = useSetRecoilState(selectedSessionIdState);
+    const setSelectedSessionId = useSetRecoilState(selectedSessionIdState);
 
     return (
         <MenuButton
             selected={props.selected}
             tooltip="All sessions"
             onClick={() => {
-                // setSelectedSessionId(null);
+                setSelectedSessionId(null);
             }}
         >
             <ClassroomIcon className={classes.icon} />
