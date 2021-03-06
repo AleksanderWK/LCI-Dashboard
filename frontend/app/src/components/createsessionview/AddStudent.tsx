@@ -6,7 +6,8 @@ import {
     addStudentPopupOpenState,
     createSessionValuesState
 } from "../../state/CreateSessionViewState/createSessionViewAtoms";
-import {students} from "../../state/data/studentAtoms";
+import {students, User} from "../../state/data/studentAtoms";
+import ipc, {ipcGet, ipcSend} from "../../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,6 +42,7 @@ export default function AddStudent(): JSX.Element {
             setInputError(true);
         } else {
             // Add student, choose the student and close popup
+            ipcSend("insertUser", {name: studentName});
             const newList = student_list.concat(studentName);
             setStudentList(newList);
             setCreateSessionValues((prevValues) => ({
@@ -54,6 +56,9 @@ export default function AddStudent(): JSX.Element {
     // Remove error message if user starts rewriting error-triggering student name.
     useEffect(() => {
         setInputError(false);
+        ipcGet<User[]>("getUsers").then((users) => {
+            setStudentList(users.map((user) => user.name));
+        });
     }, [studentName]);
 
     return (

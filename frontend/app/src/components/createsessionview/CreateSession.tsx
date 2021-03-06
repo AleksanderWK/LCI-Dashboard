@@ -1,4 +1,4 @@
-import {useState} from "react";
+import react, {useEffect, useState} from "react";
 import {
     makeStyles,
     createStyles,
@@ -25,6 +25,7 @@ import {
     createSessionValuesState
 } from "../../state/CreateSessionViewState/createSessionViewAtoms";
 import {students} from "../../state/data/studentAtoms";
+import {ipcGet} from "../../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -77,9 +78,6 @@ export default function CreateSession(): JSX.Element {
     const [createSessionValues, setCreateSessionValues] = useRecoilState<CreateSessionValues>(createSessionValuesState);
     const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
 
-    const [studentConnected, setStudentConnected] = useState<boolean>(false);
-    const [sessionToken, setSessionToken] = useState<number>();
-
     const [sessionNameNotSet, setSessionNameNotSet] = useState(true);
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
     const [deviceNotSet, setDeviceNotSet] = useState(true);
@@ -104,6 +102,14 @@ export default function CreateSession(): JSX.Element {
 
         console.log("create session");
     };
+
+    useEffect(() => {
+        if (!createSessionValues.sessionCode) {
+            ipcGet("getCode").then((code: any) => {
+                handleSelectionChange("sessionCode", code);
+            });
+        }
+    }, [createSessionValues]);
 
     return (
         <div className={classes.form}>
@@ -183,9 +189,9 @@ export default function CreateSession(): JSX.Element {
                 <Typography variant="caption">Session code</Typography>
 
                 <Typography variant="caption" className={classes.sessionToken}>
-                    748305
+                    {createSessionValues.sessionCode}
                 </Typography>
-                {studentConnected ? (
+                {createSessionValues.studentConnected ? (
                     <Typography variant="caption" style={{color: "#5BA350"}}>
                         Student has connected
                     </Typography>
@@ -200,7 +206,9 @@ export default function CreateSession(): JSX.Element {
                 variant="contained"
                 color="primary"
                 onClick={handelCreateSession}
-                disabled={sessionNameNotSet || studentNameNotSet || deviceNotSet || !studentConnected}
+                disabled={
+                    sessionNameNotSet || studentNameNotSet || deviceNotSet || !createSessionValues.studentConnected
+                }
                 name="submitBtn"
                 className={classes.btn}
             >

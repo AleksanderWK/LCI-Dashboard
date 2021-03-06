@@ -1,50 +1,42 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
-const { startServer } = require("./wsserver.js")
-const ipc = require("electron").ipcMain;
+const { app, BrowserWindow } = require("electron");
 
 let win = null;
-function createWindow () {
+function createWindow() {
   const window = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true
-    }
-  })
+      nodeIntegration: true,
+    },
+  });
 
-  window.loadURL('http://localhost:3000')
+  window.loadURL("http://localhost:3000");
   //win.webContents.openDevTools()
 
   win = window;
 }
 
-app.whenReady().then(createWindow)
+function getWindow() {
+  return win;
+}
 
+app.whenReady().then(createWindow);
 
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit()
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
   }
-})
+});
 
-app.on('activate', () => {
+app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow()
+    createWindow();
   }
-})
+});
 
-ipc.on("readyConnection", (event, ready) => {
-  if (ready) {
-    startServer(win);
-  }
-})
+module.exports = {
+  win: win,
+  getWindow: getWindow,
+};
 
-/*
-setTimeout(() => {
-  win.send("newHello", "hello there")
-}, 2000);
-
-ipc.on("newValue", (event, value) => {
-  console.log(value);
-})
-*/
+require("./ipc");

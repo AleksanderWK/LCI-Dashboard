@@ -239,9 +239,7 @@ exports[`create session view matches snapshot 1`] = `
             </span>
             <span
               class="MuiTypography-root makeStyles-sessionToken-11 MuiTypography-caption"
-            >
-              748305
-            </span>
+            />
             <span
               class="MuiTypography-root MuiTypography-caption"
               style="color: rgb(221, 87, 87);"

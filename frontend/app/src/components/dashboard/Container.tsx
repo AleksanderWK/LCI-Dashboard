@@ -16,6 +16,7 @@ import {Variable} from "../../constants";
 import Tooltip from "./Tooltip";
 import Menu from "./Menu";
 import LineChart from "./LineChart";
+import Numeric from "./Numeric";
 
 function ResizeIcon(props: SvgIconProps): JSX.Element {
     return (
@@ -114,7 +115,7 @@ export default function Container(props: Props): JSX.Element {
                     />
                 </div>
 
-                {isDetailedView ? <LineChart variable={props.variable} /> : <div>Insert value component here</div>}
+                {isDetailedView ? <LineChart variable={props.variable} /> : <Numeric variable={props.variable} />}
             </CardContent>
 
             <ResizeIcon className={classes.resizeIcon} color="action" />

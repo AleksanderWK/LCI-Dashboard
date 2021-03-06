@@ -4,6 +4,8 @@ export interface CreateSessionValues {
     sessionName: string;
     studentName: string;
     eyeTracker: string;
+    sessionCode: string;
+    studentConnected: boolean;
 }
 
 export const createSessionValuesState = atom<CreateSessionValues>({
@@ -11,7 +13,9 @@ export const createSessionValuesState = atom<CreateSessionValues>({
     default: {
         sessionName: "",
         studentName: "",
-        eyeTracker: ""
+        eyeTracker: "",
+        sessionCode: "",
+        studentConnected: false
     }
 });
 
