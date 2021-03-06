@@ -1,4 +1,4 @@
-import react, {useState} from "react";
+import react, {useEffect, useState} from "react";
 import {
     makeStyles,
     createStyles,
@@ -21,6 +21,7 @@ import React from "react";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {popupOpen} from "../../state/CreateSessionViewState/createSessionViewAtoms";
 import {students} from "../../state/data/studentAtoms";
+import {ipcGet} from "../../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -80,7 +81,7 @@ export default function CreateSession(): JSX.Element {
 
     const [sessionSelections, setSessionSelections] = useState<sessionSelections>();
     const [studentConnected, setStudentConnected] = useState<boolean>(false);
-    const [sessionToken, setSessionToken] = useState<number>();
+    const [sessionToken, setSessionToken] = useState<string>("");
     const [sessionNameNotSet, setSessionNameNotSet] = useState(true);
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
     const [deviceNotSet, setDeviceNotSet] = useState(true);
@@ -102,6 +103,12 @@ export default function CreateSession(): JSX.Element {
     const handelCreateSession = () => {
         console.log("create session");
     };
+
+    useEffect(() => {
+        ipcGet("getCode").then((code: any) => {
+            setSessionToken(code);
+        });
+    }, []);
 
     return (
         <div className={classes.paperStyles}>
@@ -174,7 +181,7 @@ export default function CreateSession(): JSX.Element {
                 <Typography variant="caption">Session code</Typography>
 
                 <Typography variant="caption" className={classes.sessionToken}>
-                    748305
+                    {sessionToken}
                 </Typography>
                 {studentConnected ? (
                     <Typography variant="caption" style={{color: "#5BA350"}}>

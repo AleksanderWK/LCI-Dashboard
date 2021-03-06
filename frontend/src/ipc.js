@@ -2,6 +2,7 @@ const ipc = require("electron").ipcMain;
 const { startServer } = require("./wsserver.js");
 const { getUserByName, getUsers, insertUser } = require("./db/users.js");
 const { win, getWindow } = require("./main.js");
+const { generateCode } = require("./codegen.js");
 
 ipc.on("readyConnection", (event, ready) => {
   if (ready) {
@@ -23,4 +24,8 @@ ipc.on("getUsers", (event) => {
 
 ipc.on("insertUser", (event, user) => {
   insertUser(user);
+});
+
+ipc.on("getCode", (event) => {
+  event.reply("getCode-reply", generateCode());
 });

@@ -22,7 +22,8 @@ def process_current_data():
 
 
 def setup():
-    asyncio.run_coroutine_threadsafe(ws.connect("ws://localhost:8080"), loop)
+    asyncio.run_coroutine_threadsafe(
+        ws.connect("ws://localhost:8080"), loop)
     ws.onMessage = terminate
     ds.add_all_to_event_loop(loop)
     loop.call_later(1, process_current_data)
