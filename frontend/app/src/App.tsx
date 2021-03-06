@@ -4,19 +4,18 @@ import "./App.css";
 import SessionView from "./pages/SessionView";
 import StartView from "./pages/StartView";
 import CreateSessionView from "./pages/CreateSessionView";
+import {useEffect} from "react";
+import ipc, {ipcOn, ipcSend} from "./ipc";
 
 function App(): JSX.Element {
-    /*useEffect(() => {
-        const electron = window.require("electron");
-        const ipc = electron.ipcRenderer;
-
-        ipc.on("newData", (event: any, data: any) => {
+    useEffect(() => {
+        ipcOn("newData", (event: any, data: any) => {
             console.log(data);
         });
 
-        ipc.send("readyConnection", true);
+        ipcSend("readyConnection", true);
     }, []);
-*/
+
     return (
         <BrowserRouter>
             <div className="App">

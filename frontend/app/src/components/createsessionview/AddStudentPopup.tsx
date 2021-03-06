@@ -13,7 +13,8 @@ import {
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import {useRecoilState} from "recoil";
 import {popupOpen} from "../../state/CreateSessionViewState/createSessionViewAtoms";
-import {students} from "../../state/data/studentAtoms";
+import {students, User} from "../../state/data/studentAtoms";
+import ipc, {ipcGet, ipcSend} from "../../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -65,6 +66,7 @@ export default function AddStudentPopup(): JSX.Element {
             setInputError(true);
         } else {
             //Add student and close popup
+            ipcSend("insertUser", {name: studentName});
             const newList = student_list.concat(studentName);
             setStudentList(newList);
             setPopupOpen(false);
@@ -74,6 +76,9 @@ export default function AddStudentPopup(): JSX.Element {
     //Remove error message if user starts rewriting error-triggering student name.
     useEffect(() => {
         setInputError(false);
+        ipcGet<User[]>("getUsers").then((users) => {
+            setStudentList(users.map((user) => user.name));
+        });
     }, [studentName]);
 
     return (
