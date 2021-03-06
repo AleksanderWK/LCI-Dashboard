@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {fireEvent, render, screen, waitFor, getByTestId} from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import {render, screen} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
 import {selectedSessionIdState, sessionIdsState, sessionState} from "../../../state/data/dataAtoms";
 import {studentIdsState, studentState} from "../../../state/data/studentAtoms";

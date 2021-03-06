@@ -7,7 +7,7 @@ import {
     createSessionValuesState
 } from "../../state/CreateSessionViewState/createSessionViewAtoms";
 import {students, User} from "../../state/data/studentAtoms";
-import ipc, {ipcGet, ipcSend} from "../../ipc";
+import {ipcGet, ipcSend} from "../../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
