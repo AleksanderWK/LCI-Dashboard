@@ -13,6 +13,7 @@ import {
     createSessionValuesState
 } from "../state/CreateSessionViewState/createSessionViewAtoms";
 import {createSessionPopupOpenState} from "../state/SessionViewState/SessionViewAtoms";
+import Dashboard from "../components/dashboard/Dashboard";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -28,12 +29,6 @@ const useStyles = makeStyles(() =>
             gridColumnEnd: 3,
             gridRowStart: 1,
             gridRowEnd: 2
-        },
-        dashboard: {
-            gridColumnStart: 2,
-            gridColumnEnd: 3,
-            gridRowStart: 2,
-            gridRowEnd: 3
         }
     })
 );
@@ -97,9 +92,7 @@ export default function SessionView(): JSX.Element {
             <div className={classes.pageContainer}>
                 <Menu />
                 <div className={classes.header}>header space</div>
-                <div className={classes.dashboard}>
-                    <Container variable={Variable.PerceivedDifficulty} />
-                </div>
+                <Dashboard />
             </div>
 
             <PopupContainer
