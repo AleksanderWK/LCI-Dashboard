@@ -1,7 +1,7 @@
 import {atom, atomFamily} from "recoil";
 
 export interface User {
-    _id: string;
+    _id: number;
     name: string;
 }
 
