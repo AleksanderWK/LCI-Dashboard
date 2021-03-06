@@ -4,7 +4,7 @@ import {fireEvent, render, screen, waitFor, getByTestId} from "@testing-library/
 import userEvent from "@testing-library/user-event";
 import QuitSession from "../QuitSession";
 import {RecoilRoot} from "recoil";
-import {popupOpen} from "../../../state/SessionViewState/SessionViewAtoms";
+import {quitSessionPopupOpenState} from "../../../state/SessionViewState/SessionViewAtoms";
 import {selectedStudentRecordingState} from "../../../state/recording/recordingAtoms";
 
 it("renders without crashing", () => {
@@ -12,7 +12,7 @@ it("renders without crashing", () => {
     ReactDOM.render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(quitSessionPopupOpenState, true);
             }}
         >
             <QuitSession sessionName="name" studentName="name" />
@@ -25,7 +25,7 @@ it("QuitSession matches snapshot", () => {
     const {baseElement} = render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(quitSessionPopupOpenState, true);
             }}
         >
             <QuitSession sessionName="name" studentName="name" />
@@ -38,7 +38,7 @@ it("Recording prompt renders", () => {
     render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(quitSessionPopupOpenState, true);
                 snap.set(selectedStudentRecordingState, true);
             }}
         >
@@ -52,7 +52,7 @@ it("Displays session name and student name correctly", () => {
     render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(quitSessionPopupOpenState, true);
                 snap.set(selectedStudentRecordingState, true);
             }}
         >
