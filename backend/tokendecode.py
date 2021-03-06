@@ -18,4 +18,4 @@ def decodeToken(token):
     return ip_address, random_code
 
 
-print(decodeToken("bwawnqn6"))
+print(decodeToken("48o05fod"))
