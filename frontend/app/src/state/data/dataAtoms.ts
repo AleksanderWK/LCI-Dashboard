@@ -1,7 +1,8 @@
 import {atom, atomFamily, selector, selectorFamily} from "recoil";
-import {Variable} from "../../constants";
+import {EyeTrackingDevice, Variable} from "../../constants";
+import {studentState, User} from "./studentAtoms";
 
-interface Data {
+export interface Data {
     [Variable.CognitiveLoad]: [number, number][];
     [Variable.PerceivedDifficulty]: [number, number][];
     [Variable.Familiarity]: [number, number][];
@@ -16,17 +17,76 @@ interface Data {
 }
 
 /*
- *  An atom that stores which student is selected
+ *  An atom that stores which session is selected
  */
-const selectedStudentIdState = atom<number | null>({
-    key: "selectedStudentId",
+export const selectedSessionIdState = atom<number | null>({
+    key: "selectedSessionId",
     default: null
 });
 
 /*
- *   An atomFamily that stores the data for each student
+ *  An atom that stores all ids for sessions
  */
-const dataState = atomFamily<Data, number | null>({
+export const sessionIdsState = atom<number[]>({
+    key: "sessionIds",
+    default: []
+});
+
+export interface Session {
+    sessionId: number;
+    studentId: number;
+    eyeTrackingDevice: EyeTrackingDevice;
+    recording: boolean;
+}
+
+/*
+ *  An atomFamily that stores session information for each session
+ */
+export const sessionState = atomFamily<Session | undefined, number | null>({
+    key: "session",
+    default: undefined
+});
+
+export interface SessionWithStudent {
+    sessionId: number;
+    student: User;
+    eyeTrackingDevice: EyeTrackingDevice;
+    recording: boolean;
+}
+
+/*
+ *  A selector that returns the session info of all sessions
+ */
+export const sessionsState = selector<SessionWithStudent[]>({
+    key: "sessions",
+    get: ({get}) => {
+        const sessions: SessionWithStudent[] = [];
+        const sessionIds = get(sessionIdsState);
+
+        sessionIds.forEach((sessionId) => {
+            const session = get(sessionState(sessionId));
+            if (session) {
+                const student = get(studentState(session?.studentId));
+
+                if (student) {
+                    sessions.push({
+                        sessionId: sessionId,
+                        student: student,
+                        eyeTrackingDevice: session.eyeTrackingDevice,
+                        recording: session.recording
+                    });
+                }
+            }
+        });
+
+        return sessions;
+    }
+});
+
+/*
+ *   An atomFamily that stores the data for each session
+ */
+export const dataState = atomFamily<Data, number | null>({
     key: "data",
     default: {
         [Variable.CognitiveLoad]: [],
@@ -44,29 +104,29 @@ const dataState = atomFamily<Data, number | null>({
 });
 
 /*
- *  A selector that returns the selected student's data
+ *  A selector that returns the selected session's data
  */
-const selectedStudentDataState = selector<Data>({
-    key: "selectedStudentData",
+export const selectedSessionDataState = selector<Data>({
+    key: "selectedSessionData",
     get: ({get}) => {
-        const id = get(selectedStudentIdState);
+        const id = get(selectedSessionIdState);
 
         return get(dataState(id));
     },
     set: ({get, set}, newValue) => {
-        const id = get(selectedStudentIdState);
+        const id = get(selectedSessionIdState);
 
         set(dataState(id), newValue);
     }
 });
 
 /*
- *  A selector that returns the last value for a given variable from the selected student's data
+ *  A selector that returns the last value for a given variable from the selected session's data
  */
-const selectedStudentLastValueState = selectorFamily<number | null, Variable>({
-    key: "selectedStudentLastValue",
+export const selectedSessionLastValueState = selectorFamily<number | null, Variable>({
+    key: "selectedSessionLastValue",
     get: (variable: Variable) => ({get}) => {
-        const id = get(selectedStudentIdState);
+        const id = get(selectedSessionIdState);
 
         const data = get(dataState(id))[variable];
 
@@ -77,5 +137,3 @@ const selectedStudentLastValueState = selectorFamily<number | null, Variable>({
         }
     }
 });
-
-export {selectedStudentIdState, dataState, selectedStudentDataState, selectedStudentLastValueState};

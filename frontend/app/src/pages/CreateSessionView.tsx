@@ -1,15 +1,18 @@
-import react, {useState} from "react";
-import {makeStyles, createStyles, Theme, Grid} from "@material-ui/core";
+import React from "react";
+import {makeStyles, createStyles} from "@material-ui/core";
 import logo from "../assets/Images/LCI_logo.png";
 import dashboardIllustration from "../assets/Images/dashboardIllustration.svg";
 import CreateSession from "../components/createsessionview/CreateSession";
-import AddStudentPopup from "../components/createsessionview/AddStudentPopup";
+import PopupContainer from "../components/common/PopupContainer";
+import AddStudent from "../components/createsessionview/AddStudent";
+import {addStudentPopupOpenState} from "../state/CreateSessionViewState/createSessionViewAtoms";
+import {useRecoilState} from "recoil";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         pageContainer: {
             width: "100%",
-            height: window.innerHeight,
+            height: "100%",
             display: "grid",
             gridTemplateColumns: "30px 140px auto 140px 30px",
             gridTemplateRows: "30px auto 30px"
@@ -42,14 +45,26 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function CreateSessionView(): JSX.Element {
     const classes = useStyles();
 
+    const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
+
     return (
-        <div className={classes.pageContainer}>
-            <img className={classes.pageLogo} src={logo} alt="The LCI-lab logo" />
-            <div className={classes.pageContent}>
-                <AddStudentPopup />
-                <CreateSession />
-                <img className={classes.illustration} src={dashboardIllustration} alt="dashboard illustration" />
+        <>
+            <div className={classes.pageContainer}>
+                <img className={classes.pageLogo} src={logo} alt="The LCI-lab logo" />
+                <div className={classes.pageContent}>
+                    <CreateSession />
+                    <img className={classes.illustration} src={dashboardIllustration} alt="dashboard illustration" />
+                </div>
             </div>
-        </div>
+
+            <PopupContainer
+                open={addStudentPopupOpen}
+                onClose={() => {
+                    setAddStudentPopupOpen(false);
+                }}
+            >
+                <AddStudent />
+            </PopupContainer>
+        </>
     );
 }

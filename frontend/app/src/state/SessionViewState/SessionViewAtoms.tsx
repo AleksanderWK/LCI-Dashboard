@@ -1,6 +1,11 @@
 import {atom} from "recoil";
 
-export const popupOpen = atom({
-    key: "popupOpen",
+export const quitSessionPopupOpenState = atom<boolean>({
+    key: "quitSessionPopupOpen",
+    default: false
+});
+
+export const createSessionPopupOpenState = atom<boolean>({
+    key: "createSessionPopupOpen",
     default: false
 });

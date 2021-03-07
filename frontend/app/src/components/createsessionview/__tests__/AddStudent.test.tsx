@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {fireEvent, render, screen, waitFor, getByTestId} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import AddStudentPopup from "../AddStudentPopup";
+import AddStudent from "../AddStudent";
 import {RecoilRoot} from "recoil";
-import {popupOpen} from "../../../state/CreateSessionViewState/createSessionViewAtoms";
+import {addStudentPopupOpenState} from "../../../state/CreateSessionViewState/createSessionViewAtoms";
 import CreateSessionView from "../../../pages/CreateSessionView";
 
 it("renders without crashing", () => {
@@ -12,10 +12,10 @@ it("renders without crashing", () => {
     ReactDOM.render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
             }}
         >
-            <AddStudentPopup />
+            <AddStudent />
         </RecoilRoot>,
         div
     );
@@ -25,10 +25,10 @@ it("AddStudentPopup matches snapshot", () => {
     const {baseElement} = render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
             }}
         >
-            <AddStudentPopup />
+            <AddStudent />
         </RecoilRoot>
     );
     expect(baseElement).toMatchSnapshot();
@@ -38,10 +38,10 @@ it("cant add empty string", async () => {
     render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
             }}
         >
-            <AddStudentPopup />
+            <AddStudent />
         </RecoilRoot>
     );
     const nameField = screen.getByRole("textbox", {hidden: true});
@@ -57,7 +57,7 @@ it("cant add same student twice", async () => {
     render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
             }}
         >
             <CreateSessionView />

@@ -2,7 +2,7 @@ import React from "react";
 import {createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useRecoilValue} from "recoil";
 import {Variable} from "../../constants";
-import {selectedStudentLastValueState} from "../../state/data/dataAtoms";
+import {selectedSessionLastValueState} from "../../state/data/dataAtoms";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -30,7 +30,7 @@ function Numeric(props: Props): JSX.Element {
     const classes = useStyles();
 
     // Get the latest variable data point for the selected user
-    const dataPoint = useRecoilValue(selectedStudentLastValueState(props.variable));
+    const dataPoint = useRecoilValue(selectedSessionLastValueState(props.variable));
 
     return (
         <div className={classes.numericWrapper}>
