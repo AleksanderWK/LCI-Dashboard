@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
@@ -43,11 +43,16 @@ export default function RecordingButton(): JSX.Element {
 
     function handleStopRecordingClick(): void {
         setRecording({status: false, startTime: null});
-        if (interval) {
-            clearInterval(interval);
-            setDuration("0:00:00");
-        }
     }
+
+    useEffect(() => {
+        if (!recording.status) {
+            if (interval) {
+                clearInterval(interval);
+                setDuration("0:00:00");
+            }
+        }
+    }, [recording]);
 
     if (!recording.status) {
         return (
