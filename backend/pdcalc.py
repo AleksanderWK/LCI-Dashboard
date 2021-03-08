@@ -6,13 +6,14 @@ from mmdvcalc import MMDVCalculator
 class PerceivedDifficultyCalculator(MMDVCalculator):
 
     prev_data_point = []
+    prev_pd = 0
 
     def __init__(self):
         pass
 
     def calculate_dataset(self, data):
         if len(data) == 0 or (len(data) == 1 and len(self.prev_data_point) == 0):
-            return 0
+            return self.prev_pd
         elif len(data) == 1:
             return self.calculate(self.prev_data_point[-2], self.prev_data_point[-1], data[0][-2], data[0][-1], self.prev_data_point[2], data[0][1])
 
@@ -29,7 +30,9 @@ class PerceivedDifficultyCalculator(MMDVCalculator):
             pd_points.append(self.calculate(prev_fx, prev_fy,
                                             new_fx, new_fy, prev_end_time, new_init_time))
         self.prev_data_point = data[-1]
-        return statistics.mean(pd_points)
+        current_pd = statistics.mean(pd_points)
+        self.prev_pd = current_pd
+        return current_pd
 
     def calculate(self, fx0, fy0, fx1, fy1, et0, it1):
         # The Euclidian distance between two fixations

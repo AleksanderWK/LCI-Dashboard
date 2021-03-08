@@ -1,9 +1,8 @@
 const WebSocket = require("ws");
 const { insertSession } = require("./db/sessions.js");
 
-let wss = null;
 function startServer(destWin) {
-  wss = new WebSocket.Server({
+  let wss = new WebSocket.Server({
     port: 8080,
     perMessageDeflate: {
       zlibDeflateOptions: {
@@ -32,29 +31,33 @@ function startServer(destWin) {
     );
 
     ws.on("message", function incoming(message) {
-      //console.log("received: %s", message);
-      destWin.send("newData", "received: " + message);
-
       let variables = JSON.parse(message);
+      destWin.send("newData", variables);
+
       insertSession(variables);
     });
 
+    destWin.send("readyConnection");
     ws.send("something");
+  });
 
-    setTimeout(() => {
-      terminateClient();
-    }, 5000);
+  return wss;
+}
+
+function terminateClient(wss) {
+  wss.clients.forEach((ws) => {
+    ws.send("Terminate");
   });
 }
 
-function terminateClient() {
-  wss.clients.forEach((client) => {
-    let clientID =
-      client._socket.remoteAddress + ":" + client._socket.remotePort;
-    console.log(clientID);
+function sendStartDatastream(wss) {
+  wss.clients.forEach((ws) => {
+    ws.send("Start");
   });
 }
 
 module.exports = {
   startServer: startServer,
+  terminateClient: terminateClient,
+  sendStartDatastream: sendStartDatastream,
 };

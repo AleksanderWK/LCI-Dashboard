@@ -18,10 +18,11 @@ import {
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import {useRecoilState, useResetRecoilState} from "recoil";
-import {ipcGet} from "../../ipc";
+import {ipcGet, ipcOnce, ipcSend} from "../../ipc";
 import {createSessionValuesState} from "../../state/createSession";
 import {addStudentPopupOpenState} from "../../state/popup";
 import {Student, studentsState} from "../../state/student";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -81,11 +82,18 @@ export default function CreateSession(): JSX.Element {
     const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
 
     const [students, setStudents] = useRecoilState(studentsState);
+    const [studentConnected, setStudentConnected] = useState(false);
+
+    const history = useHistory();
 
     useEffect(() => {
         // Get users from DB when component loads
         ipcGet<Student[]>("getUsers").then((students) => {
             setStudents(students);
+        });
+
+        ipcOnce("readyConnection", (event: any, data: any) => {
+            setStudentConnected(true);
         });
     }, [addStudentPopupOpen]);
 
@@ -104,7 +112,8 @@ export default function CreateSession(): JSX.Element {
         // Reset values
         resetCreateSessionValues();
 
-        console.log("create session");
+        history.push("session");
+        ipcSend("startDatastream", {});
     };
 
     useEffect(() => {
@@ -204,8 +213,8 @@ export default function CreateSession(): JSX.Element {
                         Student has connected
                     </Typography>
                 ) : (
-                    <Typography variant="caption" style={{color: "#DD5757"}}>
-                        Waiting for student connection...
+                    <Typography variant="caption" style={studentConnected ? {color: "#00FF00"} : {color: "#DD5757"}}>
+                        {studentConnected ? "Student connected" : "Waiting for student connection..."}
                     </Typography>
                 )}
             </div>
@@ -214,9 +223,7 @@ export default function CreateSession(): JSX.Element {
                 variant="contained"
                 color="primary"
                 onClick={handelCreateSession}
-                disabled={
-                    sessionNameNotSet || studentNameNotSet || deviceNotSet || !createSessionValues.studentConnected
-                }
+                disabled={sessionNameNotSet || studentNameNotSet || deviceNotSet || !studentConnected}
                 name="submitBtn"
                 className={classes.btn}
             >

@@ -33,11 +33,11 @@ function App(): JSX.Element {
     });
 
     useEffect(() => {
-        ipcOn("newData", (event: any, data: string) => {
-            addDataPointToState(null, JSON.parse(data.slice(10)) as DataPoints);
+        ipcOn("newData", (event: any, data: DataPoints) => {
+            addDataPointToState(null, data);
         });
 
-        ipcSend("readyConnection", true);
+        ipcSend("startServer", true);
     }, []);
 
     return (
@@ -46,9 +46,8 @@ function App(): JSX.Element {
                 {/*
                     Add new pages by adding a Route component. (Important! they need to be above the startview route) Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
                 */}
-                <Route path="/create-session" component={CreateSessionView} />
                 <Route path="/session" component={SessionView} />
-                <Route path="/" component={SessionView} />
+                <Route path="/" component={CreateSessionView} />
             </Switch>
         </BrowserRouter>
     );
