@@ -2,7 +2,7 @@ import {atom} from "recoil";
 
 export interface CreateSessionValues {
     sessionName: string;
-    studentId: number | null;
+    studentId: string;
     studentName: string;
     eyeTracker: string;
     sessionCode: string;
@@ -13,7 +13,7 @@ export const createSessionValuesState = atom<CreateSessionValues>({
     key: "createSessionValues",
     default: {
         sessionName: "",
-        studentId: null,
+        studentId: "",
         studentName: "",
         eyeTracker: "",
         sessionCode: "",

@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {createStyles, makeStyles, Theme, Typography, TextField, Button, CardActions} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilState, useSetRecoilState} from "recoil";
 import {ipcSend} from "../../ipc";
-import {studentsState} from "../../state/student";
+import {Student, studentsState} from "../../state/student";
 import {addStudentPopupOpenState} from "../../state/popup";
 import {createSessionValuesState} from "../../state/createSession";
 
@@ -35,18 +35,21 @@ export default function AddStudent(): JSX.Element {
 
     const setCreateSessionValues = useSetRecoilState(createSessionValuesState);
 
-    const students = useRecoilValue(studentsState);
+    const [students, setStudents] = useRecoilState(studentsState);
 
     const addStudent = () => {
         // If student is in list already prevent action and show error on screen
         if (students.some((student) => student.name === studentName) || studentName == "") {
             setInputError(true);
         } else {
-            // Add student, choose the student and close popup
-            ipcSend("insertUser", {name: studentName});
-
             // Retrieve student ID for the recent inserted student here
-            const studentId = Math.floor(Math.random() * 10000);
+            const studentId = Math.floor(Math.random() * 10000).toString();
+            const student: Student = {_id: studentId, name: studentName};
+
+            // Add student, choose the student and close popup
+            ipcSend("insertUser", student);
+
+            setStudents((prevValue) => [...prevValue, student]);
 
             // Update state values
             setCreateSessionValues((prevValues) => ({

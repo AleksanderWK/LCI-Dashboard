@@ -34,7 +34,7 @@ function App(): JSX.Element {
 
     useEffect(() => {
         ipcOn("newData", (event: any, data: DataPoints) => {
-            addDataPointToState(null, data);
+            addDataPointToState(1, data);
         });
 
         ipcSend("startServer", true);
