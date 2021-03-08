@@ -1,4 +1,4 @@
-import {atom, atomFamily, DefaultValue, selector, selectorFamily, useRecoilCallback} from "recoil";
+import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
 import {studentState, Student} from "./student";
 
@@ -34,18 +34,26 @@ export const sessionState = atomFamily<Session | undefined, number | null>({
     default: undefined
 });
 
+interface Recording {
+    status: boolean;
+    startTime: Date | null;
+}
+
 /*
  *   An atomFamily that stores the recording status of each session
  */
-export const sessionRecordingState = atomFamily<boolean, number | null>({
+export const sessionRecordingState = atomFamily<Recording, number | null>({
     key: "sessionRecording",
-    default: false
+    default: {
+        status: false,
+        startTime: null
+    }
 });
 
 /*
  *   A selector that returns whether the selected session is being recorded
  */
-export const selectedSessionRecordingState = selector<boolean>({
+export const selectedSessionRecordingState = selector<Recording>({
     key: "selectedSessionRecording",
     get: ({get}) => {
         const id = get(selectedSessionIdState);
@@ -63,7 +71,7 @@ export interface SessionWithStudent {
     sessionName: string;
     student: Student;
     eyeTrackingDevice: EyeTrackingDevice;
-    recording: boolean;
+    recording: Recording;
     startTime: Date;
 }
 

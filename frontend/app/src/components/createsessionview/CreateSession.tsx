@@ -17,10 +17,10 @@ import {
     IconButton
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
-import {useRecoilCallback, useRecoilState, useResetRecoilState} from "recoil";
+import {useRecoilCallback, useRecoilState, useResetRecoilState, useSetRecoilState} from "recoil";
 import {ipcGet, ipcOnce, ipcSend} from "../../ipc";
 import {createSessionValuesState} from "../../state/createSession";
-import {addStudentPopupOpenState} from "../../state/popup";
+import {addStudentPopupOpenState, createSessionPopupOpenState} from "../../state/popup";
 import {Student, studentsState} from "../../state/student";
 import {useHistory} from "react-router-dom";
 import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../state/session";
@@ -82,6 +82,7 @@ export default function CreateSession(): JSX.Element {
     const [deviceNotSet, setDeviceNotSet] = useState(true);
 
     const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
+    const setCreateSessionPopupOpen = useSetRecoilState(createSessionPopupOpenState);
 
     const [students, setStudents] = useRecoilState(studentsState);
 
@@ -123,12 +124,13 @@ export default function CreateSession(): JSX.Element {
             sessionName: createSessionValues.sessionName,
             studentId: createSessionValues.studentId,
             eyeTrackingDevice:
-                createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary
+                createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary,
+            startTime: new Date()
         });
 
         set(sessionIdsState, (prevValue) => [...prevValue, sessionId]);
 
-        set(sessionRecordingState(sessionId), false);
+        set(sessionRecordingState(sessionId), {status: false, startTime: null});
 
         set(selectedSessionIdState, sessionId);
     });
@@ -213,6 +215,7 @@ export default function CreateSession(): JSX.Element {
                     className={classes.addStudentBtn}
                     onClick={() => {
                         setAddStudentPopupOpen(true);
+                        setCreateSessionPopupOpen(false);
                     }}
                 >
                     <AddCircleRoundedIcon />
