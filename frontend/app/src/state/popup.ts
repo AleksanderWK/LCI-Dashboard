@@ -9,3 +9,8 @@ export const createSessionPopupOpenState = atom<boolean>({
     key: "createSessionPopupOpen",
     default: false
 });
+
+export const addStudentPopupOpenState = atom<boolean>({
+    key: "addStudentPopupOpen",
+    default: false
+});

@@ -4,8 +4,8 @@ import AddIcon from "@material-ui/icons/Add";
 import ClassroomButton from "./ClassroomButton";
 import StudentButton from "./StudentButton";
 import {useRecoilValue, useSetRecoilState} from "recoil";
-import {createSessionPopupOpenState} from "../../../state/SessionViewState/SessionViewAtoms";
-import {selectedSessionIdState, sessionsState} from "../../../state/data/dataAtoms";
+import {createSessionPopupOpenState} from "../../../state/popup";
+import {selectedSessionIdState, sessionsState} from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

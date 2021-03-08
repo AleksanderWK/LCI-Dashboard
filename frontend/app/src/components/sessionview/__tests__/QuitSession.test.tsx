@@ -1,11 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {fireEvent, render, screen, waitFor, getByTestId} from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import {render, screen} from "@testing-library/react";
 import QuitSession from "../QuitSession";
 import {RecoilRoot} from "recoil";
-import {quitSessionPopupOpenState} from "../../../state/SessionViewState/SessionViewAtoms";
-import {selectedStudentRecordingState} from "../../../state/recording/recordingAtoms";
+import {quitSessionPopupOpenState} from "../../../state/popup";
+import {selectedSessionRecordingState} from "../../../state/session";
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
@@ -39,7 +38,7 @@ it("Recording prompt renders", () => {
         <RecoilRoot
             initializeState={(snap) => {
                 snap.set(quitSessionPopupOpenState, true);
-                snap.set(selectedStudentRecordingState, true);
+                snap.set(selectedSessionRecordingState, true);
             }}
         >
             <QuitSession sessionName="name" studentName="name" />
@@ -53,7 +52,7 @@ it("Displays session name and student name correctly", () => {
         <RecoilRoot
             initializeState={(snap) => {
                 snap.set(quitSessionPopupOpenState, true);
-                snap.set(selectedStudentRecordingState, true);
+                snap.set(selectedSessionRecordingState, true);
             }}
         >
             <QuitSession sessionName="Educational Game" studentName="Aleksander" />

@@ -2,22 +2,39 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {render, screen} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
-import {selectedSessionIdState, sessionIdsState, sessionState} from "../../../state/data/dataAtoms";
-import {studentIdsState, studentState} from "../../../state/data/studentAtoms";
 import {EyeTrackingDevice} from "../../../constants";
 import Menu from "../Menu/Menu";
+import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../../state/session";
+import {studentsState} from "../../../state/student";
 
 const testSessionIds = [1, 2];
-const testStudentIds = [1, 2];
 
-const testStudents = {1: {_id: 1, name: "John Doe"}, 2: {_id: 2, name: "Jane Smith"}};
+const testStudents = [
+    {_id: "1", name: "John Doe"},
+    {_id: "2", name: "Jane Smith"}
+];
 
 const testSessions = {
-    1: {sessionId: 1, studentId: 1, eyeTrackingDevice: EyeTrackingDevice.Mobile, recording: false},
-    2: {sessionId: 2, studentId: 2, eyeTrackingDevice: EyeTrackingDevice.Stationary, recording: true}
+    1: {
+        sessionId: 1,
+        sessionName: "Test1",
+        studentId: "1",
+        eyeTrackingDevice: EyeTrackingDevice.Mobile
+    },
+    2: {
+        sessionId: 2,
+        sessionName: "Test2",
+        studentId: "2",
+        eyeTrackingDevice: EyeTrackingDevice.Stationary
+    }
 };
 
 const testSelectedSessionId = 1;
+
+const testRecording = {
+    1: false,
+    2: true
+};
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
@@ -25,12 +42,12 @@ it("renders without crashing", () => {
         <RecoilRoot
             initializeState={(snap) => {
                 snap.set(sessionIdsState, testSessionIds);
-                snap.set(studentIdsState, testStudentIds);
-                snap.set(studentState(1), testStudents[1]);
-                snap.set(studentState(2), testStudents[2]);
+                snap.set(studentsState, testStudents);
                 snap.set(sessionState(1), testSessions[1]);
                 snap.set(sessionState(2), testSessions[2]);
                 snap.set(selectedSessionIdState, testSelectedSessionId);
+                snap.set(sessionRecordingState(1), testRecording[1]);
+                snap.set(sessionRecordingState(2), testRecording[2]);
             }}
         >
             <Menu />
@@ -44,12 +61,12 @@ it("matches snapshot", () => {
         <RecoilRoot
             initializeState={(snap) => {
                 snap.set(sessionIdsState, testSessionIds);
-                snap.set(studentIdsState, testStudentIds);
-                snap.set(studentState(1), testStudents[1]);
-                snap.set(studentState(2), testStudents[2]);
+                snap.set(studentsState, testStudents);
                 snap.set(sessionState(1), testSessions[1]);
                 snap.set(sessionState(2), testSessions[2]);
                 snap.set(selectedSessionIdState, testSelectedSessionId);
+                snap.set(sessionRecordingState(1), testRecording[1]);
+                snap.set(sessionRecordingState(2), testRecording[2]);
             }}
         >
             <Menu />
@@ -63,12 +80,12 @@ it("renders correct based on state", () => {
         <RecoilRoot
             initializeState={(snap) => {
                 snap.set(sessionIdsState, testSessionIds);
-                snap.set(studentIdsState, testStudentIds);
-                snap.set(studentState(1), testStudents[1]);
-                snap.set(studentState(2), testStudents[2]);
+                snap.set(studentsState, testStudents);
                 snap.set(sessionState(1), testSessions[1]);
                 snap.set(sessionState(2), testSessions[2]);
                 snap.set(selectedSessionIdState, testSelectedSessionId);
+                snap.set(sessionRecordingState(1), testRecording[1]);
+                snap.set(sessionRecordingState(2), testRecording[2]);
             }}
         >
             <Menu />

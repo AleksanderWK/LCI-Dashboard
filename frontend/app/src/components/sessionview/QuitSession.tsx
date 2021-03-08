@@ -1,7 +1,7 @@
 import {Backdrop, createStyles, makeStyles, Theme, Card, CardContent, Typography, Button} from "@material-ui/core";
 import {useRecoilState} from "recoil";
-import {quitSessionPopupOpenState} from "../../state/SessionViewState/SessionViewAtoms";
-import {selectedStudentRecordingState} from "../../state/recording/recordingAtoms";
+import {quitSessionPopupOpenState} from "../../state/popup";
+import {selectedSessionRecordingState} from "../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,7 +50,7 @@ export default function QuitSesson(props: Props): JSX.Element {
     const classes = useStyles();
 
     const [popupOpen, setPopupOpen] = useRecoilState(quitSessionPopupOpenState);
-    const [isRecording, setIsRecording] = useRecoilState(selectedStudentRecordingState);
+    const [isRecording, setIsRecording] = useRecoilState(selectedSessionRecordingState);
 
     //stops recording, closes popup, and goes to the startview
     const quitSession = () => {

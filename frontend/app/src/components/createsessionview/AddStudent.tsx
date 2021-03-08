@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from "react";
 import {createStyles, makeStyles, Theme, Typography, TextField, Button, CardActions} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import {useRecoilState, useSetRecoilState} from "recoil";
-import {
-    addStudentPopupOpenState,
-    createSessionValuesState
-} from "../../state/CreateSessionViewState/createSessionViewAtoms";
-import {students, User} from "../../state/data/studentAtoms";
-import {ipcGet, ipcSend} from "../../ipc";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import {ipcSend} from "../../ipc";
+import {studentsState} from "../../state/student";
+import {addStudentPopupOpenState} from "../../state/popup";
+import {createSessionValuesState} from "../../state/createSession";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,33 +30,41 @@ export default function AddStudent(): JSX.Element {
 
     const [studentName, setStudentName] = useState<string>("");
     const [inputError, setInputError] = useState<boolean>(false);
+
     const setPopupOpen = useSetRecoilState(addStudentPopupOpenState);
+
     const setCreateSessionValues = useSetRecoilState(createSessionValuesState);
-    const [student_list, setStudentList] = useRecoilState(students);
+
+    const students = useRecoilValue(studentsState);
 
     const addStudent = () => {
         // If student is in list already prevent action and show error on screen
-        if (student_list.includes(studentName) || studentName == "") {
+        if (students.some((student) => student.name === studentName) || studentName == "") {
             setInputError(true);
         } else {
             // Add student, choose the student and close popup
             ipcSend("insertUser", {name: studentName});
-            const newList = student_list.concat(studentName);
-            setStudentList(newList);
+
+            // Retrieve student ID for the recent inserted student here
+            const studentId = Math.floor(Math.random() * 10000);
+
+            // Update state values
             setCreateSessionValues((prevValues) => ({
                 ...prevValues,
+                studentId: studentId,
                 studentName: studentName
             }));
+
             setPopupOpen(false);
+
+            setStudentName("");
+            setInputError(false);
         }
     };
 
     // Remove error message if user starts rewriting error-triggering student name.
     useEffect(() => {
         setInputError(false);
-        ipcGet<User[]>("getUsers").then((users) => {
-            setStudentList(users.map((user) => user.name));
-        });
     }, [studentName]);
 
     return (
@@ -73,6 +79,7 @@ export default function AddStudent(): JSX.Element {
                 onChange={(event: React.ChangeEvent<{value: unknown}>) => {
                     setStudentName(event.target.value as string);
                 }}
+                value={studentName}
                 error={inputError}
             />
             <CardActions style={{width: "100%", justifyContent: "flex-end"}}>

@@ -4,7 +4,7 @@ import React, {createRef, RefObject} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, Variable} from "../../constants";
-import {selectedSessionDataState} from "../../state/data/dataAtoms";
+import {selectedSessionDataState} from "../../state/session";
 import theme from "../../theme";
 
 // Initial options for chart

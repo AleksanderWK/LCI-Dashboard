@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {render, screen} from "@testing-library/react";
 import Numeric from "../Numeric";
-import {RecoilRoot, useSetRecoilState} from "recoil";
+import {RecoilRoot} from "recoil";
 import {Variable} from "../../../constants";
-import {dataState, selectedStudentDataState} from "../../../state/data/dataAtoms";
+import {sessionDataState} from "../../../state/session";
 
 it("matches snapshot", () => {
     const {baseElement} = render(
@@ -39,7 +39,7 @@ it("shows correct value", () => {
     render(
         <RecoilRoot
             initializeState={(snap) =>
-                snap.set(dataState(null), {
+                snap.set(sessionDataState(null), {
                     [Variable.CognitiveLoad]: [[new Date().getTime(), 50]],
                     [Variable.PerceivedDifficulty]: [],
                     [Variable.Familiarity]: [],
@@ -49,8 +49,7 @@ it("shows correct value", () => {
                     [Variable.PhysiologicalStress]: [],
                     [Variable.EmotionalRegulation]: [],
                     [Variable.MotionStability]: [],
-                    [Variable.EnergySpentFatigue]: [],
-                    [Variable.EducationalSpecificEmotions]: []
+                    [Variable.EnergySpentFatigue]: []
                 })
             }
         >
