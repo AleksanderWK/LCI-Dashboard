@@ -33,8 +33,6 @@ function startServer(destWin) {
     ws.on("message", function incoming(message) {
       let variables = JSON.parse(message);
       destWin.send("newData", variables);
-
-      insertSession(variables);
     });
 
     destWin.send("readyConnection");

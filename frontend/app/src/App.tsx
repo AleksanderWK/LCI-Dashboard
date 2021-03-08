@@ -3,8 +3,14 @@ import SessionView from "./pages/SessionView";
 import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
 import {ipcOn, ipcSend} from "./ipc";
-import {Data, sessionDataState} from "./state/session";
-import {useRecoilCallback} from "recoil";
+import {
+    Data,
+    selectedSessionIdState,
+    selectedSessionState,
+    sessionDataState,
+    sessionRecordingState
+} from "./state/session";
+import {useRecoilCallback, useRecoilState, useRecoilValue} from "recoil";
 import {Variable} from "./constants";
 
 export interface DataPoints {
@@ -32,8 +38,14 @@ function App(): JSX.Element {
         });
     });
 
+    const [recording, setRecording] = useRecoilState(sessionRecordingState(1));
+    const session = useRecoilValue(selectedSessionState);
+
     useEffect(() => {
         ipcOn("newData", (event: any, data: DataPoints) => {
+            if (true) {
+                ipcSend("pushDataPointToSession", {data: data, name: "123", student: "Lukas"});
+            }
             addDataPointToState(1, data);
         });
 

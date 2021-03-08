@@ -142,6 +142,7 @@ export default function CreateSession(): JSX.Element {
 
         history.push("session");
         ipcSend("startDatastream", {});
+        ipcSend("insertSession", {...createSessionValues, data: []});
     };
 
     useEffect(() => {
