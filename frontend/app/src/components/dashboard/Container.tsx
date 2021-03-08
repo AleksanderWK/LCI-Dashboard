@@ -12,7 +12,7 @@ import {
 } from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import {Variable} from "../../constants";
+import {MMDVariables, Variable} from "../../constants";
 import Tooltip from "./Tooltip";
 import Menu from "./Menu";
 import LineChart from "./LineChart";
@@ -80,7 +80,7 @@ export default function Container(props: Props): JSX.Element {
             <CardContent>
                 <div className={classes.header}>
                     <Typography variant="h2" noWrap={true}>
-                        {props.variable}
+                        {MMDVariables[props.variable].name}
                     </Typography>
 
                     <div className={classes.menu} ref={menuAnchorElement}>

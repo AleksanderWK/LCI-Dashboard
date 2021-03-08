@@ -1,15 +1,40 @@
-import React from "react";
 import {BrowserRouter, Route, Switch} from "react-router-dom";
 import SessionView from "./pages/SessionView";
-import StartView from "./pages/StartView";
 import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
-import ipc, {ipcOn, ipcSend} from "./ipc";
+import {ipcOn, ipcSend} from "./ipc";
+import {Data, sessionDataState} from "./state/session";
+import {useRecoilCallback} from "recoil";
+import {Variable} from "./constants";
+
+export interface DataPoints {
+    [key: string]: number;
+    [Variable.CognitiveLoad]: number;
+    [Variable.PerceivedDifficulty]: number;
+    [Variable.Familiarity]: number;
+    [Variable.InformationProcessingIndex]: number;
+    [Variable.PhysiologicalArousal]: number;
+    [Variable.Engagement]: number;
+    [Variable.PhysiologicalStress]: number;
+    [Variable.EmotionalRegulation]: number;
+    [Variable.MotionStability]: number;
+    [Variable.EnergySpentFatigue]: number;
+}
 
 function App(): JSX.Element {
+    const addDataPointToState = useRecoilCallback(({set}) => (sessionId: number | null, dataPoints: DataPoints) => {
+        const now = new Date().getTime();
+
+        set(sessionDataState(sessionId), (prevVal) => {
+            return (Object.fromEntries(
+                Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(dataPoints[k] * 100).toFixed()]]])
+            ) as unknown) as Data;
+        });
+    });
+
     useEffect(() => {
-        ipcOn("newData", (event: any, data: any) => {
-            console.log(data);
+        ipcOn("newData", (event: any, data: string) => {
+            addDataPointToState(null, JSON.parse(data.slice(10)) as DataPoints);
         });
 
         ipcSend("readyConnection", true);
