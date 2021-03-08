@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {render, screen} from "@testing-library/react";
+import {fireEvent, render, screen} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
-import {EyeTrackingDevice} from "../../../constants";
-import Menu from "../Menu/Menu";
+import Header from "../Header";
 import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../../state/session";
 import {studentsState} from "../../../state/student";
+import {EyeTrackingDevice} from "../../../constants";
 
 const testSessionIds = [1, 2];
 
@@ -52,13 +52,13 @@ it("renders without crashing", () => {
                 snap.set(sessionRecordingState(2), testRecording[2]);
             }}
         >
-            <Menu />
+            <Header />
         </RecoilRoot>,
         div
     );
 });
 
-it("matches snapshot", () => {
+it("Header matches snapshot", () => {
     const {baseElement} = render(
         <RecoilRoot
             initializeState={(snap) => {
@@ -71,31 +71,8 @@ it("matches snapshot", () => {
                 snap.set(sessionRecordingState(2), testRecording[2]);
             }}
         >
-            <Menu />
+            <Header />
         </RecoilRoot>
     );
     expect(baseElement).toMatchSnapshot();
-});
-
-it("renders correct based on state", () => {
-    render(
-        <RecoilRoot
-            initializeState={(snap) => {
-                snap.set(sessionIdsState, testSessionIds);
-                snap.set(studentsState, testStudents);
-                snap.set(sessionState(1), testSessions[1]);
-                snap.set(sessionState(2), testSessions[2]);
-                snap.set(selectedSessionIdState, testSelectedSessionId);
-                snap.set(sessionRecordingState(1), testRecording[1]);
-                snap.set(sessionRecordingState(2), testRecording[2]);
-            }}
-        >
-            <Menu />
-        </RecoilRoot>
-    );
-
-    expect(screen.getByText(/JD/i)).toBeInTheDocument();
-    expect(screen.getByText(/JS/i)).toBeInTheDocument();
-    expect(screen.getByText(/REC/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/REC/i)).toHaveLength(1);
 });
