@@ -22,7 +22,7 @@ it("renders title", () => {
             <Container variable={Variable.CognitiveLoad} />
         </RecoilRoot>
     );
-    expect(screen.getByText(Variable.CognitiveLoad)).toBeInTheDocument();
+    expect(screen.getByText(MMDVariables[Variable.CognitiveLoad].name)).toBeInTheDocument();
 });
 
 it("tooltip displays variable info", async () => {
