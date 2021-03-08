@@ -1,0 +1,145 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Header matches snapshot 1`] = `
+<body>
+  <div>
+    <div
+      class="makeStyles-container-1"
+    >
+      <div
+        class="makeStyles-contentLeft-5"
+      >
+        <img
+          alt="The LCI logo"
+          src="LCI_logo.png"
+        />
+        <div
+          class="makeStyles-sessionInfoContainer-2"
+        >
+          <h1
+            class="MuiTypography-root makeStyles-header-8 MuiTypography-h1 MuiTypography-noWrap"
+          >
+            Test1
+          </h1>
+          <div
+            class="makeStyles-infoRow-7"
+          >
+            <div
+              class="makeStyles-indicatorIcon-3"
+            />
+            <p
+              class="MuiTypography-root MuiTypography-body1"
+            >
+              John Doe
+            </p>
+            <div />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root makeStyles-textColor-6"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M15 1H9v2h6V1zm-4 13h2V8h-2v6zm8.03-6.61l1.42-1.42c-.43-.51-.9-.99-1.41-1.41l-1.42 1.42C16.07 4.74 14.12 4 12 4c-4.97 0-9 4.03-9 9s4.02 9 9 9 9-4.03 9-9c0-2.12-.74-4.07-1.97-5.61zM12 20c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"
+              />
+            </svg>
+            <p
+              class="MuiTypography-root MuiTypography-body1"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="makeStyles-btnGroup-4"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            <span
+              class="MuiButton-startIcon MuiButton-iconSizeMedium"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8 5v14l11-7z"
+                />
+              </svg>
+            </span>
+            Start recording
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          aria-label="add new chart"
+          class="MuiButtonBase-root MuiIconButton-root"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              fill="none"
+              focusable="false"
+              height="29"
+              viewBox="0 0 29 29"
+              width="29"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M29 4.5V7.5H24.5V12H21.5V7.5H17V4.5H21.5V0H24.5V4.5H29ZM24.5 25.5H3.5V4.5H12.5V1.5H3.5C1.85 1.5 0.5 2.85 0.5 4.5V25.5C0.5 27.15 1.85 28.5 3.5 28.5H24.5C26.15 28.5 27.5 27.15 27.5 25.5V16.5H24.5V25.5ZM18.5 16.5V22.5H21.5V16.5H18.5ZM12.5 22.5H15.5V10.5H12.5V22.5ZM9.5 22.5V13.5H6.5V22.5H9.5Z"
+                fill="#535353"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          aria-label="quit student session"
+          class="MuiButtonBase-root MuiIconButton-root"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              fill="none"
+              focusable="false"
+              height="29"
+              viewBox="0 0 29 29"
+              width="29"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.9408 8.55L14.25 12.2408L10.5592 8.55L8.55 10.5592L12.2408 14.25L8.55 17.9408L10.5592 19.95L14.25 16.2592L17.9408 19.95L19.95 17.9408L16.2592 14.25L19.95 10.5592L17.9408 8.55ZM14.25 0C6.36975 0 0 6.36975 0 14.25C0 22.1302 6.36975 28.5 14.25 28.5C22.1302 28.5 28.5 22.1302 28.5 14.25C28.5 6.36975 22.1302 0 14.25 0ZM14.25 25.65C7.96575 25.65 2.85 20.5343 2.85 14.25C2.85 7.96575 7.96575 2.85 14.25 2.85C20.5343 2.85 25.65 7.96575 25.65 14.25C25.65 20.5343 20.5343 25.65 14.25 25.65Z"
+                fill="#535353"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+`;

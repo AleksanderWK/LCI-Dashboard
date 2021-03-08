@@ -8,6 +8,7 @@ import CreateSession from "../components/createsessionview/CreateSession";
 import Dashboard from "../components/dashboard/Dashboard";
 import {addStudentPopupOpenState, createSessionPopupOpenState} from "../state/popup";
 import {createSessionValuesState} from "../state/createSession";
+import Header from "../components/sessionview/Header";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -39,7 +40,7 @@ export default function SessionView(): JSX.Element {
         <>
             <div className={classes.pageContainer}>
                 <Menu />
-                <div className={classes.header}>header space</div>
+                <Header />
                 <Dashboard />
             </div>
 

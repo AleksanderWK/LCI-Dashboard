@@ -51,6 +51,9 @@ const theme = createMuiTheme({
             fontSize: 12,
             lineHeight: 1.2,
             letterSpacing: "normal"
+        },
+        body1: {
+            color: "#535353"
         }
     }
 });
