@@ -10,12 +10,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import AddIcon from "@material-ui/icons/Add";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         pageContainer: {
             width: "100%",
-            height: window.innerHeight,
+            height: "100%",
             display: "grid",
             gridTemplateColumns: "30px 140px auto 140px 30px",
             gridTemplateRows: "30px auto 30px"
@@ -66,6 +67,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function StartView(): JSX.Element {
     const classes = useStyles();
+
+    const history = useHistory();
 
     interface Column {
         id: "id" | "sessionName" | "date" | "startTime" | "duration" | "studentName";
@@ -183,7 +186,9 @@ export default function StartView(): JSX.Element {
                             variant="contained"
                             color="primary"
                             style={{float: "right", borderRadius: 20, marginBottom: 20}}
-                            href="/createSession"
+                            onClick={() => {
+                                history.push("/create-session");
+                            }}
                         >
                             <AddIcon style={{paddingRight: 10}} />
                             New session
