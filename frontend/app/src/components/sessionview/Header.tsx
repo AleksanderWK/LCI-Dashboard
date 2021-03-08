@@ -2,13 +2,15 @@ import {createStyles, makeStyles, Typography, IconButton, SvgIcon, SvgIconProps,
 import logo from "../../assets/Images/LCI_logo.png";
 import TimerIcon from "@material-ui/icons/Timer";
 import RecordingButton from "./RecordingButton";
+import {selectedSessionState} from "../../state/session";
+import {useRecoilValue} from "recoil";
+import {useEffect, useState} from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
             width: "100%",
             height: "100%",
-            marginLeft: "25px",
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
@@ -36,9 +38,10 @@ const useStyles = makeStyles((theme: Theme) =>
             gridTemplateColumns: "225px 50px 50px",
             gridTemplateRows: "35px",
             gap: theme.spacing(2),
-            marginRight: "25px"
+            marginRight: "40px"
         },
         contentLeft: {
+            marginLeft: "40px",
             display: "flex",
             alignItems: "center"
         },
@@ -79,14 +82,27 @@ function CloseIcon(props: SvgIconProps): JSX.Element {
     );
 }
 
-interface Props {
-    sessionName: string;
-    studentName: string;
-    runtime: string;
-}
-
-export default function Header(props: Props): JSX.Element {
+export default function Header(): JSX.Element {
     const classes = useStyles();
+
+    const selectedSessionInfo = useRecoilValue(selectedSessionState);
+    const [duration, setDuration] = useState<string>();
+
+    useEffect(() => {
+        //interval that updates the duration state every second
+        if (selectedSessionInfo) {
+            setInterval(() => {
+                const d = new Date().getTime();
+                let distance = d - selectedSessionInfo.startTime.getTime();
+                const hours = Math.floor(distance / 3600000);
+                distance -= hours * 3600000;
+                const minutes = Math.floor(distance / 60000);
+                distance -= minutes * 60000;
+                const seconds = Math.floor(distance / 1000);
+                setDuration(`${hours}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`);
+            }, 1000);
+        }
+    }, []);
 
     return (
         <div className={classes.container}>
@@ -95,16 +111,16 @@ export default function Header(props: Props): JSX.Element {
 
                 <div className={classes.sessionInfoContainer}>
                     <Typography variant={"h1"} noWrap className={classes.header}>
-                        {props.sessionName}
+                        {selectedSessionInfo?.sessionName}
                     </Typography>
 
                     <div className={`${classes.infoRow}`}>
                         <div className={classes.indicatorIcon}></div>
-                        <Typography>{props.studentName}</Typography>
+                        <Typography>{selectedSessionInfo?.student.name}</Typography>
                         <div></div>
                         <TimerIcon className={classes.textColor} />
 
-                        <Typography>{props.runtime}</Typography>
+                        <Typography>{duration}</Typography>
                     </div>
                 </div>
             </div>
