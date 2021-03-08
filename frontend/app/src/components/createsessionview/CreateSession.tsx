@@ -17,11 +17,14 @@ import {
     IconButton
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
-import {useRecoilState, useResetRecoilState} from "recoil";
-import {ipcGet} from "../../ipc";
+import {useRecoilCallback, useRecoilState, useResetRecoilState} from "recoil";
+import {ipcGet, ipcOnce, ipcSend} from "../../ipc";
 import {createSessionValuesState} from "../../state/createSession";
 import {addStudentPopupOpenState} from "../../state/popup";
 import {Student, studentsState} from "../../state/student";
+import {useHistory} from "react-router-dom";
+import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../state/session";
+import {EyeTrackingDevice} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -82,10 +85,19 @@ export default function CreateSession(): JSX.Element {
 
     const [students, setStudents] = useRecoilState(studentsState);
 
+    const history = useHistory();
+
     useEffect(() => {
         // Get users from DB when component loads
         ipcGet<Student[]>("getUsers").then((students) => {
             setStudents(students);
+        });
+
+        ipcOnce("readyConnection", (event: any, data: any) => {
+            setCreateSessionValues((prevValues) => ({
+                ...prevValues,
+                studentConnected: true
+            }));
         });
     }, [addStudentPopupOpen]);
 
@@ -100,14 +112,48 @@ export default function CreateSession(): JSX.Element {
         setCreateSessionValues(updatedSessionSelections);
     };
 
+    const createSession = useRecoilCallback(({set}) => (sessionId: number) => {
+        set(studentsState, (prevValue) => [
+            ...prevValue,
+            {_id: createSessionValues.studentId, name: createSessionValues.studentName}
+        ]);
+
+        set(sessionState(sessionId), {
+            sessionId: sessionId,
+            sessionName: createSessionValues.sessionName,
+            studentId: createSessionValues.studentId,
+            eyeTrackingDevice:
+                createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary
+        });
+
+        set(sessionIdsState, (prevValue) => [...prevValue, sessionId]);
+
+        set(sessionRecordingState(sessionId), false);
+
+        set(selectedSessionIdState, sessionId);
+    });
+
     const handelCreateSession = () => {
         // Reset values
         resetCreateSessionValues();
 
-        console.log("create session");
+        // Create session in state with dummy ID = 1
+        createSession(1);
+
+        history.push("session");
+        ipcSend("startDatastream", {});
+        ipcSend("insertSession", {...createSessionValues, data: []});
     };
 
     useEffect(() => {
+        if (createSessionValues.sessionName) {
+            setSessionNameNotSet(false);
+        }
+
+        if (createSessionValues.studentId) {
+            setStudentNameNotSet(false);
+        }
+
         if (!createSessionValues.sessionCode) {
             ipcGet("getCode").then((code: any) => {
                 handleSelectionChange("sessionCode", code);
@@ -126,7 +172,6 @@ export default function CreateSession(): JSX.Element {
                 label={"Session name"}
                 onChange={(event: React.ChangeEvent<{value: unknown}>) => {
                     handleSelectionChange("sessionName", event.target.value as string);
-                    setSessionNameNotSet(!event.target.value);
                 }}
                 value={createSessionValues.sessionName}
             />
@@ -147,17 +192,16 @@ export default function CreateSession(): JSX.Element {
                         input={<Input />}
                         classes={{root: classes.inputSelectStudent}}
                         onChange={(event: React.ChangeEvent<{value: unknown}>) => {
-                            handleSelectionChange("studentName", event.target.value as string);
-                            setStudentNameNotSet(!event.target.value);
+                            handleSelectionChange("studentId", event.target.value as string);
                         }}
                         value={
-                            students.some((student) => student.name === createSessionValues.studentName)
-                                ? createSessionValues.studentName
+                            students.some((student) => student._id === createSessionValues.studentId)
+                                ? createSessionValues.studentId
                                 : ""
                         }
                     >
                         {students.map((student: Student) => (
-                            <MenuItem key={student._id} value={student.name} data-testid={student.name}>
+                            <MenuItem key={student._id} value={student._id} data-testid={student.name}>
                                 {student.name}
                             </MenuItem>
                         ))}
@@ -204,8 +248,13 @@ export default function CreateSession(): JSX.Element {
                         Student has connected
                     </Typography>
                 ) : (
-                    <Typography variant="caption" style={{color: "#DD5757"}}>
-                        Waiting for student connection...
+                    <Typography
+                        variant="caption"
+                        style={createSessionValues.studentConnected ? {color: "#00FF00"} : {color: "#DD5757"}}
+                    >
+                        {createSessionValues.studentConnected
+                            ? "Student connected"
+                            : "Waiting for student connection..."}
                     </Typography>
                 )}
             </div>

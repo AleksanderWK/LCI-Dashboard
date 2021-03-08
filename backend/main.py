@@ -20,15 +20,13 @@ def process_current_data():
     ds.clear_current_data()
 
     # Scheduling this function for 1 second later
-    loop.call_later(1, process_current_data)
+    loop.call_later(0.5, process_current_data)
 
 
 def setup():
     asyncio.run_coroutine_threadsafe(
         ws.connect("ws://" + getHost() + ":8080"), loop)
-    ws.onMessage = terminate
-    ds.add_all_to_event_loop(loop)
-    loop.call_later(1, process_current_data)
+    ws.onMessage = onMessage
     loop.run_forever()
 
 
@@ -41,7 +39,18 @@ def getHost():
         return "localhost"
 
 
-def terminate(ws, message):
+def onMessage(ws, message):
+    checkTerminate(ws, message)
+    checkStartDatastream(ws, message)
+
+
+def checkStartDatastream(ws, message):
+    if message == "Start":
+        ds.add_all_to_event_loop(loop)
+        loop.call_later(1, process_current_data)
+
+
+def checkTerminate(ws, message):
     if message == "Terminate":
         ds.terminate()
         asyncio.run_coroutine_threadsafe(ws.close(), loop)

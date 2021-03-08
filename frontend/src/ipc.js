@@ -1,12 +1,15 @@
 const ipc = require("electron").ipcMain;
-const { startServer } = require("./wsserver.js");
+const { startServer, sendStartDatastream } = require("./wsserver.js");
 const { getUserByName, getUsers, insertUser } = require("./db/users.js");
+const { insertSession, pushDataPointToSession } = require("./db/sessions.js");
 const { win, getWindow } = require("./main.js");
 const { generateCode } = require("./codegen.js");
 
-ipc.on("readyConnection", (event, ready) => {
+let wss = null;
+
+ipc.on("startServer", (event, ready) => {
   if (ready) {
-    startServer(getWindow());
+    wss = startServer(getWindow());
   }
 });
 
@@ -26,6 +29,18 @@ ipc.on("insertUser", (event, user) => {
   insertUser(user);
 });
 
+ipc.on("insertSession", (event, data) => {
+  insertSession(data);
+});
+
+ipc.on("pushDataPointToSession", (event, data) => {
+  pushDataPointToSession(data.data, data.name, data.student);
+});
+
 ipc.on("getCode", (event) => {
   event.reply("getCode-reply", generateCode());
+});
+
+ipc.on("startDatastream", (event, user) => {
+  sendStartDatastream(wss);
 });
