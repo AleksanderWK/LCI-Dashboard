@@ -1,4 +1,4 @@
-import react, {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     makeStyles,
     createStyles,
@@ -17,15 +17,11 @@ import {
     IconButton
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
-import React from "react";
-import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
-import {
-    addStudentPopupOpenState,
-    CreateSessionValues,
-    createSessionValuesState
-} from "../../state/CreateSessionViewState/createSessionViewAtoms";
-import {students} from "../../state/data/studentAtoms";
+import {useRecoilState, useResetRecoilState} from "recoil";
 import {ipcGet} from "../../ipc";
+import {createSessionValuesState} from "../../state/createSession";
+import {addStudentPopupOpenState} from "../../state/popup";
+import {Student, studentsState} from "../../state/student";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -75,15 +71,23 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function CreateSession(): JSX.Element {
     const classes = useStyles();
 
-    const [createSessionValues, setCreateSessionValues] = useRecoilState<CreateSessionValues>(createSessionValuesState);
+    const [createSessionValues, setCreateSessionValues] = useRecoilState(createSessionValuesState);
     const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
 
     const [sessionNameNotSet, setSessionNameNotSet] = useState(true);
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
     const [deviceNotSet, setDeviceNotSet] = useState(true);
 
-    const setAddStudentPopupOpen = useSetRecoilState(addStudentPopupOpenState);
-    const studentList = useRecoilValue(students);
+    const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
+
+    const [students, setStudents] = useRecoilState(studentsState);
+
+    useEffect(() => {
+        // Get users from DB when component loads
+        ipcGet<Student[]>("getUsers").then((students) => {
+            setStudents(students);
+        });
+    }, [addStudentPopupOpen]);
 
     const handleSelectionChange = (selection: string, value: string) => {
         // Overwrite an attribute based on the selection parameter
@@ -146,11 +150,15 @@ export default function CreateSession(): JSX.Element {
                             handleSelectionChange("studentName", event.target.value as string);
                             setStudentNameNotSet(!event.target.value);
                         }}
-                        value={createSessionValues.studentName}
+                        value={
+                            students.some((student) => student.name === createSessionValues.studentName)
+                                ? createSessionValues.studentName
+                                : ""
+                        }
                     >
-                        {studentList.map((option: string) => (
-                            <MenuItem key={option} value={option} data-testid={option}>
-                                {option}
+                        {students.map((student: Student) => (
+                            <MenuItem key={student._id} value={student.name} data-testid={student.name}>
+                                {student.name}
                             </MenuItem>
                         ))}
                     </Select>

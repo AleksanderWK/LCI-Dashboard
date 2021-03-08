@@ -1,7 +1,7 @@
 import {createStyles, makeStyles, Typography} from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
 import {useSetRecoilState} from "recoil";
-import {selectedSessionIdState} from "../../../state/data/dataAtoms";
+import {selectedSessionIdState} from "../../../state/session";
 import MenuButton from "./MenuButton";
 
 const useStyles = makeStyles(() =>

@@ -16,9 +16,6 @@ it("renders without crashing for each device", () => {
             <Tooltip variable={Variable.MotionStability}>
                 <div>Tooltip render test</div>
             </Tooltip>
-            <Tooltip variable={Variable.EducationalSpecificEmotions}>
-                <div>Tooltip render test</div>
-            </Tooltip>
         </div>,
         div
     );

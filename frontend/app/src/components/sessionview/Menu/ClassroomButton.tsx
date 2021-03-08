@@ -1,6 +1,6 @@
 import {createStyles, makeStyles, SvgIcon, SvgIconProps} from "@material-ui/core";
 import {useSetRecoilState} from "recoil";
-import {selectedSessionIdState} from "../../../state/data/dataAtoms";
+import {selectedSessionIdState} from "../../../state/session";
 import MenuButton from "./MenuButton";
 
 const useStyles = makeStyles(() =>

@@ -1,12 +1,12 @@
-import React from "react";
+import React, {Suspense} from "react";
 import {makeStyles, createStyles} from "@material-ui/core";
 import logo from "../assets/Images/LCI_logo.png";
 import dashboardIllustration from "../assets/Images/dashboardIllustration.svg";
 import CreateSession from "../components/createsessionview/CreateSession";
 import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";
-import {addStudentPopupOpenState} from "../state/CreateSessionViewState/createSessionViewAtoms";
 import {useRecoilState} from "recoil";
+import {addStudentPopupOpenState} from "../state/popup";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -52,7 +52,9 @@ export default function CreateSessionView(): JSX.Element {
             <div className={classes.pageContainer}>
                 <img className={classes.pageLogo} src={logo} alt="The LCI-lab logo" />
                 <div className={classes.pageContent}>
-                    <CreateSession />
+                    <Suspense fallback={<div>Loading...</div>}>
+                        <CreateSession />
+                    </Suspense>
                     <img className={classes.illustration} src={dashboardIllustration} alt="dashboard illustration" />
                 </div>
             </div>

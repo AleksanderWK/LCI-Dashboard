@@ -5,17 +5,16 @@ export const FREQUENCY = 2;
 export const LIVE_CHART_RANGE = 30;
 
 export enum Variable {
-    CognitiveLoad = "Cognitive Load",
-    PerceivedDifficulty = "Perceived Difficulty",
-    Familiarity = "Familiarity",
-    InformationProcessingIndex = "Information Processing Index",
-    PhysiologicalArousal = "Physiological Arousal",
-    Engagement = "Engagement",
-    PhysiologicalStress = "Physiological Stress",
-    EmotionalRegulation = "Emotional Regulation",
-    MotionStability = "Motion Stability",
-    EnergySpentFatigue = "Energy Spent/Fatigue",
-    EducationalSpecificEmotions = "Educational-specific Emotions"
+    CognitiveLoad = "cl",
+    PerceivedDifficulty = "pd",
+    Familiarity = "fam",
+    InformationProcessingIndex = "ipd",
+    PhysiologicalArousal = "pa",
+    Engagement = "eng",
+    PhysiologicalStress = "ps",
+    EmotionalRegulation = "er",
+    MotionStability = "ms",
+    EnergySpentFatigue = "esf"
 }
 
 export enum Device {
@@ -76,10 +75,6 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     },
     [Variable.EnergySpentFatigue]: {
         device: Device.VideoBody,
-        description: ""
-    },
-    [Variable.EducationalSpecificEmotions]: {
-        device: Device.VideoFace,
         description: ""
     }
 };
