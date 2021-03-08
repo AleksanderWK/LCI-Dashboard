@@ -4,7 +4,7 @@ import React, {createRef, RefObject} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, Variable} from "../../constants";
-import {selectedStudentDataState} from "../../state/data/dataAtoms";
+import {selectedSessionDataState} from "../../state/session";
 import theme from "../../theme";
 
 // Initial options for chart
@@ -93,18 +93,18 @@ interface Props {
 function LineChart(props: Props): JSX.Element {
     const chart = createRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>();
 
-    const selectedStudentData = useRecoilValue(selectedStudentDataState);
+    const selectedSessionData = useRecoilValue(selectedSessionDataState);
 
     useEffect(() => {
         if (chart.current) {
             // Update series data
-            chart.current.chart.series[0].setData([...selectedStudentData[props.variable]], false);
+            chart.current.chart.series[0].setData([...selectedSessionData[props.variable]], false);
 
-            if (selectedStudentData[props.variable].length >= FREQUENCY * LIVE_CHART_RANGE) {
+            if (selectedSessionData[props.variable].length >= FREQUENCY * LIVE_CHART_RANGE) {
                 // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
                 chart.current.chart.xAxis[0].setExtremes(
                     // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
-                    selectedStudentData[props.variable].slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
+                    selectedSessionData[props.variable].slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
                     undefined,
                     true // Redraw graph
                 );
@@ -112,7 +112,7 @@ function LineChart(props: Props): JSX.Element {
                 chart.current.chart.redraw();
             }
         }
-    }, [selectedStudentData]);
+    }, [selectedSessionData]);
 
     return <HighchartsReact highcharts={Highcharts} options={options} ref={chart} />;
 }

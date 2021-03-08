@@ -1,8 +1,7 @@
-import react, {useEffect, useState} from "react";
 import {Backdrop, createStyles, makeStyles, Theme, Card, CardContent, Typography, Button} from "@material-ui/core";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {popupOpen} from "../../state/SessionViewState/SessionViewAtoms";
-import {selectedStudentRecordingState} from "../../state/recording/recordingAtoms";
+import {useRecoilState} from "recoil";
+import {quitSessionPopupOpenState} from "../../state/popup";
+import {selectedSessionRecordingState} from "../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,8 +49,8 @@ interface Props {
 export default function QuitSesson(props: Props): JSX.Element {
     const classes = useStyles();
 
-    const [status, setPopupOpen] = useRecoilState(popupOpen);
-    const [isRecording, setIsRecording] = useRecoilState(selectedStudentRecordingState);
+    const [popupOpen, setPopupOpen] = useRecoilState(quitSessionPopupOpenState);
+    const [isRecording, setIsRecording] = useRecoilState(selectedSessionRecordingState);
 
     //stops recording, closes popup, and goes to the startview
     const quitSession = () => {
@@ -61,7 +60,7 @@ export default function QuitSesson(props: Props): JSX.Element {
 
     return (
         <div>
-            <Backdrop className={classes.backdrop} open={status}>
+            <Backdrop className={classes.backdrop} open={popupOpen}>
                 <Card className={classes.root} onClick={(e) => e.stopPropagation()}>
                     <CardContent className={classes.cardContent}>
                         <Typography variant={"h1"}>Quit Session</Typography>

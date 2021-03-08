@@ -3,10 +3,10 @@ import Button from "@material-ui/core/Button";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import {useRecoilState} from "recoil";
-import {selectedStudentRecordingState} from "../../state/recording/recordingAtoms";
+import {selectedSessionRecordingState} from "../../state/session";
 
 export default function RecordingButton(): JSX.Element {
-    const [isRecording, setIsRecording] = useRecoilState(selectedStudentRecordingState);
+    const [isRecording, setIsRecording] = useRecoilState(selectedSessionRecordingState);
 
     function handleStartRecordingClick(): void {
         //ADD START SIGNAL

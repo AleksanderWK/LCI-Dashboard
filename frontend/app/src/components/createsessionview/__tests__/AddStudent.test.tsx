@@ -1,21 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {fireEvent, render, screen, waitFor, getByTestId} from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import AddStudentPopup from "../AddStudentPopup";
+import {fireEvent, render, screen} from "@testing-library/react";
+import AddStudent from "../AddStudent";
 import {RecoilRoot} from "recoil";
-import {popupOpen} from "../../../state/CreateSessionViewState/createSessionViewAtoms";
 import CreateSessionView from "../../../pages/CreateSessionView";
+import {addStudentPopupOpenState} from "../../../state/popup";
+import {studentsState} from "../../../state/student";
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
             }}
         >
-            <AddStudentPopup />
+            <AddStudent />
         </RecoilRoot>,
         div
     );
@@ -25,10 +25,10 @@ it("AddStudentPopup matches snapshot", () => {
     const {baseElement} = render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
             }}
         >
-            <AddStudentPopup />
+            <AddStudent />
         </RecoilRoot>
     );
     expect(baseElement).toMatchSnapshot();
@@ -38,10 +38,10 @@ it("cant add empty string", async () => {
     render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
             }}
         >
-            <AddStudentPopup />
+            <AddStudent />
         </RecoilRoot>
     );
     const nameField = screen.getByRole("textbox", {hidden: true});
@@ -57,7 +57,8 @@ it("cant add same student twice", async () => {
     render(
         <RecoilRoot
             initializeState={(snap) => {
-                snap.set(popupOpen, true);
+                snap.set(addStudentPopupOpenState, true);
+                snap.set(studentsState, [{_id: "1", name: "Aleksander"}]);
             }}
         >
             <CreateSessionView />
@@ -69,12 +70,12 @@ it("cant add same student twice", async () => {
         hidden: true
     });
     const popupBtn = screen.getByRole("button", {name: /add new student/i});
-    await fireEvent.change(nameField, {target: {value: "Aleksander"}});
-    await fireEvent.click(submitBtn);
     await fireEvent.click(popupBtn);
+    await fireEvent.change(nameField, {target: {value: "Aleksander"}});
     await fireEvent.click(submitBtn);
     expect(nameField.parentElement).toHaveClass("Mui-error");
 });
+
 /*
 it("popup adds student to selection dropdown", async () => {
     render(
