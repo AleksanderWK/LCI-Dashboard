@@ -82,7 +82,6 @@ export default function CreateSession(): JSX.Element {
     const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
 
     const [students, setStudents] = useRecoilState(studentsState);
-    const [studentConnected, setStudentConnected] = useState(false);
 
     const history = useHistory();
 
@@ -93,7 +92,10 @@ export default function CreateSession(): JSX.Element {
         });
 
         ipcOnce("readyConnection", (event: any, data: any) => {
-            setStudentConnected(true);
+            setCreateSessionValues((prevValues) => ({
+                ...prevValues,
+                studentConnected: true
+            }));
         });
     }, [addStudentPopupOpen]);
 
@@ -117,6 +119,14 @@ export default function CreateSession(): JSX.Element {
     };
 
     useEffect(() => {
+        if (createSessionValues.sessionName) {
+            setSessionNameNotSet(false);
+        }
+
+        if (createSessionValues.studentName) {
+            setStudentNameNotSet(false);
+        }
+
         if (!createSessionValues.sessionCode) {
             ipcGet("getCode").then((code: any) => {
                 handleSelectionChange("sessionCode", code);
@@ -135,7 +145,6 @@ export default function CreateSession(): JSX.Element {
                 label={"Session name"}
                 onChange={(event: React.ChangeEvent<{value: unknown}>) => {
                     handleSelectionChange("sessionName", event.target.value as string);
-                    setSessionNameNotSet(!event.target.value);
                 }}
                 value={createSessionValues.sessionName}
             />
@@ -157,7 +166,6 @@ export default function CreateSession(): JSX.Element {
                         classes={{root: classes.inputSelectStudent}}
                         onChange={(event: React.ChangeEvent<{value: unknown}>) => {
                             handleSelectionChange("studentName", event.target.value as string);
-                            setStudentNameNotSet(!event.target.value);
                         }}
                         value={
                             students.some((student) => student.name === createSessionValues.studentName)
@@ -213,8 +221,13 @@ export default function CreateSession(): JSX.Element {
                         Student has connected
                     </Typography>
                 ) : (
-                    <Typography variant="caption" style={studentConnected ? {color: "#00FF00"} : {color: "#DD5757"}}>
-                        {studentConnected ? "Student connected" : "Waiting for student connection..."}
+                    <Typography
+                        variant="caption"
+                        style={createSessionValues.studentConnected ? {color: "#00FF00"} : {color: "#DD5757"}}
+                    >
+                        {createSessionValues.studentConnected
+                            ? "Student connected"
+                            : "Waiting for student connection..."}
                     </Typography>
                 )}
             </div>
@@ -223,7 +236,9 @@ export default function CreateSession(): JSX.Element {
                 variant="contained"
                 color="primary"
                 onClick={handelCreateSession}
-                disabled={sessionNameNotSet || studentNameNotSet || deviceNotSet || !studentConnected}
+                disabled={
+                    sessionNameNotSet || studentNameNotSet || deviceNotSet || !createSessionValues.studentConnected
+                }
                 name="submitBtn"
                 className={classes.btn}
             >
