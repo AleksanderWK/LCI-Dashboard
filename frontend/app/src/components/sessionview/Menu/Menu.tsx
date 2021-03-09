@@ -74,7 +74,7 @@ export default function Menu(): JSX.Element {
                         sessionId={session.sessionId}
                         selected={session.sessionId === selectedSessionId}
                         studentName={session.student.name}
-                        recording={session.recording}
+                        recording={session.recording.status}
                     />
                 ))}
                 <Tooltip

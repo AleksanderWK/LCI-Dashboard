@@ -1,7 +1,11 @@
 let { db } = require("./nedb.js");
 
 function insertUser(data) {
-  db.users.insert(data);
+  return new Promise((resolve, reject) => {
+    db.users.insert(data, function (err, doc) {
+      resolve(doc._id);
+    });
+  });
 }
 
 function getUserByName(name) {

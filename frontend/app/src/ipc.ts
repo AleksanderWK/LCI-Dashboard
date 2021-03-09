@@ -41,4 +41,10 @@ export function ipcGet<T>(message: string): Promise<T> {
     });
 }
 
+export async function ipcInvoke<T>(event: string, data: any): Promise<T> {
+    return ipc.invoke(event, data).then((result: any) => {
+        return result;
+    });
+}
+
 export default ipc;

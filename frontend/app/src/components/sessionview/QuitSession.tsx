@@ -1,98 +1,82 @@
-import {Backdrop, createStyles, makeStyles, Theme, Card, CardContent, Typography, Button} from "@material-ui/core";
-import {useRecoilState} from "recoil";
+import React from "react";
+import {createStyles, makeStyles, Theme, Typography, Button, CardActions} from "@material-ui/core";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {quitSessionPopupOpenState} from "../../state/popup";
-import {selectedSessionRecordingState} from "../../state/session";
+import {selectedSessionRecordingState, selectedSessionState} from "../../state/session";
+import {useHistory} from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        backdrop: {
-            color: "#fff",
-            alignItems: "center",
-            overflowY: "auto",
-            zIndex: 20 //should have zindex in theme
-        },
-        root: {
-            width: "400px",
-            height: "250px",
-            backgroundColor: theme.palette.background.default,
-            transition: "all 0.25s"
+        grid: {
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: 18
         },
         btn: {
             color: theme.palette.text.default,
             fontWeight: "bold"
         },
         btnGroup: {
-            width: "220px",
-            float: "right",
-            marginLeft: "140px",
-            display: "flex",
-            justifyContent: "space-between"
+            marginLeft: "auto"
         },
         cardContent: {
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
             height: "210px"
-        },
-        emphasizedText: {
-            fontWeight: "bold",
-            color: theme.palette.text.default
         }
     })
 );
 
-interface Props {
-    sessionName: string;
-    studentName: string;
-}
-
-export default function QuitSesson(props: Props): JSX.Element {
+export default function QuitSesson(): JSX.Element {
     const classes = useStyles();
 
-    const [popupOpen, setPopupOpen] = useRecoilState(quitSessionPopupOpenState);
-    const [isRecording, setIsRecording] = useRecoilState(selectedSessionRecordingState);
+    const history = useHistory();
 
-    //stops recording, closes popup, and goes to the startview
+    const setPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
+    const [recording, setRecording] = useRecoilState(selectedSessionRecordingState);
+
+    const selectedSession = useRecoilValue(selectedSessionState);
+
+    // Stops recording, closes popup, terminates session and goes to the startview
     const quitSession = () => {
-        setIsRecording(false);
+        setRecording({status: false, startTime: null});
         setPopupOpen(false);
+
+        // TERMINATE SESSION HERE
+
+        history.push("/");
     };
 
     return (
-        <div>
-            <Backdrop className={classes.backdrop} open={popupOpen}>
-                <Card className={classes.root} onClick={(e) => e.stopPropagation()}>
-                    <CardContent className={classes.cardContent}>
-                        <Typography variant={"h1"}>Quit Session</Typography>
-                        <div>
-                            <Typography>
-                                Are you sure you want to quit{" "}
-                                <span className={classes.emphasizedText}>{props.sessionName}</span> with{" "}
-                                <span className={classes.emphasizedText}>{props.studentName}</span>?
-                            </Typography>
+        <div className={classes.grid}>
+            <Typography variant="h1">Quit Session</Typography>
+            <div>
+                <Typography>
+                    Are you sure you want to quit <i>{selectedSession?.sessionName}</i> with{" "}
+                    <i>{selectedSession?.student.name}</i>?
+                </Typography>
 
-                            {isRecording && (
-                                <div>
-                                    <br /> <Typography>This will also stop the ongoing recording</Typography>
-                                </div>
-                            )}
-                        </div>
-                        <div className={classes.btnGroup}>
-                            <Button
-                                onClick={() => {
-                                    setPopupOpen(false);
-                                }}
-                            >
-                                Cancel
-                            </Button>
+                {recording.status && (
+                    <>
+                        <br />
+                        <Typography>This will also stop the ongoing recording.</Typography>
+                    </>
+                )}
+            </div>
+            <CardActions className={classes.btnGroup}>
+                <Button
+                    onClick={() => {
+                        setPopupOpen(false);
+                    }}
+                >
+                    Cancel
+                </Button>
 
-                            <Button variant="contained" color="primary" onClick={quitSession} className={classes.btn}>
-                                Quit session
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            </Backdrop>
+                <Button variant="contained" color="primary" onClick={quitSession} className={classes.btn}>
+                    Quit session
+                </Button>
+            </CardActions>
         </div>
     );
 }

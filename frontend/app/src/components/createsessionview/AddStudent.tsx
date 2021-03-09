@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import {createStyles, makeStyles, Theme, Typography, TextField, Button, CardActions} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import {useRecoilState, useSetRecoilState} from "recoil";
-import {ipcSend} from "../../ipc";
-import {Student, studentsState} from "../../state/student";
+import {ipcInvoke} from "../../ipc";
+import {studentsState} from "../../state/student";
 import {addStudentPopupOpenState} from "../../state/popup";
 import {createSessionValuesState} from "../../state/createSession";
 
@@ -42,26 +42,23 @@ export default function AddStudent(): JSX.Element {
         if (students.some((student) => student.name === studentName) || studentName == "") {
             setInputError(true);
         } else {
-            // Retrieve student ID for the recent inserted student here
-            const studentId = Math.floor(Math.random() * 10000).toString();
-            const student: Student = {_id: studentId, name: studentName};
+            const student = {name: studentName};
 
-            // Add student, choose the student and close popup
-            ipcSend("insertUser", student);
+            // Add student
+            ipcInvoke("insertUser", student).then((studentId) => {
+                setStudents((prevValue) => [...prevValue, {...student, _id: studentId as string}]);
 
-            setStudents((prevValue) => [...prevValue, student]);
+                setCreateSessionValues((prevValues) => ({
+                    ...prevValues,
+                    studentId: studentId as string,
+                    studentName: studentName
+                }));
 
-            // Update state values
-            setCreateSessionValues((prevValues) => ({
-                ...prevValues,
-                studentId: studentId,
-                studentName: studentName
-            }));
+                setPopupOpen(false);
 
-            setPopupOpen(false);
-
-            setStudentName("");
-            setInputError(false);
+                setStudentName("");
+                setInputError(false);
+            });
         }
     };
 

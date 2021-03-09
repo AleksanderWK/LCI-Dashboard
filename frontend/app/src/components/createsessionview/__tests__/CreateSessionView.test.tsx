@@ -1,15 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {fireEvent, render, screen, waitFor} from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import {render} from "@testing-library/react";
 import CreateSessionView from "../../../pages/CreateSessionView";
-import CreateSession from "../CreateSession";
+import {createMemoryHistory} from "history";
+import {Router} from "react-router-dom";
 import {RecoilRoot} from "recoil";
+
+const history = createMemoryHistory();
+history.push("/create-session");
 
 it("create session view matches snapshot", () => {
     const {baseElement} = render(
         <RecoilRoot>
-            <CreateSessionView />
+            <Router history={history}>
+                <CreateSessionView />
+            </Router>
         </RecoilRoot>
     );
     expect(baseElement).toMatchSnapshot();
@@ -17,9 +22,12 @@ it("create session view matches snapshot", () => {
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
+
     ReactDOM.render(
         <RecoilRoot>
-            <CreateSessionView />
+            <Router history={history}>
+                <CreateSessionView />
+            </Router>
         </RecoilRoot>,
         div
     );

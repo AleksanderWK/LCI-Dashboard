@@ -25,16 +25,20 @@ ipc.on("getUsers", (event) => {
   });
 });
 
-ipc.on("insertUser", (event, user) => {
-  insertUser(user);
+ipc.handle("insertUser", async (event, data) => {
+  return insertUser(data).then((userId) => {
+    return userId;
+  });
 });
 
-ipc.on("insertSession", (event, data) => {
-  insertSession(data);
+ipc.handle("insertSession", async (event, data) => {
+  return insertSession(data).then((sessionId) => {
+    return sessionId;
+  });
 });
 
 ipc.on("pushDataPointToSession", (event, data) => {
-  pushDataPointToSession(data.data, data.name, data.student);
+  pushDataPointToSession(data.data, data.sessionId);
 });
 
 ipc.on("getCode", (event) => {

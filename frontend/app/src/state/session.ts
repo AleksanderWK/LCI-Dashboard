@@ -1,11 +1,11 @@
-import {atom, atomFamily, DefaultValue, selector, selectorFamily, useRecoilCallback} from "recoil";
+import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
 import {studentState, Student} from "./student";
 
 /*
  *  An atom that stores which session is selected
  */
-export const selectedSessionIdState = atom<number | null>({
+export const selectedSessionIdState = atom<string | null>({
     key: "selectedSessionId",
     default: null
 });
@@ -13,13 +13,13 @@ export const selectedSessionIdState = atom<number | null>({
 /*
  *  An atom that stores ids for all sessions
  */
-export const sessionIdsState = atom<number[]>({
+export const sessionIdsState = atom<string[]>({
     key: "sessionIds",
     default: []
 });
 
 export interface Session {
-    sessionId: number;
+    sessionId: string;
     sessionName: string;
     studentId: string;
     eyeTrackingDevice: EyeTrackingDevice;
@@ -29,23 +29,31 @@ export interface Session {
 /*
  *  An atomFamily that stores session information for each session
  */
-export const sessionState = atomFamily<Session | undefined, number | null>({
+export const sessionState = atomFamily<Session | undefined, string | null>({
     key: "session",
     default: undefined
 });
 
+interface Recording {
+    status: boolean;
+    startTime: Date | null;
+}
+
 /*
  *   An atomFamily that stores the recording status of each session
  */
-export const sessionRecordingState = atomFamily<boolean, number | null>({
+export const sessionRecordingState = atomFamily<Recording, string | null>({
     key: "sessionRecording",
-    default: false
+    default: {
+        status: false,
+        startTime: null
+    }
 });
 
 /*
  *   A selector that returns whether the selected session is being recorded
  */
-export const selectedSessionRecordingState = selector<boolean>({
+export const selectedSessionRecordingState = selector<Recording>({
     key: "selectedSessionRecording",
     get: ({get}) => {
         const id = get(selectedSessionIdState);
@@ -59,11 +67,11 @@ export const selectedSessionRecordingState = selector<boolean>({
 });
 
 export interface SessionWithStudent {
-    sessionId: number;
+    sessionId: string;
     sessionName: string;
     student: Student;
     eyeTrackingDevice: EyeTrackingDevice;
-    recording: boolean;
+    recording: Recording;
     startTime: Date;
 }
 
@@ -140,7 +148,7 @@ export interface Data {
 /*
  *   An atomFamily that stores the data for each session
  */
-export const sessionDataState = atomFamily<Data, number | null>({
+export const sessionDataState = atomFamily<Data, string | null>({
     key: "sessionData",
     default: {
         [Variable.CognitiveLoad]: [],

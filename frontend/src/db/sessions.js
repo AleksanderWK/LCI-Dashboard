@@ -3,12 +3,16 @@ let { db } = require("./nedb.js");
 db.sessions.persistence.setAutocompactionInterval(10000);
 
 function insertSession(data) {
-  db.sessions.insert(data);
+  return new Promise((resolve, reject) => {
+    db.sessions.insert(data, function (err, doc) {
+      resolve(doc._id);
+    });
+  });
 }
 
-function pushDataPointToSession(data, name, student) {
+function pushDataPointToSession(data, sessionId) {
   db.sessions.update(
-    { sessionName: name, studentName: student },
+    { _id: sessionId },
     { $push: { data: data } },
     { multi: false, upsert: false },
     () => {}

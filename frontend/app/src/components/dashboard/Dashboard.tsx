@@ -5,7 +5,7 @@ import Container from "./Container";
 const useStyles = makeStyles(() =>
     createStyles({
         dashboard: {
-            padding: "0 40px",
+            padding: "20px 40px",
             gridColumnStart: 2,
             gridColumnEnd: 3,
             gridRowStart: 2,

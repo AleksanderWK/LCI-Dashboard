@@ -3,8 +3,9 @@ import logo from "../../assets/Images/LCI_logo.png";
 import TimerIcon from "@material-ui/icons/Timer";
 import RecordingButton from "./RecordingButton";
 import {selectedSessionState} from "../../state/session";
-import {useRecoilValue} from "recoil";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import {useEffect, useState} from "react";
+import {quitSessionPopupOpenState} from "../../state/popup";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,9 +36,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
         btnGroup: {
             display: "grid",
-            gridTemplateColumns: "225px 50px 50px",
-            gridTemplateRows: "35px",
-            gap: theme.spacing(2),
+            gridTemplateColumns: "max-content 50px 50px",
+            gridTemplateRows: "50px",
+            alignItems: "center",
+            gap: theme.spacing(1),
             marginRight: "40px"
         },
         contentLeft: {
@@ -85,6 +87,8 @@ function CloseIcon(props: SvgIconProps): JSX.Element {
 export default function Header(): JSX.Element {
     const classes = useStyles();
 
+    const setQuitSessionPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
+
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
     const [duration, setDuration] = useState<string>();
 
@@ -102,7 +106,7 @@ export default function Header(): JSX.Element {
                 setDuration(`${hours}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`);
             }, 1000);
         }
-    }, []);
+    }, [selectedSessionInfo, setDuration]);
 
     return (
         <div className={classes.container}>
@@ -135,7 +139,12 @@ export default function Header(): JSX.Element {
                         xmlns="http://www.w3.org/2000/svg"
                     />
                 </IconButton>
-                <IconButton aria-label="quit student session">
+                <IconButton
+                    aria-label="quit student session"
+                    onClick={() => {
+                        setQuitSessionPopupOpen(true);
+                    }}
+                >
                     <CloseIcon
                         width="29"
                         height="29"

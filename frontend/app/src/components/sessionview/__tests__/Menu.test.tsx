@@ -7,7 +7,7 @@ import Menu from "../Menu/Menu";
 import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../../state/session";
 import {studentsState} from "../../../state/student";
 
-const testSessionIds = [1, 2];
+const testSessionIds = ["1", "2"];
 
 const testStudents = [
     {_id: "1", name: "John Doe"},
@@ -16,14 +16,14 @@ const testStudents = [
 
 const testSessions = {
     1: {
-        sessionId: 1,
+        sessionId: "1",
         sessionName: "Test1",
         studentId: "1",
         eyeTrackingDevice: EyeTrackingDevice.Mobile,
         startTime: new Date()
     },
     2: {
-        sessionId: 2,
+        sessionId: "2",
         sessionName: "Test2",
         studentId: "2",
         eyeTrackingDevice: EyeTrackingDevice.Stationary,
@@ -31,11 +31,11 @@ const testSessions = {
     }
 };
 
-const testSelectedSessionId = 1;
+const testSelectedSessionId = "1";
 
 const testRecording = {
-    1: false,
-    2: true
+    1: {status: false, startTime: new Date()},
+    2: {status: true, startTime: new Date()}
 };
 
 it("renders without crashing", () => {
@@ -45,11 +45,11 @@ it("renders without crashing", () => {
             initializeState={(snap) => {
                 snap.set(sessionIdsState, testSessionIds);
                 snap.set(studentsState, testStudents);
-                snap.set(sessionState(1), testSessions[1]);
-                snap.set(sessionState(2), testSessions[2]);
+                snap.set(sessionState("1"), testSessions[1]);
+                snap.set(sessionState("2"), testSessions[2]);
                 snap.set(selectedSessionIdState, testSelectedSessionId);
-                snap.set(sessionRecordingState(1), testRecording[1]);
-                snap.set(sessionRecordingState(2), testRecording[2]);
+                snap.set(sessionRecordingState("1"), testRecording[1]);
+                snap.set(sessionRecordingState("2"), testRecording[2]);
             }}
         >
             <Menu />
@@ -64,11 +64,11 @@ it("matches snapshot", () => {
             initializeState={(snap) => {
                 snap.set(sessionIdsState, testSessionIds);
                 snap.set(studentsState, testStudents);
-                snap.set(sessionState(1), testSessions[1]);
-                snap.set(sessionState(2), testSessions[2]);
+                snap.set(sessionState("1"), testSessions[1]);
+                snap.set(sessionState("2"), testSessions[2]);
                 snap.set(selectedSessionIdState, testSelectedSessionId);
-                snap.set(sessionRecordingState(1), testRecording[1]);
-                snap.set(sessionRecordingState(2), testRecording[2]);
+                snap.set(sessionRecordingState("1"), testRecording[1]);
+                snap.set(sessionRecordingState("2"), testRecording[2]);
             }}
         >
             <Menu />
@@ -83,11 +83,11 @@ it("renders correct based on state", () => {
             initializeState={(snap) => {
                 snap.set(sessionIdsState, testSessionIds);
                 snap.set(studentsState, testStudents);
-                snap.set(sessionState(1), testSessions[1]);
-                snap.set(sessionState(2), testSessions[2]);
+                snap.set(sessionState("1"), testSessions[1]);
+                snap.set(sessionState("2"), testSessions[2]);
                 snap.set(selectedSessionIdState, testSelectedSessionId);
-                snap.set(sessionRecordingState(1), testRecording[1]);
-                snap.set(sessionRecordingState(2), testRecording[2]);
+                snap.set(sessionRecordingState("1"), testRecording[1]);
+                snap.set(sessionRecordingState("2"), testRecording[2]);
             }}
         >
             <Menu />
