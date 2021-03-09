@@ -3,15 +3,10 @@ import SessionView from "./pages/SessionView";
 import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
 import {ipcOn, ipcSend} from "./ipc";
-import {
-    Data,
-    selectedSessionIdState,
-    selectedSessionState,
-    sessionDataState,
-    sessionRecordingState
-} from "./state/session";
-import {useRecoilCallback, useRecoilState, useRecoilValue} from "recoil";
+import {Data, selectedSessionIdState, sessionDataState, sessionRecordingState} from "./state/session";
+import {useRecoilCallback} from "recoil";
 import {Variable} from "./constants";
+import StartView from "./pages/StartView";
 
 export interface DataPoints {
     [key: string]: number;
@@ -28,25 +23,29 @@ export interface DataPoints {
 }
 
 function App(): JSX.Element {
-    const addDataPointToState = useRecoilCallback(({set}) => (sessionId: number | null, dataPoints: DataPoints) => {
+    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (dataPoints: DataPoints) => {
         const now = new Date().getTime();
+
+        // TEMPORARY: Add incoming data point to selected session
+        const sessionId = snapshot.getLoadable(selectedSessionIdState).getValue();
 
         set(sessionDataState(sessionId), (prevVal) => {
             return (Object.fromEntries(
                 Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(dataPoints[k] * 100).toFixed()]]])
             ) as unknown) as Data;
         });
-    });
 
-    const [recording, setRecording] = useRecoilState(sessionRecordingState(1));
-    const session = useRecoilValue(selectedSessionState);
+        if (snapshot.getLoadable(sessionRecordingState(sessionId)).getValue().status) {
+            ipcSend("pushDataPointToSession", {
+                data: dataPoints,
+                sessionId: sessionId
+            });
+        }
+    });
 
     useEffect(() => {
         ipcOn("newData", (event: any, data: DataPoints) => {
-            if (true) {
-                ipcSend("pushDataPointToSession", {data: data, name: "123", student: "Lukas"});
-            }
-            addDataPointToState(1, data);
+            addDataPointToState(data);
         });
 
         ipcSend("startServer", true);
@@ -58,8 +57,9 @@ function App(): JSX.Element {
                 {/*
                     Add new pages by adding a Route component. (Important! they need to be above the startview route) Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
                 */}
+                <Route path="/create-session" component={CreateSessionView} />
                 <Route path="/session" component={SessionView} />
-                <Route path="/" component={CreateSessionView} />
+                <Route path="/" component={StartView} />
             </Switch>
         </BrowserRouter>
     );

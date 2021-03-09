@@ -18,11 +18,11 @@ import {
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import {useRecoilCallback, useRecoilState, useResetRecoilState, useSetRecoilState} from "recoil";
-import {ipcGet, ipcOnce, ipcSend} from "../../ipc";
+import {ipcGet, ipcInvoke, ipcOnce, ipcSend} from "../../ipc";
 import {createSessionValuesState} from "../../state/createSession";
 import {addStudentPopupOpenState, createSessionPopupOpenState} from "../../state/popup";
 import {Student, studentsState} from "../../state/student";
-import {useHistory} from "react-router-dom";
+import {useHistory, useLocation} from "react-router-dom";
 import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../state/session";
 import {EyeTrackingDevice} from "../../constants";
 
@@ -87,6 +87,7 @@ export default function CreateSession(): JSX.Element {
     const [students, setStudents] = useRecoilState(studentsState);
 
     const history = useHistory();
+    const location = useLocation();
 
     useEffect(() => {
         // Get users from DB when component loads
@@ -113,12 +114,7 @@ export default function CreateSession(): JSX.Element {
         setCreateSessionValues(updatedSessionSelections);
     };
 
-    const createSession = useRecoilCallback(({set}) => (sessionId: number) => {
-        set(studentsState, (prevValue) => [
-            ...prevValue,
-            {_id: createSessionValues.studentId, name: createSessionValues.studentName}
-        ]);
-
+    const createSession = useRecoilCallback(({set}) => (sessionId: string) => {
         set(sessionState(sessionId), {
             sessionId: sessionId,
             sessionName: createSessionValues.sessionName,
@@ -139,21 +135,29 @@ export default function CreateSession(): JSX.Element {
         // Reset values
         resetCreateSessionValues();
 
-        // Create session in state with dummy ID = 1
-        createSession(1);
-
-        history.push("session");
         ipcSend("startDatastream", {});
-        ipcSend("insertSession", {...createSessionValues, data: []});
+        ipcInvoke("insertSession", {...createSessionValues, data: []}).then((sessionId) => {
+            createSession(sessionId as string);
+        });
+
+        if (location.pathname === "/create-session") {
+            history.push("session");
+        } else if (location.pathname === "/session") {
+            setCreateSessionPopupOpen(false);
+        }
     };
 
     useEffect(() => {
         if (createSessionValues.sessionName) {
             setSessionNameNotSet(false);
+        } else {
+            setSessionNameNotSet(true);
         }
 
         if (createSessionValues.studentId) {
             setStudentNameNotSet(false);
+        } else {
+            setStudentNameNotSet(true);
         }
 
         if (!createSessionValues.sessionCode) {
@@ -215,7 +219,6 @@ export default function CreateSession(): JSX.Element {
                     className={classes.addStudentBtn}
                     onClick={() => {
                         setAddStudentPopupOpen(true);
-                        setCreateSessionPopupOpen(false);
                     }}
                 >
                     <AddCircleRoundedIcon />
