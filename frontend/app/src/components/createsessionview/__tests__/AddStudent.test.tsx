@@ -6,6 +6,11 @@ import {RecoilRoot} from "recoil";
 import CreateSessionView from "../../../pages/CreateSessionView";
 import {addStudentPopupOpenState} from "../../../state/popup";
 import {studentsState} from "../../../state/student";
+import {createMemoryHistory} from "history";
+import {Router} from "react-router-dom";
+
+const history = createMemoryHistory();
+history.push("/create-session");
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
@@ -61,7 +66,9 @@ it("cant add same student twice", async () => {
                 snap.set(studentsState, [{_id: "1", name: "Aleksander"}]);
             }}
         >
-            <CreateSessionView />
+            <Router history={history}>
+                <CreateSessionView />
+            </Router>
         </RecoilRoot>
     );
     const nameField = screen.getByTestId("content-input");

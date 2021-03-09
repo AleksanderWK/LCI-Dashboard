@@ -30,9 +30,9 @@ it("toggles between start recording / stop recording on click", () => {
             <RecordingButton />
         </RecoilRoot>
     );
-    expect(screen.getAllByText("Start recording").pop()).toBeInTheDocument();
+    expect(screen.getByText("Start recording")).toBeInTheDocument();
     userEvent.click(screen.getByText("Start recording"));
-    expect(screen.getAllByText("Stop recording").pop()).toBeInTheDocument();
-    userEvent.click(screen.getByText("Stop recording"));
-    expect(screen.getAllByText("Start recording").pop()).toBeInTheDocument();
+    expect(screen.getByText("Stop recording", {exact: false})).toBeInTheDocument();
+    userEvent.click(screen.getByText("Stop recording", {exact: false}));
+    expect(screen.getByText("Start recording")).toBeInTheDocument();
 });
