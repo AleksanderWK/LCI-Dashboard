@@ -19,7 +19,16 @@ function pushDataPointToSession(data, sessionId) {
   );
 }
 
+function getSessions() {
+  return new Promise((resolve, reject) => {
+    db.sessions.find({}, (err, docs) => {
+      resolve(docs);
+    });
+  });
+}
+
 module.exports = {
   insertSession: insertSession,
   pushDataPointToSession: pushDataPointToSession,
+  getSessions: getSessions,
 };

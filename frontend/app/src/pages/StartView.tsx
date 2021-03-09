@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {makeStyles, createStyles, Theme, Button} from "@material-ui/core";
 import logo from "../assets/Images/LCI_logo.png";
 import Paper from "@material-ui/core/Paper";
@@ -11,6 +11,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import AddIcon from "@material-ui/icons/Add";
 import {useHistory} from "react-router-dom";
+import {ipcGet} from "../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -79,7 +80,7 @@ export default function StartView(): JSX.Element {
     }
 
     interface Data {
-        id: number;
+        id: string;
         sessionName: string;
         date: number;
         startTime: number;
@@ -131,7 +132,7 @@ export default function StartView(): JSX.Element {
 
     //Example data creation
     function createData(
-        id: number,
+        id: string,
         sessionName: string,
         date: number,
         startTime: number,
@@ -141,26 +142,7 @@ export default function StartView(): JSX.Element {
         return {id, sessionName, date, startTime, duration, studentName};
     }
 
-    const rows = [
-        createData(1, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(2, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(3, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(4, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(5, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(6, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(7, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(8, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(9, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(10, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(11, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(12, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(13, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(14, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(15, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(16, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(17, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend"),
-        createData(18, "Edugame", 1600000000000, 1600000000000, 360000, "Erlend")
-    ];
+    const [rows, setRows] = useState([createData("1", "Edugame", 1600000000000, 1600000000000, 360000, "Erlend")]);
 
     // Pagination
     const [page, setPage] = React.useState(0);
@@ -174,6 +156,24 @@ export default function StartView(): JSX.Element {
         setRowsPerPage(+event.target.value);
         setPage(0);
     };
+
+    useEffect(() => {
+        ipcGet("getSessions").then((data: any) => {
+            console.log(data);
+            setRows(
+                data.map((session: any) => {
+                    return createData(
+                        session._id,
+                        session.sessionName,
+                        1600000000000,
+                        1600000000000,
+                        360000,
+                        session.studentName
+                    );
+                })
+            );
+        });
+    }, []);
 
     return (
         <div className={classes.pageContainer}>
