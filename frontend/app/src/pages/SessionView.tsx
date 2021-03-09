@@ -1,4 +1,4 @@
-import {Suspense} from "react";
+import React from "react";
 import {createStyles, makeStyles} from "@material-ui/core";
 import {useRecoilState, useResetRecoilState} from "recoil";
 import Menu from "../components/sessionview/Menu/Menu";
@@ -6,9 +6,11 @@ import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";
 import CreateSession from "../components/createsessionview/CreateSession";
 import Dashboard from "../components/dashboard/Dashboard";
-import {addStudentPopupOpenState, createSessionPopupOpenState} from "../state/popup";
+import {addStudentPopupOpenState, createSessionPopupOpenState, quitSessionPopupOpenState} from "../state/popup";
 import {createSessionValuesState} from "../state/createSession";
 import Header from "../components/sessionview/Header";
+import QuitSession from "../components/sessionview/QuitSession";
+import Popup from "../components/common/Popup";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -33,6 +35,7 @@ export default function SessionView(): JSX.Element {
 
     const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
     const [createSessionPopupOpen, setCreateSessionPopupOpen] = useRecoilState(createSessionPopupOpenState);
+    const [quitSessionPopupOpen, setQuitSessionPopupOpen] = useRecoilState(quitSessionPopupOpenState);
 
     const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
 
@@ -45,7 +48,7 @@ export default function SessionView(): JSX.Element {
             </div>
 
             <PopupContainer
-                open={createSessionPopupOpen || addStudentPopupOpen}
+                open={createSessionPopupOpen || addStudentPopupOpen || quitSessionPopupOpen}
                 onClose={(e) => {
                     if (addStudentPopupOpen) {
                         e.preventDefault();
@@ -55,16 +58,26 @@ export default function SessionView(): JSX.Element {
                         setTimeout(() => {
                             resetCreateSessionValues();
                         }, 100);
+                    } else if (quitSessionPopupOpen) {
+                        setQuitSessionPopupOpen(false);
                     }
                 }}
             >
-                {addStudentPopupOpen ? (
-                    <AddStudent />
-                ) : (
-                    <Suspense fallback={<div>Loading...</div>}>
-                        <CreateSession />
-                    </Suspense>
-                )}
+                <>
+                    {quitSessionPopupOpen ? (
+                        <Popup>
+                            <QuitSession />
+                        </Popup>
+                    ) : addStudentPopupOpen ? (
+                        <Popup>
+                            <AddStudent />
+                        </Popup>
+                    ) : createSessionPopupOpen ? (
+                        <Popup>
+                            <CreateSession />
+                        </Popup>
+                    ) : null}
+                </>
             </PopupContainer>
         </>
     );

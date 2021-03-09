@@ -7,6 +7,7 @@ import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";
 import {useRecoilState} from "recoil";
 import {addStudentPopupOpenState} from "../state/popup";
+import Popup from "../components/common/Popup";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -65,7 +66,9 @@ export default function CreateSessionView(): JSX.Element {
                     setAddStudentPopupOpen(false);
                 }}
             >
-                <AddStudent />
+                <Popup>
+                    <AddStudent />
+                </Popup>
             </PopupContainer>
         </>
     );
