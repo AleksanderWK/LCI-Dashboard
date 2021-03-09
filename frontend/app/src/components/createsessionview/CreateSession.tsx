@@ -67,6 +67,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         placeholder: {
             color: theme.palette.text.placeholder
+        },
+        noStudentsPromptContainer: {
+            width: "250px",
+            height: "auto",
+            color: theme.palette.text.placeholder
         }
     })
 );
@@ -206,11 +211,21 @@ export default function CreateSession(): JSX.Element {
                                 : ""
                         }
                     >
-                        {students.map((student: Student) => (
-                            <MenuItem key={student._id} value={student._id} data-testid={student.name}>
-                                {student.name}
+                        {students.length > 0 ? (
+                            students.map((student: Student) => (
+                                <MenuItem key={student._id} value={student._id} data-testid={student.name}>
+                                    {student.name}
+                                </MenuItem>
+                            ))
+                        ) : (
+                            <MenuItem
+                                className={classes.noStudentsPromptContainer}
+                                disabled
+                                style={{whiteSpace: "normal", margin: "auto", textAlign: "center"}}
+                            >
+                                <p>You have not added any students yet. Click on the + button to add a new student.</p>
                             </MenuItem>
-                        ))}
+                        )}
                     </Select>
                 </FormControl>
                 <IconButton
