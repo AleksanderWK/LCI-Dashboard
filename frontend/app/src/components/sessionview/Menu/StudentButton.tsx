@@ -34,7 +34,7 @@ const useStyles = makeStyles(() =>
 );
 
 interface Props {
-    sessionId: string;
+    sessionId: number;
     selected: boolean;
     studentName: string;
     recording: boolean;
