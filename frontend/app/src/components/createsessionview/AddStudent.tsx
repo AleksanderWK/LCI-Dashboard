@@ -19,8 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
             width: "100%"
         },
         btn: {
-            color: theme.palette.text.default,
-            fontWeight: "bold"
+            color: theme.palette.text.default
         }
     })
 );
@@ -84,6 +83,7 @@ export default function AddStudent(): JSX.Element {
             />
             <CardActions style={{width: "100%", justifyContent: "flex-end"}}>
                 <Button
+                    className={classes.btn}
                     onClick={() => {
                         setPopupOpen(false);
                     }}

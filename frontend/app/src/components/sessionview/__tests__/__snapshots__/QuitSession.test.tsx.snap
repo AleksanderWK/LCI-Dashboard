@@ -27,7 +27,7 @@ exports[`QuitSession matches snapshot 1`] = `
         class="MuiCardActions-root makeStyles-btnGroup-3 MuiCardActions-spacing"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-2"
           tabindex="0"
           type="button"
         >

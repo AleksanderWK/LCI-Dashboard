@@ -247,19 +247,37 @@ exports[`create session view matches snapshot 1`] = `
               Waiting for student connection...
             </span>
           </div>
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-13 MuiButton-containedPrimary Mui-disabled Mui-disabled"
-            disabled=""
-            name="submitBtn"
-            tabindex="-1"
-            type="button"
-          >
-            <span
-              class="MuiButton-label"
+          <div>
+            <button
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-13 MuiButton-containedPrimary Mui-disabled Mui-disabled"
+              disabled=""
+              name="submitBtn"
+              style="margin-right: 8px;"
+              tabindex="-1"
+              type="button"
             >
-              Create session
-            </span>
-          </button>
+              <span
+                class="MuiButton-label"
+              >
+                Create session
+              </span>
+            </button>
+            <button
+              class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-13"
+              name="cancelBtn"
+              tabindex="0"
+              type="button"
+            >
+              <span
+                class="MuiButton-label"
+              >
+                Cancel
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+          </div>
         </div>
         <img
           alt="dashboard illustration"
@@ -314,7 +332,7 @@ exports[`create session view matches snapshot 1`] = `
               style="width: 100%; justify-content: flex-end;"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text"
+                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-28"
                 tabindex="0"
                 type="button"
               >

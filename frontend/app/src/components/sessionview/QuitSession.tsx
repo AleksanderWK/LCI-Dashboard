@@ -13,8 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
             gap: 18
         },
         btn: {
-            color: theme.palette.text.default,
-            fontWeight: "bold"
+            color: theme.palette.text.default
         },
         btnGroup: {
             marginLeft: "auto"
@@ -66,6 +65,7 @@ export default function QuitSesson(): JSX.Element {
             </div>
             <CardActions className={classes.btnGroup}>
                 <Button
+                    className={classes.btn}
                     onClick={() => {
                         setPopupOpen(false);
                     }}
