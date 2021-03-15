@@ -5,7 +5,7 @@ import {studentState, Student} from "./student";
 /*
  *  An atom that stores which session is selected
  */
-export const selectedSessionIdState = atom<string | null>({
+export const selectedSessionIdState = atom<number | null>({
     key: "selectedSessionId",
     default: null
 });
@@ -13,13 +13,13 @@ export const selectedSessionIdState = atom<string | null>({
 /*
  *  An atom that stores ids for all sessions
  */
-export const sessionIdsState = atom<string[]>({
+export const sessionIdsState = atom<number[]>({
     key: "sessionIds",
     default: []
 });
 
 export interface Session {
-    sessionId: string;
+    sessionId: number;
     sessionName: string;
     studentId: string;
     eyeTrackingDevice: EyeTrackingDevice;
@@ -29,7 +29,7 @@ export interface Session {
 /*
  *  An atomFamily that stores session information for each session
  */
-export const sessionState = atomFamily<Session | undefined, string | null>({
+export const sessionState = atomFamily<Session | undefined, number | null>({
     key: "session",
     default: undefined
 });
@@ -42,7 +42,7 @@ interface Recording {
 /*
  *   An atomFamily that stores the recording status of each session
  */
-export const sessionRecordingState = atomFamily<Recording, string | null>({
+export const sessionRecordingState = atomFamily<Recording, number | null>({
     key: "sessionRecording",
     default: {
         status: false,
@@ -67,7 +67,7 @@ export const selectedSessionRecordingState = selector<Recording>({
 });
 
 export interface SessionWithStudent {
-    sessionId: string;
+    sessionId: number;
     sessionName: string;
     student: Student;
     eyeTrackingDevice: EyeTrackingDevice;
@@ -148,7 +148,7 @@ export interface Data {
 /*
  *   An atomFamily that stores the data for each session
  */
-export const sessionDataState = atomFamily<Data, string | null>({
+export const sessionDataState = atomFamily<Data, number | null>({
     key: "sessionData",
     default: {
         [Variable.CognitiveLoad]: [],

@@ -119,7 +119,7 @@ export default function CreateSession(): JSX.Element {
         setCreateSessionValues(updatedSessionSelections);
     };
 
-    const createSession = useRecoilCallback(({set}) => (sessionId: string) => {
+    const createSession = useRecoilCallback(({set}) => (sessionId: number) => {
         set(sessionState(sessionId), {
             sessionId: sessionId,
             sessionName: createSessionValues.sessionName,
@@ -142,7 +142,7 @@ export default function CreateSession(): JSX.Element {
 
         ipcSend("startDatastream", {});
         ipcInvoke("insertSession", {...createSessionValues, data: []}).then((sessionId) => {
-            createSession(sessionId as string);
+            createSession(sessionId as number);
         });
 
         if (location.pathname === "/create-session") {
