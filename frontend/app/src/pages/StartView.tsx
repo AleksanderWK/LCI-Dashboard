@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {makeStyles, createStyles, Theme, Button} from "@material-ui/core";
+import {makeStyles, createStyles, Theme, Fab, Typography} from "@material-ui/core";
 import logo from "../assets/Images/LCI_logo.png";
-import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -40,126 +39,112 @@ const useStyles = makeStyles((theme: Theme) =>
             gridRowEnd: 3,
             floodColor: "#ffffff"
         },
-        illustration: {
-            width: "400px",
-            height: "400px",
-            marginLeft: "100px"
-        },
         root: {
-            width: "70%",
+            width: "100%",
+            maxWidth: 1200,
             maxHeight: "80vh",
             minHeight: 200,
-            boxShadow: "none",
-            backgroundColor: theme.palette.background.default
-        },
-        container: {
-            maxHeight: "70vh",
             boxShadow: "none"
         },
+        header: {
+            marginBottom: theme.spacing(1)
+        },
+        button: {
+            float: "right",
+            color: theme.palette.text.default,
+            boxShadow: "0px 2px 5px 0px rgba(0,0,0,0.25)",
+            zIndex: 3
+        },
+        heading: {
+            lineHeight: "40px"
+        },
+        container: {
+            maxHeight: "70vh"
+        },
         row: {
-            padding: 16,
+            cursor: "pointer"
+        },
+        headCell: {
+            color: theme.palette.text.default,
+            border: "none"
+        },
+        cell: {
             borderStyle: "solid",
             borderColor: theme.palette.background.default,
             borderWidth: "5px 0px 5px 0px",
-            cursor: "pointer"
+            color: theme.palette.text.default
         }
     })
 );
+
+interface Column {
+    id: "id" | "sessionName" | "date" | "time" | "duration" | "studentName";
+    label: string;
+    format?: (value: number) => string;
+}
+
+interface Data {
+    id: number;
+    sessionName: string;
+    date: number;
+    time: number;
+    duration: number;
+    studentName: string;
+}
+
+const columns: Column[] = [
+    {
+        id: "id",
+        label: "ID"
+    },
+    {
+        id: "sessionName",
+        label: "Session Name"
+    },
+    {
+        id: "date",
+        label: "Date",
+
+        format: (value: number) => "-" // new Date(value).toDateString()
+    },
+    {
+        id: "time",
+        label: "Time",
+        format: (value: number) => "-" // new Date(value).toLocaleTimeString("nb-NO")
+    },
+    {
+        id: "duration",
+        label: "Duration",
+
+        format: (value: number) => "-" // (value / (1000 * 60)).toString()
+    },
+    {
+        id: "studentName",
+        label: "Student"
+    }
+];
 
 export default function StartView(): JSX.Element {
     const classes = useStyles();
 
     const history = useHistory();
 
-    interface Column {
-        id: "id" | "sessionName" | "date" | "startTime" | "duration" | "studentName";
-        label: string;
-        minWidth?: number;
-        align?: "right" | "center" | "left";
-        format?: (value: number) => string;
-    }
-
-    interface Data {
-        id: string;
-        sessionName: string;
-        date: number;
-        startTime: number;
-        duration: number;
-        studentName: string;
-    }
-
-    const columns: Column[] = [
-        {
-            id: "id",
-            label: "ID",
-            minWidth: 5,
-            align: "right"
-        },
-        {
-            id: "sessionName",
-            label: "Session\u00a0Name",
-            minWidth: 10,
-            align: "right"
-        },
-        {
-            id: "date",
-            label: "Date",
-            minWidth: 40,
-            align: "right",
-            format: (value: number) => new Date(value).toDateString()
-        },
-        {
-            id: "startTime",
-            label: "Start\u00a0Time",
-            minWidth: 30,
-            align: "right",
-            format: (value: number) => new Date(value).toLocaleTimeString("nb-NO")
-        },
-        {
-            id: "duration",
-            label: "Duration",
-            minWidth: 10,
-            align: "right",
-            format: (value: number) => (value / (1000 * 60)).toString()
-        },
-        {
-            id: "studentName",
-            label: "Student",
-            minWidth: 10,
-            align: "right"
-        }
-    ];
-
-    //Example data creation
+    // Data creation
     function createData(
-        id: string,
+        id: number,
         sessionName: string,
         date: number,
-        startTime: number,
+        time: number,
         duration: number,
         studentName: string
     ): Data {
-        return {id, sessionName, date, startTime, duration, studentName};
+        return {id, sessionName, date, time, duration, studentName};
     }
 
-    const [rows, setRows] = useState([createData("1", "Edugame", 1600000000000, 1600000000000, 360000, "Erlend")]);
-
-    // Pagination
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(6);
-
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
+    const [rows, setRows] = useState<Data[]>([]);
 
     useEffect(() => {
         ipcGet("getSessions").then((data: any) => {
-            console.log(data);
             setRows(
                 data.map((session: any) => {
                     return createData(
@@ -175,80 +160,96 @@ export default function StartView(): JSX.Element {
         });
     }, []);
 
+    // Pagination
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(6);
+
+    const handleChangePage = (event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
     return (
         <div className={classes.pageContainer}>
             <img className={classes.pageLogo} src={logo} alt="The LCI-lab logo" />
             <div className={classes.pageContent}>
-                <Paper className={classes.root}>
-                    <div>
-                        <Button
-                            className="headerHeader"
-                            variant="contained"
+                <div className={classes.root}>
+                    <div className={classes.header}>
+                        <Fab
+                            variant="extended"
+                            size="medium"
                             color="primary"
-                            style={{float: "right", borderRadius: 20, marginBottom: 20}}
+                            aria-label="add"
+                            className={classes.button}
                             onClick={() => {
                                 history.push("/create-session");
                             }}
                         >
-                            <AddIcon style={{paddingRight: 10}} />
-                            New session
-                        </Button>
-                        <h3>Recorded learning sessions</h3>
+                            <AddIcon style={{marginRight: 8}} />
+                            New Session
+                        </Fab>
+                        <Typography variant="h1" className={classes.heading}>
+                            Recorded Learning Sessions
+                        </Typography>
                     </div>
-                    <TableContainer className={classes.container}>
-                        <Table className="headerHeader" stickyHeader aria-label="sticky table">
-                            <TableHead>
-                                <TableRow>
-                                    {columns.map((column) => (
-                                        <TableCell
-                                            key={column.id}
-                                            align={column.align}
-                                            style={{
-                                                minWidth: column.minWidth,
-                                                padding: 8,
-                                                border: "none"
-                                            }}
-                                        >
-                                            {column.label}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody style={{backgroundColor: "white"}}>
-                                {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                    return (
-                                        <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-                                            {columns.map((column) => {
-                                                const value = row[column.id];
-                                                return (
-                                                    <TableCell
-                                                        className={classes.row}
-                                                        key={column.id}
-                                                        align={column.align}
-                                                    >
-                                                        {column.format && typeof value === "number"
-                                                            ? column.format(value)
-                                                            : value}
-                                                    </TableCell>
-                                                );
-                                            })}
+                    {rows.length > 0 ? (
+                        <>
+                            <TableContainer className={classes.container}>
+                                <Table stickyHeader aria-label="sticky table">
+                                    <TableHead>
+                                        <TableRow>
+                                            {columns.map((column) => (
+                                                <TableCell key={column.id} className={classes.headCell}>
+                                                    {column.label}
+                                                </TableCell>
+                                            ))}
                                         </TableRow>
-                                    );
-                                })}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                    <TablePagination
-                        style={{minHeight: "50px"}}
-                        rowsPerPageOptions={[6, 12, 25]}
-                        component="div"
-                        count={rows.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
-                        onChangePage={handleChangePage}
-                        onChangeRowsPerPage={handleChangeRowsPerPage}
-                    />
-                </Paper>
+                                    </TableHead>
+                                    <TableBody style={{backgroundColor: "white"}}>
+                                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+                                            return (
+                                                <TableRow
+                                                    hover
+                                                    role="checkbox"
+                                                    tabIndex={-1}
+                                                    key={row.id}
+                                                    className={classes.row}
+                                                >
+                                                    {columns.map((column) => {
+                                                        const value = row[column.id];
+                                                        return (
+                                                            <TableCell className={classes.cell} key={column.id}>
+                                                                {column.format && typeof value === "number"
+                                                                    ? column.format(value)
+                                                                    : value}
+                                                            </TableCell>
+                                                        );
+                                                    })}
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                            <TablePagination
+                                style={{minHeight: "50px"}}
+                                rowsPerPageOptions={[6, 12, 25]}
+                                component="div"
+                                count={rows.length}
+                                rowsPerPage={rowsPerPage}
+                                page={page}
+                                onChangePage={handleChangePage}
+                                onChangeRowsPerPage={handleChangeRowsPerPage}
+                            />
+                        </>
+                    ) : (
+                        <Typography>No recorded sessions.</Typography>
+                    )}
+                </div>
             </div>
         </div>
     );

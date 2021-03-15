@@ -62,8 +62,7 @@ const useStyles = makeStyles((theme: Theme) =>
             justifyContent: "space-between"
         },
         btn: {
-            color: theme.palette.text.default,
-            fontWeight: "bold"
+            color: theme.palette.text.default
         },
         placeholder: {
             color: theme.palette.text.placeholder
@@ -136,7 +135,7 @@ export default function CreateSession(): JSX.Element {
         set(selectedSessionIdState, sessionId);
     });
 
-    const handelCreateSession = () => {
+    const handleCreateSession = () => {
         // Reset values
         resetCreateSessionValues();
 
@@ -279,19 +278,34 @@ export default function CreateSession(): JSX.Element {
                     </Typography>
                 )}
             </div>
-
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handelCreateSession}
-                disabled={
-                    sessionNameNotSet || studentNameNotSet || deviceNotSet || !createSessionValues.studentConnected
-                }
-                name="submitBtn"
-                className={classes.btn}
-            >
-                Create session
-            </Button>
+            <div>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleCreateSession}
+                    disabled={
+                        sessionNameNotSet || studentNameNotSet || deviceNotSet || !createSessionValues.studentConnected
+                    }
+                    name="submitBtn"
+                    className={classes.btn}
+                    style={{marginRight: 8}}
+                >
+                    Create session
+                </Button>
+                <Button
+                    onClick={() => {
+                        if (location.pathname === "/create-session") {
+                            history.push("/");
+                        } else if (location.pathname === "/session") {
+                            setCreateSessionPopupOpen(false);
+                        }
+                    }}
+                    name="cancelBtn"
+                    className={classes.btn}
+                >
+                    Cancel
+                </Button>
+            </div>
         </div>
     );
 }

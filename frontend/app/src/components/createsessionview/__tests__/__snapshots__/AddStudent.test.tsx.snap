@@ -38,7 +38,7 @@ exports[`AddStudentPopup matches snapshot 1`] = `
         style="width: 100%; justify-content: flex-end;"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-3"
           tabindex="0"
           type="button"
         >
