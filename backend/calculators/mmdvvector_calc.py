@@ -1,6 +1,6 @@
 from datastreams import Datastreams
-from mmdvvector import MMDVVector
-from pdcalc import PerceivedDifficultyCalculator
+from datamodels.mmdvvector import MMDVVector
+from calculators.pdcalc import PerceivedDifficultyCalculator
 
 
 class MMDVVectorCalculator:

@@ -1,6 +1,6 @@
 import math
 import statistics
-from mmdvcalc import MMDVCalculator
+from calculators.mmdvcalc import MMDVCalculator
 
 
 class PerceivedDifficultyCalculator(MMDVCalculator):

@@ -1,8 +1,8 @@
 import asyncio
 import sys
 from datastreams import Datastreams
-from mmdvvector import MMDVVector
-from mmdvvector_calc import MMDVVectorCalculator
+from datamodels.mmdvvector import MMDVVector
+from calculators.mmdvvector_calc import MMDVVectorCalculator
 from wsclient import WebSocketClient
 from tokendecode import decodeToken
 
@@ -13,6 +13,9 @@ def process_current_data():
     """
     # Code for calculating variables based on current_data will be done here.
     data = mmdv_calc.calculate_all().get_json()
+    # print(data)
+
+    print(ds.current_eda_data)
 
     # Sending calculated variables to dashboard
     asyncio.run_coroutine_threadsafe(ws.send(data), loop)
