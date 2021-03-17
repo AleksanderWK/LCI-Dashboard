@@ -5,6 +5,7 @@ const {
   insertSession,
   pushDataPointToSession,
   getSessions,
+  getSessionTimeInterval,
 } = require("./db/sessions.js");
 const { win, getWindow } = require("./main.js");
 const { generateCode } = require("./codegen.js");
@@ -38,6 +39,12 @@ ipc.handle("insertUser", async (event, data) => {
 ipc.on("getSessions", (event) => {
   getSessions().then((sessions) => {
     event.reply("getSessions-reply", sessions);
+  });
+});
+
+ipc.handle("getSessionTimeInterval", async (event, sessionId) => {
+  return getSessionTimeInterval(sessionId).then((interval) => {
+    return interval;
   });
 });
 

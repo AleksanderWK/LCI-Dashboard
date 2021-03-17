@@ -12,6 +12,7 @@ declare module "@material-ui/core/styles/createPalette" {
 
     interface TypeBackground {
         tooltip: string;
+        slider: string;
     }
 }
 
@@ -26,7 +27,8 @@ const theme = createMuiTheme({
         },
         background: {
             default: "#F6F7F8",
-            tooltip: "rgba(97, 97, 97, 0.9)"
+            tooltip: "rgba(97, 97, 97, 0.9)",
+            slider: "#E0E0E0"
         },
         text: {
             default: "#535353",
