@@ -11,6 +11,8 @@ import TableRow from "@material-ui/core/TableRow";
 import AddIcon from "@material-ui/icons/Add";
 import {useHistory} from "react-router-dom";
 import {ipcGet} from "../ipc";
+import {useSetRecoilState} from "recoil";
+import {selectedRecordedSessionId} from "../state/recordedSession";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -126,8 +128,10 @@ const columns: Column[] = [
 
 export default function StartView(): JSX.Element {
     const classes = useStyles();
-
     const history = useHistory();
+
+    //state management
+    const setSelectedRecordedSessionId = useSetRecoilState(selectedRecordedSessionId);
 
     // Data creation
     function createData(
@@ -218,6 +222,10 @@ export default function StartView(): JSX.Element {
                                                     tabIndex={-1}
                                                     key={row.id}
                                                     className={classes.row}
+                                                    onClick={() => {
+                                                        setSelectedRecordedSessionId(row.id);
+                                                        history.push("/RecordedSessionView");
+                                                    }}
                                                 >
                                                     {columns.map((column) => {
                                                         const value = row[column.id];
