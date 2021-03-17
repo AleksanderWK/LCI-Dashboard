@@ -1,8 +1,8 @@
 import asyncio
 import sys
 from datastreams import Datastreams
-from datamodels.mmdvvector import MMDVVector
-from calculators.mmdvvector_calc import MMDVVectorCalculator
+from datamodels.mmdvcollection import MMDVCollection
+from calculators.mmdvcollection_calc import MMDVCollectionCalculator
 from wsclient import WebSocketClient
 from tokendecode import decodeToken
 
@@ -13,9 +13,6 @@ def process_current_data():
     """
     # Code for calculating variables based on current_data will be done here.
     data = mmdv_calc.calculate_all().get_json()
-    # print(data)
-
-    print(ds.current_eda_data)
 
     # Sending calculated variables to dashboard
     asyncio.run_coroutine_threadsafe(ws.send(data), loop)
@@ -78,6 +75,6 @@ def checkTerminate(ws, message):
 # The code below is the startpoint of the backend application. Here all the essential objects get initialized.
 ws = WebSocketClient()
 ds = Datastreams("S001")
-mmdv_calc = MMDVVectorCalculator(ds)
+mmdv_calc = MMDVCollectionCalculator(ds)
 loop = asyncio.get_event_loop()
 setup()

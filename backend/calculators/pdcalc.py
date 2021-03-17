@@ -1,32 +1,32 @@
 import math
 import statistics
 from calculators.mmdvcalc import MMDVCalculator
+from datamodels.eye_tracking import EyeTrackingDataPoint
+from typing import List
 
 
 class PerceivedDifficultyCalculator(MMDVCalculator):
 
-    prev_data_point = []
+    prev_data_point = None
     prev_pd = 0
 
     def __init__(self):
         pass
 
-    def calculate_dataset(self, data):
-        if len(data) == 0 or (len(data) == 1 and len(self.prev_data_point) == 0):
+    def calculate_dataset(self, data: List[EyeTrackingDataPoint]):
+        if len(data) == 0 or (len(data) == 1 and self.prev_data_point == None):
             return self.prev_pd
         elif len(data) == 1:
-            return self.calculate(self.prev_data_point[-2], self.prev_data_point[-1], data[0][-2], data[0][-1], self.prev_data_point[2], data[0][1])
+            return self.calculate(self.prev_data_point.fx, self.prev_data_point.fy, data[0].fx, data[0].fy, self.prev_data_point.endTime, data[0].initTime)
 
         pd_points = []
         for i in range(1, len(data)):
-            prev_fx = data[i-1][-2]
-            prev_fy = data[i-1][-1]
-            new_fx = data[i][-2]
-            new_fy = data[i][-1]
-            # prev_init_time = data[i-1][1]
-            prev_end_time = data[i-1][2]
-            new_init_time = data[i][1]
-            # new_end_time = data[i][2]
+            prev_fx = data[i-1].fx
+            prev_fy = data[i-1].fy
+            new_fx = data[i].fx
+            new_fy = data[i].fy
+            prev_end_time = data[i-1].endTime
+            new_init_time = data[i].initTime
             pd_points.append(self.calculate(prev_fx, prev_fy,
                                             new_fx, new_fy, prev_end_time, new_init_time))
         self.prev_data_point = data[-1]
