@@ -1,9 +1,10 @@
 import websockets
 
+
 class WebSocketClient:
 
     wscp = None
-    
+
     async def connect(self, uri):
         self.wscp = await websockets.connect(uri)
         await self.listen()
@@ -21,8 +22,10 @@ class WebSocketClient:
             self.onMessage(self, message)
 
     def onMessage(self, wsc, message):
+        """
+        This method is supposed to be implemented by the user of the object. It is the callback function called when the web socket connection gets a message.
+        """
         pass
-
 
 
 """

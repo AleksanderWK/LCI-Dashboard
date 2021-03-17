@@ -1,12 +1,12 @@
 from datastreams import Datastreams
-from mmdvvector import MMDVVector
-from pdcalc import PerceivedDifficultyCalculator
+from datamodels.mmdvcollection import MMDVCollection
+from calculators.pdcalc import PerceivedDifficultyCalculator
 
 
-class MMDVVectorCalculator:
+class MMDVCollectionCalculator:
 
     """
-        This class calculates a MMD Variable Vector based on the data from the datastream it gets.
+        This class calculates a MMD Variable Collection based on the data from the datastream it gets.
         It delegates the actual calculations to the MMDVCalculator-subclasses.
     """
 
@@ -18,9 +18,9 @@ class MMDVVectorCalculator:
         self.pd_calc = PerceivedDifficultyCalculator()
 
     def calc_pd(self):
-        return self.pd_calc.calculate_dataset(self.ds.current_eye_tracking_data)
+        return self.pd_calc.calculate_dataset(self.ds.get_current_eye_tracking_data())
 
     def calculate_all(self):
-        result = MMDVVector()
+        result = MMDVCollection()
         result.pd = self.calc_pd()
         return result
