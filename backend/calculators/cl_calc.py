@@ -8,53 +8,67 @@ from calculators.mmdvcalc import MMDVCalculator
 class CognitiveLoadCalculator(MMDVCalculator):
 
     prev_data_point = None
-    prev_cl = 0
+    batch = []
 
     def __init__(self):
         pass
 
     def calculate_dataset(self, data):
-        if len(data) == 0:
-            return self.prev_cl
 
-        d = []
+        # Append incoming data to batch
+        if (len(data) > 0):
+            for data_point in data:
+                self.batch.append(data_point)
 
-        # Init time and end time for data batch in seconds
-        init_time = data[0].initTime / 1000
-        end_time = data[-1].endTime / 1000
+        if (len(self.batch) > 0):
+            # Init time and end time for batch in seconds
+            init_time = self.batch[0].initTime / 1000
+            end_time = self.batch[-1].endTime / 1000
 
-        for i in range(0, len(data)):
-            lpup = data[i].lpup
-            rpup = data[i].rpup
+            # Get signal duration for batch in seconds
+            signal_duration = end_time - init_time
 
-            data_point = None
+            # Compute LHIPA when batch contains values covering at least 10 seconds
+            if (signal_duration >= 10):
+                d = []
 
-            # Choose diameter based on presence in data set
-            if (not (np.isnan(lpup) or np.isnan(rpup))):
-                # Left and right is present; take average
-                data_point = (lpup + rpup)/2
-            elif (np.isnan(lpup) and not np.isnan(rpup)):
-                # Right is present
-                data_point = rpup
-            elif (not np.isnan(lpup) and np.isnan(rpup)):
-                # Left is present
-                data_point = lpup
-            elif (self.prev_data_point != None):
-                # Left and right is not present; take previous diameter
-                data_point = self.prev_data_point
+                for i in range(0, len(self.batch)):
+                    lpup = self.batch[i].lpup
+                    rpup = self.batch[i].rpup
 
-            if (data_point != None):
-                d.append(data_point)
-                self.prev_data_point = data_point
+                    data_point = None
 
-        # Calculate a single LHIPA value for all data points received in this batch
-        if (len(d) > 0):
-            lhipa = self.lhipa(d, init_time, end_time)
-            print("d", d, "\ntt", end_time - init_time, "\nlhipa", lhipa, "\n")
-            self.prev_cl = lhipa
-            return lhipa
+                    # Choose diameter based on presence in data set
+                    if (not (np.isnan(lpup) or np.isnan(rpup))):
+                        # Left and right is present; take average
+                        data_point = (lpup + rpup)/2
+                    elif (np.isnan(lpup) and not np.isnan(rpup)):
+                        # Right is present
+                        data_point = rpup
+                    elif (not np.isnan(lpup) and np.isnan(rpup)):
+                        # Left is present
+                        data_point = lpup
+                    elif (self.prev_data_point != None):
+                        # Left and right is not present; take previous diameter
+                        data_point = self.prev_data_point
 
-    def lhipa(self, d, init_time, end_time):
+                    if (data_point != None):
+                        d.append(data_point)
+                        self.prev_data_point = data_point
+
+                # Calculate a single LHIPA value for all data points in batch
+                if (len(d) > 0):
+                    print("\nd", d, "\ntt", signal_duration, "\n")
+                    lhipa = self.lhipa(d, signal_duration)
+                    print("lhipa", lhipa)
+
+                    # Would probably remove old points (appended over 10 s ago), instead of clearing the whole batch.
+                    # By clearing the batch, LHIPA is calculated every 10 second, which is probably not what we want.
+                    self.batch = []
+
+                    return lhipa
+
+    def lhipa(self, d, signal_duration):
         # Find max decomposition level
         w = pywt.Wavelet("sym16")
         maxlevel = pywt.dwt_max_level(len(d), filter_len=w.dec_len)
@@ -83,15 +97,12 @@ class CognitiveLoadCalculator(MMDVCalculator):
         lambda_univ = np.std(cD_LHm) * math.sqrt(2.0 * np.log2(len(cD_LHm)))
         cD_LHt = pywt.threshold(cD_LHm, lambda_univ, mode="less")
 
-        # Get signal duration (in seconds)
-        tt = end_time - init_time
-
         # Compute LHIPA
         ctr = 0
         for i in range(len(cD_LHt)):
             if math.fabs(cD_LHt[i]) > 0:
                 ctr += 1
-        LHIPA = float(ctr)/tt
+        LHIPA = float(ctr)/signal_duration
 
         return LHIPA
 
