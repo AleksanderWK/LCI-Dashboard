@@ -1,11 +1,9 @@
 import {Slider, Tooltip} from "@material-ui/core";
 import {makeStyles, Theme, withStyles} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
-import React, {ChangeEvent, useEffect} from "react";
-import {useRecoilState, useRecoilValue} from "recoil";
-import {intervalState, selectedRecordedSessionId} from "../../state/recordedSession";
-import {Interval} from "../../state/recordedSession";
-import {ipcInvoke} from "../../ipc";
+import React, {ChangeEvent} from "react";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {currentRecordingInterval, recordingInterval} from "../../state/recordedSession";
 
 const sliderStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -74,33 +72,29 @@ function ValueLabelComponent(props: Props) {
 export default function IntervalSlider(): JSX.Element {
     const classes = sliderStyles();
 
-    const [interval, setInterval] = useRecoilState(intervalState);
-    const selectedRecordedSession = useRecoilValue(selectedRecordedSessionId);
-
-    // On initial render, get the time interval from the selected recorded session
-    useEffect(() => {
-        // query db
-        const data = ipcInvoke("getSessionTimeInterval", selectedRecordedSessionId);
-        console.log(data);
-        // set state
-    }, []);
+    const setInterval = useSetRecoilState(currentRecordingInterval);
+    const completeRecordingInterval = useRecoilValue(recordingInterval);
 
     // Update state on slider change
     const handleChange = (event: ChangeEvent<unknown>, value: number | number[]) => {
         setInterval({start: (value as number[])[0], end: (value as number[])[1]});
     };
 
-    // Converts the time data to the hh:mm format to display on the labels
+    // Converts milliseconds to the hh:mm:ss format to display on the labels
     function valuetext(value: number) {
-        return ``;
+        const d = new Date(0);
+        d.setSeconds(value);
+        return `${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
     }
 
     return (
         <div className={classes.root}>
             <CustomSlider
                 valueLabelDisplay="on"
-                min={interval?.start}
-                max={interval?.end}
+                defaultValue={[completeRecordingInterval.start, completeRecordingInterval.end]}
+                min={completeRecordingInterval.start}
+                max={completeRecordingInterval.end}
+                valueLabelFormat={valuetext}
                 onChange={handleChange}
                 ValueLabelComponent={ValueLabelComponent}
             />

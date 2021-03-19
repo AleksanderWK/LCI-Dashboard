@@ -41,15 +41,11 @@ function getSessions() {
   });
 }
 
-function getSessionTimeInterval(sessionId) {
+function getSession(sessionId) {
   return new Promise((resolve, reject) => {
-    db.sessions.findOne(
-      { _id: sessionId },
-      { startTime: 1, endTime: 1 },
-      (err, doc) => {
-        resolve(doc);
-      }
-    );
+    db.sessions.findOne({ _id: sessionId }, (err, doc) => {
+      resolve(doc);
+    });
   });
 }
 
@@ -57,5 +53,5 @@ module.exports = {
   insertSession: insertSession,
   pushDataPointToSession: pushDataPointToSession,
   getSessions: getSessions,
-  getSessionTimeInterval: getSessionTimeInterval,
+  getSession: getSession,
 };

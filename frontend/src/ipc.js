@@ -42,9 +42,9 @@ ipc.on("getSessions", (event) => {
   });
 });
 
-ipc.handle("getSessionTimeInterval", async (event, sessionId) => {
-  return getSessionTimeInterval(sessionId).then((interval) => {
-    return interval;
+ipc.handle("getSession", async (event, sessionId) => {
+  return getSessionTimeInterval(sessionId).then((session) => {
+    return session;
   });
 });
 
