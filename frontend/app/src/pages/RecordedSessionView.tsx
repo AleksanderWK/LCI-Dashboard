@@ -4,6 +4,7 @@ import {useRecoilValue, useSetRecoilState} from "recoil";
 import IntervalSlider from "../components/recordedsessionview/IntervalSlider";
 import {ipcInvoke} from "../ipc";
 import {RecordedSession, recordedSession, selectedRecordedSessionId} from "../state/recordedSession";
+import Header from "../components/recordedsessionview/Header";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -41,10 +42,10 @@ export default function RecordedSessionView(): JSX.Element {
 
     return (
         <div className={classes.pageContainer}>
-            <div className={classes.header}>Header</div>
-            <div className={classes.dashboard}>
-                <IntervalSlider />
+            <div className={classes.header}>
+                <Header />
             </div>
+            <div className={classes.dashboard}></div>
         </div>
     );
 }
