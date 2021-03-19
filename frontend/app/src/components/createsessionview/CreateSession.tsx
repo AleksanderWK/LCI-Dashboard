@@ -125,7 +125,8 @@ export default function CreateSession(): JSX.Element {
             studentId: createSessionValues.studentId,
             eyeTrackingDevice:
                 createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary,
-            startTime: new Date()
+            startTime: new Date(),
+            sessionCode: createSessionValues.sessionCode
         });
 
         set(sessionIdsState, (prevValue) => [...prevValue, sessionId]);

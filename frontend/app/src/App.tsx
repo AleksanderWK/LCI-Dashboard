@@ -3,7 +3,14 @@ import SessionView from "./pages/SessionView";
 import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
 import {ipcOn, ipcSend} from "./ipc";
-import {Data, selectedSessionIdState, sessionDataState, sessionRecordingState} from "./state/session";
+import {
+    Data,
+    selectedSessionIdState,
+    sessionDataState,
+    sessionRecordingState,
+    sessionsState,
+    SessionWithStudent
+} from "./state/session";
 import {useRecoilCallback} from "recoil";
 import {Variable} from "./constants";
 import StartView from "./pages/StartView";
@@ -22,29 +29,49 @@ export interface DataPoints {
     [Variable.EnergySpentFatigue]: number;
 }
 
+export interface DataPayload {
+    dataPoints: DataPoints;
+    sessionCode: string;
+    timestamp: number;
+}
+
 function App(): JSX.Element {
-    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (dataPoints: DataPoints) => {
-        const now = new Date().getTime();
+    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (data: DataPayload) => {
+        const now: number = new Date().getTime();
 
-        // TEMPORARY: Add incoming data point to selected session
-        const sessionId = snapshot.getLoadable(selectedSessionIdState).getValue();
+        // Find the Session with the same sessionCode as this data has
+        const session: SessionWithStudent | undefined = snapshot
+            .getLoadable(sessionsState)
+            .getValue()
+            .find((session) => session.sessionCode == data.sessionCode);
 
-        set(sessionDataState(sessionId), (prevVal) => {
-            return (Object.fromEntries(
-                Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(dataPoints[k] * 100).toFixed()]]])
-            ) as unknown) as Data;
-        });
+        console.log(data);
+        console.log(snapshot.getLoadable(sessionsState).getValue());
+        console.log(session);
 
-        if (snapshot.getLoadable(sessionRecordingState(sessionId)).getValue().status) {
-            ipcSend("pushDataPointToSession", {
-                data: dataPoints,
-                sessionId: sessionId
+        // If we have found the session, set the data in the session state
+        if (session != undefined) {
+            const sessionId: number = session.sessionId;
+
+            // Set the data in session state
+            set(sessionDataState(sessionId), (prevVal) => {
+                return (Object.fromEntries(
+                    Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(data.dataPoints[k] * 100).toFixed()]]])
+                ) as unknown) as Data;
             });
+
+            // If this session is recording push the data to the database
+            if (snapshot.getLoadable(sessionRecordingState(sessionId)).getValue().status) {
+                ipcSend("pushDataPointToSession", {
+                    data: data.dataPoints,
+                    sessionId: sessionId
+                });
+            }
         }
     });
 
     useEffect(() => {
-        ipcOn("newData", (event: any, data: DataPoints) => {
+        ipcOn("newData", (event: any, data: DataPayload) => {
             addDataPointToState(data);
         });
 

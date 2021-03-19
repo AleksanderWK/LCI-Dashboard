@@ -31,12 +31,11 @@ function startServer(destWin) {
     );
 
     ws.on("message", function incoming(message) {
-      let variables = JSON.parse(message);
-      destWin.send("newData", variables);
+      let dataPayload = JSON.parse(message);
+      destWin.send("newData", dataPayload);
     });
 
     destWin.send("readyConnection");
-    ws.send("something");
   });
 
   return wss;

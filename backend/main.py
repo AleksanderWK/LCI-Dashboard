@@ -2,6 +2,7 @@ import asyncio
 import sys
 from datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
+from datamodels.datapayload import DataPayload
 from calculators.mmdvcollection_calc import MMDVCollectionCalculator
 from wsclient import WebSocketClient
 from tokendecode import decodeToken
@@ -12,10 +13,13 @@ def process_current_data():
     This function will get executed every half a second.
     """
     # Code for calculating variables based on current_data will be done here.
-    data = mmdv_calc.calculate_all().get_json()
+    mmdv_collection = mmdv_calc.calculate_all()
 
-    # Sending calculated variables to dashboard
-    asyncio.run_coroutine_threadsafe(ws.send(data), loop)
+    # Get the final payload that will be sent to the dashboard
+    data_payload = DataPayload(mmdv_collection, getSessionCode()).get_json()
+
+    # Sending the data payload to dashboard
+    asyncio.run_coroutine_threadsafe(ws.send(data_payload), loop)
 
     # Clearing up data
     ds.clear_current_data()
@@ -34,13 +38,23 @@ def setup():
     loop.run_forever()
 
 
+def getSessionCode():
+    """
+    Gets the session code gotten from the command line agruments, if nothing is applied it will return None
+    """
+    if len(sys.argv) >= 2:
+        return sys.argv[1]
+    else:
+        return None
+
+
 def getHost():
     """
     Gets the dashboard host ip address based on the session code gotten from the command line arguments. If no code is used it will use localhost.
     """
-    if len(sys.argv) >= 2:
-        token = sys.argv[1]
-        ip, code = decodeToken(token)
+    session_code = getSessionCode()
+    if session_code != None:
+        ip, code = decodeToken(session_code)
         return ip
     else:
         return "localhost"
