@@ -8,7 +8,7 @@ export enum Variable {
     CognitiveLoad = "cl",
     PerceivedDifficulty = "pd",
     Familiarity = "fam",
-    InformationProcessingIndex = "ipd",
+    InformationProcessingIndex = "ipi",
     PhysiologicalArousal = "pa",
     Engagement = "eng",
     PhysiologicalStress = "ps",
