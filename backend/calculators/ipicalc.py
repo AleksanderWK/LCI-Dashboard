@@ -14,7 +14,7 @@ class InformationProcessingIndexCalculator(MMDVCalculator):
     last_end_time = 0
     local_count = []
     global_count = []
-    timeframe_ms = 10000
+    timeframe_ms = 5000 # The timeframe in which the ratio is calculated
     min_ipi = 0
     med_ipi = 0.5
     max_ipi = 1
