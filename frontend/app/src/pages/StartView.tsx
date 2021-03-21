@@ -224,7 +224,7 @@ export default function StartView(): JSX.Element {
                                                     className={classes.row}
                                                     onClick={() => {
                                                         setSelectedRecordedSessionId(row.id);
-                                                        history.push("/RecordedSessionView");
+                                                        history.push("/recording");
                                                     }}
                                                 >
                                                     {columns.map((column) => {

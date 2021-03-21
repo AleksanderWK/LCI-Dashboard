@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {MMDVariables, Variable} from "../../../constants";
+import {MMDVariables, Variable} from "../../../../constants";
 import Container from "../Container";
 import {RecoilRoot} from "recoil";
 
@@ -38,10 +38,12 @@ it("tooltip displays variable info", async () => {
     });
 });
 
-// Update this when state management is in place
-/*
 it("menu toggle between show more/less", async () => {
-    render(<Container variable={Variable.CognitiveLoad} />);
+    render(
+        <RecoilRoot>
+            <Container variable={Variable.CognitiveLoad} />
+        </RecoilRoot>
+    );
 
     userEvent.click(screen.getByLabelText("settings"));
     await screen.findAllByTestId("dropdown-menu").then(async (elements) => {
@@ -58,4 +60,3 @@ it("menu toggle between show more/less", async () => {
         expect(screen.getAllByLabelText("show less").pop()).toBeInTheDocument();
     });
 });
-*/

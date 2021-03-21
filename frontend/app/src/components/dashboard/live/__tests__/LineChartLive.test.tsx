@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {Variable} from "../../../constants";
+import {Variable} from "../../../../constants";
 import {RecoilRoot} from "recoil";
 import LineChart from "../LineChart";
 
