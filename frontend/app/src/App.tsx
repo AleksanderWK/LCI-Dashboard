@@ -35,10 +35,14 @@ function App(): JSX.Element {
             ) as unknown) as Data;
         });
 
-        if (snapshot.getLoadable(sessionRecordingState(sessionId)).getValue().status) {
+        const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
+
+        if (sessionRecording.status) {
             ipcSend("pushDataPointToSession", {
+                timestamp: now,
                 data: dataPoints,
-                sessionId: sessionId
+                sessionId: sessionId,
+                recordingId: sessionRecording.recordingId
             });
         }
     });
