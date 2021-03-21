@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {fireEvent, render, screen} from "@testing-library/react";
+import {render} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
 import Header from "../Header";
 import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../../state/session";
@@ -34,8 +34,8 @@ const testSessions = {
 const testSelectedSessionId = 1;
 
 const testRecording = {
-    1: false,
-    2: true
+    1: {status: false, startTime: null, recordingId: 0},
+    2: {status: true, startTime: new Date(), recordingId: 0}
 };
 
 it("renders without crashing", () => {
