@@ -1,10 +1,10 @@
-import {atom, selector} from "recoil";
+import {atom} from "recoil";
 import {Variable} from "../constants";
 
 /*
  * An atom that stores the id of a session that has been recorded and selected
  */
-export const selectedRecordedSessionId = atom<number | null>({
+export const selectedRecordedSessionIdState = atom<number | null>({
     key: "selectedRecordedSessionId",
     default: null
 });

@@ -12,7 +12,7 @@ import AddIcon from "@material-ui/icons/Add";
 import {useHistory} from "react-router-dom";
 import {ipcGet} from "../ipc";
 import {useSetRecoilState} from "recoil";
-import {selectedRecordedSessionId} from "../state/recordedSession";
+import {selectedRecordedSessionIdState} from "../state/recordedSession";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -131,7 +131,7 @@ export default function StartView(): JSX.Element {
     const history = useHistory();
 
     //state management
-    const setSelectedRecordedSessionId = useSetRecoilState(selectedRecordedSessionId);
+    const setSelectedRecordedSessionId = useSetRecoilState(selectedRecordedSessionIdState);
 
     // Data creation
     function createData(

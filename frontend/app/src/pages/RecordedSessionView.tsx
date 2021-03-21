@@ -4,7 +4,7 @@ import {useRecoilValue, useSetRecoilState} from "recoil";
 import Container from "../components/dashboard/recording/Container";
 import {Variable} from "../constants";
 import {ipcInvoke} from "../ipc";
-import {selectedRecordedSessionId, RecordedSession, recordedSessionState} from "../state/recordedSession";
+import {selectedRecordedSessionIdState, RecordedSession, recordedSessionState} from "../state/recordedSession";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -32,7 +32,7 @@ const useStyles = makeStyles(() =>
 export default function RecordedSessionView(): JSX.Element {
     const classes = useStyles();
 
-    const recordedSessionId = useRecoilValue(selectedRecordedSessionId);
+    const recordedSessionId = useRecoilValue(selectedRecordedSessionIdState);
     const setRecordedSession = useSetRecoilState(recordedSessionState);
 
     useEffect(() => {
