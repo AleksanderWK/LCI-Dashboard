@@ -6,9 +6,18 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
 import EventIcon from "@material-ui/icons/Event";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import {useRecoilValue} from "recoil";
-import {recordedSessionInfo} from "../../state/recordedSession";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {
+    RecordedSession,
+    RecordedSessionInfo,
+    recordedSessionInfoState,
+    selectedRecordedSessionIdState
+} from "../../state/recordedSession";
 import {useHistory} from "react-router";
+import {useEffect} from "react";
+import {ipcInvoke} from "../../ipc";
+import {Session} from "../../state/session";
+import {Student} from "../../state/student";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -91,7 +100,30 @@ export default function Header(): JSX.Element {
     const classes = useStyles();
     const history = useHistory();
 
-    const sessionInfo = useRecoilValue(recordedSessionInfo);
+    const recordedSessionId = useRecoilValue(selectedRecordedSessionIdState);
+    const [recordedSessionInfo, setRecordedSessionInfo] = useRecoilState(recordedSessionInfoState);
+
+    useEffect(() => {
+        if (recordedSessionId) {
+            ipcInvoke("getSession", recordedSessionId).then((session) => {
+                const sessionInfo = session as Session;
+                const studentID = sessionInfo.studentId;
+                ipcInvoke("getUserByID", studentID).then((student) => {
+                    const studentObj = student as Student;
+                    const name = studentObj.name;
+                    const info: RecordedSessionInfo = {
+                        sessionId: sessionInfo.sessionId,
+                        sessionName: sessionInfo.sessionName,
+                        studentId: sessionInfo.studentId,
+                        eyeTrackingDevice: sessionInfo.eyeTrackingDevice,
+                        startTime: sessionInfo.startTime,
+                        studentName: name
+                    };
+                    setRecordedSessionInfo(info);
+                });
+            });
+        }
+    }, [recordedSessionId]);
 
     return (
         <div className={classes.container}>
@@ -100,12 +132,12 @@ export default function Header(): JSX.Element {
 
                 <div className={classes.sessionInfoContainer}>
                     <Typography variant={"h1"} noWrap className={classes.header}>
-                        Educational Game
+                        {recordedSessionInfo?.sessionName}
                     </Typography>
 
                     <div className={`${classes.infoRow}`}>
                         <PersonIcon className={classes.textColor} />
-                        <Typography>Aleksander</Typography>
+                        <Typography>{recordedSessionInfo?.studentName}</Typography>
                         <div></div>
                         <EventIcon className={classes.textColor} />
                         <Typography>Feb 12. 2021</Typography>

@@ -87,7 +87,9 @@ export default function IntervalSlider(): JSX.Element {
     // Converts milliseconds to the hh:mm:ss format to display on the labels
     function valuetext(value: number) {
         const d = new Date(value);
-        return `${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
+        return `${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(
+            -2
+        )}`;
     }
 
     return (
