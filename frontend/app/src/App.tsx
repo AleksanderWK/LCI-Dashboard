@@ -14,6 +14,7 @@ import {
 import {useRecoilCallback} from "recoil";
 import {Variable} from "./constants";
 import StartView from "./pages/StartView";
+import RecordedSessionView from "./pages/RecordedSessionView";
 
 export interface DataPoints {
     [key: string]: number;
@@ -55,14 +56,17 @@ function App(): JSX.Element {
                     Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(data.dataPoints[k] * 100).toFixed()]]])
                 ) as unknown) as Data;
             });
+        }
 
-            // If this session is recording push the data to the database
-            if (snapshot.getLoadable(sessionRecordingState(sessionId)).getValue().status) {
-                ipcSend("pushDataPointToSession", {
-                    data: data.dataPoints,
-                    sessionId: sessionId
-                });
-            }
+        // If this session is recording push the data to the database
+        const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
+        if (sessionRecording.status) {
+            ipcSend("pushDataPointToSession", {
+                timestamp: now,
+                data: dataPoints,
+                sessionId: sessionId,
+                recordingId: sessionRecording.recordingId
+            });
         }
     });
 
@@ -80,6 +84,7 @@ function App(): JSX.Element {
                 {/*
                     Add new pages by adding a Route component. (Important! they need to be above the startview route) Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
                 */}
+                <Route path="/recording" component={RecordedSessionView} />
                 <Route path="/create-session" component={CreateSessionView} />
                 <Route path="/session" component={SessionView} />
                 <Route path="/" component={StartView} />

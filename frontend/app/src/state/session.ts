@@ -38,6 +38,7 @@ export const sessionState = atomFamily<Session | undefined, number | null>({
 interface Recording {
     status: boolean;
     startTime: Date | null;
+    recordingId: number | null;
 }
 
 /*
@@ -47,7 +48,8 @@ export const sessionRecordingState = atomFamily<Recording, number | null>({
     key: "sessionRecording",
     default: {
         status: false,
-        startTime: null
+        startTime: null,
+        recordingId: null
     }
 });
 

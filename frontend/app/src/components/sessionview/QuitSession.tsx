@@ -47,7 +47,7 @@ export default function QuitSesson(): JSX.Element {
 
     // Stops recording, closes popup, terminates session and goes to the startview
     const quitSession = () => {
-        setRecording({status: false, startTime: null});
+        setRecording({status: false, startTime: null, recordingId: null});
         setPopupOpen(false);
 
         // TERMINATE SESSION HERE

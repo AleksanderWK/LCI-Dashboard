@@ -40,7 +40,7 @@ it("Recording prompt renders", () => {
         <RecoilRoot
             initializeState={(snap) => {
                 snap.set(quitSessionPopupOpenState, true);
-                snap.set(selectedSessionRecordingState, {status: true, startTime: new Date()});
+                snap.set(selectedSessionRecordingState, {status: true, startTime: new Date(), recordingId: 0});
             }}
         >
             <QuitSession />
@@ -54,16 +54,16 @@ it("Displays session name and student name correctly", () => {
         <RecoilRoot
             initializeState={(snap) => {
                 snap.set(quitSessionPopupOpenState, true);
-                snap.set(selectedSessionRecordingState, {status: true, startTime: new Date()});
+                snap.set(selectedSessionRecordingState, {status: true, startTime: new Date(), recordingId: 0});
                 snap.set(studentsState, [{_id: "1", name: "Aleksander"}]);
-                snap.set(sessionState("1"), {
-                    sessionId: "1",
+                snap.set(sessionState(1), {
+                    sessionId: 1,
                     eyeTrackingDevice: EyeTrackingDevice.Mobile,
                     sessionName: "Educational Game",
                     studentId: "1",
                     startTime: new Date()
                 });
-                snap.set(selectedSessionIdState, "1");
+                snap.set(selectedSessionIdState, 1);
             }}
         >
             <QuitSession />

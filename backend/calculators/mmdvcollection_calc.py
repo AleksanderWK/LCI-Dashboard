@@ -1,6 +1,7 @@
 from datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
 from calculators.pdcalc import PerceivedDifficultyCalculator
+from calculators.ipicalc import InformationProcessingIndexCalculator
 
 
 class MMDVCollectionCalculator:
@@ -16,11 +17,11 @@ class MMDVCollectionCalculator:
     def __init__(self, ds: Datastreams):
         self.ds = ds
         self.pd_calc = PerceivedDifficultyCalculator()
-
-    def calc_pd(self):
-        return self.pd_calc.calculate_dataset(self.ds.get_current_eye_tracking_data())
+        self.ipi_calc = InformationProcessingIndexCalculator()
 
     def calculate_all(self):
         result = MMDVCollection()
-        result.pd = self.calc_pd()
+        eye_tracking_data = self.ds.get_current_eye_tracking_data()
+        result.pd = self.pd_calc.calculate_dataset(eye_tracking_data)
+        result.ipi = self.ipi_calc.calculate_dataset(eye_tracking_data)
         return result

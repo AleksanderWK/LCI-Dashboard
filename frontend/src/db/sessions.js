@@ -1,7 +1,5 @@
 let { db } = require("./nedb.js");
 
-db.sessions.persistence.setAutocompactionInterval(10000);
-
 db.sessions.getAutoincrementId = function (cb) {
   this.update(
     { _id: "__autoid__" },
@@ -24,15 +22,6 @@ function insertSession(data) {
   });
 }
 
-function pushDataPointToSession(data, sessionId) {
-  db.sessions.update(
-    { _id: sessionId },
-    { $push: { data: data } },
-    { multi: false, upsert: false },
-    () => {}
-  );
-}
-
 function getSessions() {
   return new Promise((resolve, reject) => {
     db.sessions.find({ _id: { $ne: "__autoid__" } }, (err, docs) => {
@@ -43,6 +32,5 @@ function getSessions() {
 
 module.exports = {
   insertSession: insertSession,
-  pushDataPointToSession: pushDataPointToSession,
   getSessions: getSessions,
 };

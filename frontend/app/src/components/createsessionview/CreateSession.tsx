@@ -131,7 +131,7 @@ export default function CreateSession(): JSX.Element {
 
         set(sessionIdsState, (prevValue) => [...prevValue, sessionId]);
 
-        set(sessionRecordingState(sessionId), {status: false, startTime: null});
+        set(sessionRecordingState(sessionId), {status: false, startTime: null, recordingId: null});
 
         set(selectedSessionIdState, sessionId);
     });
@@ -141,7 +141,7 @@ export default function CreateSession(): JSX.Element {
         resetCreateSessionValues();
 
         ipcSend("startDatastream", createSessionValues.sessionCode);
-        ipcInvoke("insertSession", {...createSessionValues, data: []}).then((sessionId) => {
+        ipcInvoke("insertSession", createSessionValues).then((sessionId) => {
             createSession(sessionId as number);
         });
 
