@@ -2,9 +2,17 @@ let { db } = require("./nedb.js");
 
 db.recordings.persistence.setAutocompactionInterval(10000);
 
+function getSessionRecording(sessionId) {
+  return new Promise((resolve, reject) => {
+    db.recordings.findOne({ _id: sessionId }, (err, doc) => {
+      resolve(doc);
+    });
+  });
+}
+
 function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
   db.recordings.update(
-    { sessionId: sessionId },
+    { _id: sessionId },
     {
       $min: {
         startTime: timestamp,
@@ -51,4 +59,5 @@ function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
 
 module.exports = {
   pushDataPointToSession: pushDataPointToSession,
+  getSessionRecording: getSessionRecording,
 };

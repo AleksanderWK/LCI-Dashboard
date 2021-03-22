@@ -1,37 +1,15 @@
-import React, {useRef, useState} from "react";
-import {
-    Card,
-    CardContent,
-    createStyles,
-    IconButton,
-    makeStyles,
-    SvgIcon,
-    SvgIconProps,
-    Theme,
-    Typography
-} from "@material-ui/core";
+import {useRef, useState} from "react";
+import {createStyles, IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import {MMDVariables, Variable} from "../../constants";
-import Tooltip from "./Tooltip";
+import {MMDVariables, Variable} from "../../../constants";
+import Tooltip from "../Tooltip";
 import Menu from "./Menu";
 import LineChart from "./LineChart";
-import Numeric from "./Numeric";
-
-function ResizeIcon(props: SvgIconProps): JSX.Element {
-    return (
-        <SvgIcon {...props}>
-            <path d="M24 24H19.2V19.2H24V24ZM24 14.4H19.2V9.6H24V14.4ZM14.4 24H9.6V19.2H14.4V24ZM14.4 14.4H9.6V9.6H14.4V14.4ZM4.8 24H0V19.2H4.8V24ZM24 4.8H19.2V0H24V4.8Z" />
-        </SvgIcon>
-    );
-}
+import ContainerCard from "../ContainerCard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        card: {
-            maxWidth: 500,
-            position: "relative"
-        },
         header: {
             display: "grid",
             gridTemplateColumns: "1fr 56px",
@@ -48,16 +26,6 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         infoIcon: {
             cursor: "default"
-        },
-        resizeIcon: {
-            position: "absolute",
-            right: "4px",
-            bottom: "4px",
-            width: "10px",
-            height: "10px",
-            "&:hover": {
-                cursor: "nw-resize"
-            }
         }
     })
 );
@@ -69,15 +37,13 @@ interface Props {
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
-    const [isDetailedView, setIsDetailedView] = useState<boolean>(true);
-
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
     return (
-        <Card variant="outlined" className={classes.card}>
-            <CardContent>
+        <ContainerCard>
+            <>
                 <div className={classes.header}>
                     <Typography variant="h2" noWrap={true}>
                         {MMDVariables[props.variable].name}
@@ -107,18 +73,13 @@ export default function Container(props: Props): JSX.Element {
                     <Menu
                         open={menuOpen}
                         anchorEl={menuAnchorElement.current}
-                        isDetailedView={isDetailedView}
-                        onShowMore={() => setIsDetailedView(true)}
-                        onShowLess={() => setIsDetailedView(false)}
                         onRemoveView={() => null}
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
 
-                {isDetailedView ? <LineChart variable={props.variable} /> : <Numeric variable={props.variable} />}
-            </CardContent>
-
-            <ResizeIcon className={classes.resizeIcon} color="action" />
-        </Card>
+                <LineChart variable={props.variable} />
+            </>
+        </ContainerCard>
     );
 }
