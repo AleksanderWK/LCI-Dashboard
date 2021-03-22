@@ -47,7 +47,7 @@ it("renders without crashing for different data lenghts", () => {
                     ],
                     pd: [[0, 0.5]],
                     fam: [[0, 0.5]],
-                    ipd: [[0, 0.5]],
+                    ipi: [[0, 0.5]],
                     pa: [[0, 0.5]],
                     eng: [[0, 0.5]],
                     ps: [[0, 0.5]],

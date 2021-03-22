@@ -1,7 +1,7 @@
 import {Slider, Tooltip} from "@material-ui/core";
 import {makeStyles, Theme, withStyles} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, useEffect} from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {currentRecordingInterval, recordingInterval} from "../../state/recordedSession";
 
@@ -75,6 +75,10 @@ export default function IntervalSlider(): JSX.Element {
     const setInterval = useSetRecoilState(currentRecordingInterval);
     const completeRecordingInterval = useRecoilValue(recordingInterval);
 
+    useEffect(() => {
+        console.log(completeRecordingInterval);
+    }, [completeRecordingInterval]);
+
     // Update state on slider change
     const handleChange = (event: ChangeEvent<unknown>, value: number | number[]) => {
         setInterval({start: (value as number[])[0], end: (value as number[])[1]});
@@ -82,8 +86,7 @@ export default function IntervalSlider(): JSX.Element {
 
     // Converts milliseconds to the hh:mm:ss format to display on the labels
     function valuetext(value: number) {
-        const d = new Date(0);
-        d.setSeconds(value);
+        const d = new Date(value);
         return `${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
     }
 
