@@ -1,6 +1,10 @@
 const WebSocket = require("ws");
 const { insertSession } = require("./db/sessions.js");
+const urlParser = require("url");
 
+let codeMap = {};
+
+// Start the server and define callbacks for connection and message
 function startServer(destWin) {
   let wss = new WebSocket.Server({
     port: 8080,
@@ -25,10 +29,13 @@ function startServer(destWin) {
     },
   });
 
-  wss.on("connection", function connection(ws) {
+  wss.on("connection", function connection(ws, req) {
     console.log(
       "Connected " + ws._socket.remoteAddress + ", " + ws._socket.remotePort
     );
+
+    const code = urlParser.parse(req.url).path.substr(1);
+    codeMap[code] = ws._socket.remoteAddress + ":" + ws._socket.remotePort;
 
     ws.on("message", function incoming(message) {
       let dataPayload = JSON.parse(message);
@@ -41,15 +48,29 @@ function startServer(destWin) {
   return wss;
 }
 
-function terminateClient(wss) {
-  wss.clients.forEach((ws) => {
-    ws.send("Terminate");
+// Send terminate signal to the clients that is assigned to the code and do other clean up
+function terminateClient(wss, code) {
+  wss.clients.forEach((client) => {
+    if (
+      codeMap[code] ==
+      client._socket.remoteAddress + ":" + client._socket.remotePort
+    ) {
+      client.send("Terminate");
+      client.close();
+      delete codeMap[code];
+    }
   });
 }
 
-function sendStartDatastream(wss) {
-  wss.clients.forEach((ws) => {
-    ws.send("Start");
+// Send start signal to the clients that is assigned to the code
+function sendStartDatastream(wss, code) {
+  wss.clients.forEach((client) => {
+    if (
+      codeMap[code] ==
+      client._socket.remoteAddress + ":" + client._socket.remotePort
+    ) {
+      client.send("Start");
+    }
   });
 }
 

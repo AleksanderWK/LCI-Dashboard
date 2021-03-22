@@ -45,10 +45,6 @@ function App(): JSX.Element {
             .getValue()
             .find((session) => session.sessionCode == data.sessionCode);
 
-        console.log(data);
-        console.log(snapshot.getLoadable(sessionsState).getValue());
-        console.log(session);
-
         // If we have found the session, set the data in the session state
         if (session != undefined) {
             const sessionId: number = session.sessionId;

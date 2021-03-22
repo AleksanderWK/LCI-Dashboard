@@ -33,7 +33,8 @@ def setup():
     Sets up the websocket connection with the dashboard and starts the event loop
     """
     asyncio.run_coroutine_threadsafe(
-        ws.connect("ws://" + getHost() + ":8080"), loop)
+        ws.connect("ws://" + getHost() + ":8080/" + getSessionCode()), loop)
+    print(getHost())
     ws.onMessage = onMessage
     loop.run_forever()
 
@@ -84,6 +85,7 @@ def checkTerminate(ws, message):
     if message == "Terminate":
         ds.terminate()
         asyncio.run_coroutine_threadsafe(ws.close(), loop)
+        loop.stop()
 
 
 # The code below is the startpoint of the backend application. Here all the essential objects get initialized.

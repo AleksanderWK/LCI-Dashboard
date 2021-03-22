@@ -140,7 +140,7 @@ export default function CreateSession(): JSX.Element {
         // Reset values
         resetCreateSessionValues();
 
-        ipcSend("startDatastream", {});
+        ipcSend("startDatastream", createSessionValues.sessionCode);
         ipcInvoke("insertSession", {...createSessionValues, data: []}).then((sessionId) => {
             createSession(sessionId as number);
         });
