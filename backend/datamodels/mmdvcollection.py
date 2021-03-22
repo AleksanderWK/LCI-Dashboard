@@ -10,7 +10,7 @@ class MMDVCollection:
     cl = None  # Cognitive Load
     pd = None  # Precieved Difficulty
     fam = None  # Familiarity
-    ipd = None  # Information Processing Index
+    ipi = None  # Information Processing Index
     pa = None  # Physical Arousal
     eng = None  # Engagement
     ps = None  # Physological Stress
@@ -22,7 +22,7 @@ class MMDVCollection:
         self.cl = 0
         self.pd = 0
         self.fam = 0
-        self.ipd = 0
+        self.ipi = 0
         self.pa = 0
         self.eng = 0
         self.ps = 0

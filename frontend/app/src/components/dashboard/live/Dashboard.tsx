@@ -20,6 +20,7 @@ function Dashboard(): JSX.Element {
     return (
         <div className={classes.dashboard}>
             <Container variable={Variable.PerceivedDifficulty} />
+            <Container variable={Variable.InformationProcessingIndex} />
         </div>
     );
 }
