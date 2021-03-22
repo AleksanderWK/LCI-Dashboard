@@ -75,10 +75,6 @@ export default function IntervalSlider(): JSX.Element {
     const setInterval = useSetRecoilState(currentRecordingInterval);
     const completeRecordingInterval = useRecoilValue(recordingInterval);
 
-    useEffect(() => {
-        console.log(completeRecordingInterval);
-    }, [completeRecordingInterval]);
-
     // Update state on slider change
     const handleChange = (event: ChangeEvent<unknown>, value: number | number[]) => {
         setInterval({start: (value as number[])[0], end: (value as number[])[1]});

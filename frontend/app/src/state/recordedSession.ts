@@ -72,7 +72,6 @@ export const recordingInterval = selector<TimeInterval | undefined>({
     key: "recordingInterval1",
     get: ({get}) => {
         const data = get(recordedSessionState);
-        console.log(data);
         if (data) {
             const interval = {start: data.startTime, end: data.endTime};
             return interval;
