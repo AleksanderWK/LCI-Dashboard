@@ -45,7 +45,9 @@ exports[`Header matches snapshot 1`] = `
             </svg>
             <p
               class="MuiTypography-root MuiTypography-body1"
-            />
+            >
+              0:00:00
+            </p>
           </div>
         </div>
       </div>
