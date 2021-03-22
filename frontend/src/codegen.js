@@ -21,8 +21,8 @@ function getIPv4() {
 
 function generateCode() {
   let ipNum = ipInt(getIPv4()).toInt();
-  let startCode = (1 + Math.random() * 9).toFixed(0).toString();
-  let endCode = (Math.random() * 10).toFixed(0).toString();
+  let startCode = (1 + Math.random() * 99).toFixed(0).toString();
+  let endCode = (Math.random() * 100).toFixed(0).toString();
 
   return parseInt(startCode + ipNum + endCode).toString(36);
 }

@@ -125,7 +125,8 @@ export default function CreateSession(): JSX.Element {
             studentId: createSessionValues.studentId,
             eyeTrackingDevice:
                 createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary,
-            startTime: new Date()
+            startTime: new Date(),
+            sessionCode: createSessionValues.sessionCode
         });
 
         set(sessionIdsState, (prevValue) => [...prevValue, sessionId]);
@@ -139,7 +140,7 @@ export default function CreateSession(): JSX.Element {
         // Reset values
         resetCreateSessionValues();
 
-        ipcSend("startDatastream", {});
+        ipcSend("startDatastream", createSessionValues.sessionCode);
         ipcInvoke("insertSession", createSessionValues).then((sessionId) => {
             createSession(sessionId as number);
         });

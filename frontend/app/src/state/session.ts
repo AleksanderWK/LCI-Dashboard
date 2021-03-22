@@ -24,6 +24,7 @@ export interface Session {
     studentId: string;
     eyeTrackingDevice: EyeTrackingDevice;
     startTime: Date;
+    sessionCode: string;
 }
 
 /*
@@ -75,6 +76,7 @@ export interface SessionWithStudent {
     eyeTrackingDevice: EyeTrackingDevice;
     recording: Recording;
     startTime: Date;
+    sessionCode: string;
 }
 
 /*
@@ -96,7 +98,8 @@ export const selectedSessionState = selector<SessionWithStudent | undefined>({
                     student: student,
                     eyeTrackingDevice: session.eyeTrackingDevice,
                     recording: get(sessionRecordingState(id)),
-                    startTime: session.startTime
+                    startTime: session.startTime,
+                    sessionCode: session.sessionCode
                 };
             }
         }
@@ -124,7 +127,8 @@ export const sessionsState = selector<SessionWithStudent[]>({
                         student: student,
                         eyeTrackingDevice: session.eyeTrackingDevice,
                         recording: get(sessionRecordingState(sessionId)),
-                        startTime: session.startTime
+                        startTime: session.startTime,
+                        sessionCode: session.sessionCode
                     });
                 }
             }
