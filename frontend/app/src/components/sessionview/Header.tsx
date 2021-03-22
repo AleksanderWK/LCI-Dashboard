@@ -111,7 +111,7 @@ export default function Header(): JSX.Element {
     function setCurrentDuration() {
         if (selectedSessionInfo) {
             const d = new Date().getTime();
-            let distance = d - selectedSessionInfo.startTime.getTime();
+            let distance = d - selectedSessionInfo.startTime;
             const hours = Math.floor(distance / 3600000);
             distance -= hours * 3600000;
             const minutes = Math.floor(distance / 60000);

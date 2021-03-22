@@ -45,14 +45,18 @@ export default function QuitSesson(): JSX.Element {
     const selectedSession = useRecoilValue(selectedSessionState);
     const sessions = useRecoilValue(sessionsState);
 
-    // Stops recording, closes popup, terminates session and goes to the startview
+    // Stops recording, closes popup, sets session end time, terminates session and goes to the startview
     const quitSession = () => {
         setRecording({status: false, startTime: null, recordingId: null});
         setPopupOpen(false);
 
-        // TERMINATE SESSION HERE
         if (selectedSession) {
-            removeSession(selectedSession.sessionId);
+            ipcSend("updateSessionEndTime", {
+                _id: selectedSession._id,
+                timestamp: new Date().getTime()
+            });
+
+            removeSession(selectedSession._id);
         }
     };
 
@@ -66,16 +70,13 @@ export default function QuitSesson(): JSX.Element {
 
         // If there is more sessions, set the selectedSessionId to some of them, else go to start view
         if (sessions.length > 1) {
-            set(
-                selectedSessionIdState,
-                sessions.find((session) => session.sessionId != sessionId)?.sessionId as number | null
-            );
+            set(selectedSessionIdState, sessions.find((session) => session._id != sessionId)?._id as number | null);
         } else {
             history.push("/");
         }
 
         // Send terminate signal to the backend with this sessionId
-        ipcSend("terminateSession", sessions.find((session) => session.sessionId == sessionId)?.sessionCode);
+        ipcSend("terminateSession", sessions.find((session) => session._id == sessionId)?.sessionCode);
     });
 
     return (

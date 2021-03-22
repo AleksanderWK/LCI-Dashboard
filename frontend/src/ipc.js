@@ -5,7 +5,11 @@ const {
   terminateClient,
 } = require("./wsserver.js");
 const { getUserByName, getUsers, insertUser } = require("./db/users.js");
-const { insertSession, getSessions } = require("./db/sessions.js");
+const {
+  insertSession,
+  updateSessionEndTime,
+  getRecordedSessions,
+} = require("./db/sessions.js");
 const {
   pushDataPointToSession,
   getSessionRecording,
@@ -39,9 +43,9 @@ ipc.handle("insertUser", async (event, data) => {
   });
 });
 
-ipc.on("getSessions", (event) => {
-  getSessions().then((sessions) => {
-    event.reply("getSessions-reply", sessions);
+ipc.on("getRecordedSessions", (event) => {
+  getRecordedSessions().then((sessions) => {
+    event.reply("getRecordedSessions-reply", sessions);
   });
 });
 
@@ -49,6 +53,10 @@ ipc.handle("insertSession", async (event, data) => {
   return insertSession(data).then((sessionId) => {
     return sessionId;
   });
+});
+
+ipc.on("updateSessionEndTime", (event, data) => {
+  updateSessionEndTime(data._id, data.timestamp);
 });
 
 ipc.handle("getSessionRecording", async (event, sessionId) => {
