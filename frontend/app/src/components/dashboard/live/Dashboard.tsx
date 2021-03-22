@@ -1,5 +1,5 @@
 import {createStyles, makeStyles} from "@material-ui/core";
-import {Variable} from "../../constants";
+import {Variable} from "../../../constants";
 import Container from "./Container";
 
 const useStyles = makeStyles(() =>
@@ -20,6 +20,7 @@ function Dashboard(): JSX.Element {
     return (
         <div className={classes.dashboard}>
             <Container variable={Variable.PerceivedDifficulty} />
+            <Container variable={Variable.InformationProcessingIndex} />
         </div>
     );
 }

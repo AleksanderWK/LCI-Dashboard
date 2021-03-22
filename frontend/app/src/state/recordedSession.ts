@@ -2,10 +2,10 @@ import {atom, selector} from "recoil";
 import {Variable} from "../constants";
 import {Session} from "./session";
 
-/**
+/*
  * An atom that stores the id of a session that has been recorded and selected
  */
-export const selectedRecordedSessionId = atom<number | null>({
+export const selectedRecordedSessionIdState = atom<number | null>({
     key: "selectedRecordedSessionId",
     default: null
 });
@@ -14,46 +14,33 @@ export interface RecordedSession {
     sessionId: number;
     startTime: number;
     endTime: number;
-    data: RecordedData;
+    data: RecordingIntervals;
+}
+
+export interface RecordingIntervals {
+    [key: string]: RecordedData;
 }
 
 export interface RecordedData {
-    timestamp: number;
-    [Variable.CognitiveLoad]: [number, number][];
-    [Variable.PerceivedDifficulty]: [number, number][];
-    [Variable.Familiarity]: [number, number][];
-    [Variable.InformationProcessingIndex]: [number, number][];
-    [Variable.PhysiologicalArousal]: [number, number][];
-    [Variable.Engagement]: [number, number][];
-    [Variable.PhysiologicalStress]: [number, number][];
-    [Variable.EmotionalRegulation]: [number, number][];
-    [Variable.MotionStability]: [number, number][];
-    [Variable.EnergySpentFatigue]: [number, number][];
+    timestamps: number[];
+    [Variable.CognitiveLoad]: number[];
+    [Variable.PerceivedDifficulty]: number[];
+    [Variable.Familiarity]: number[];
+    [Variable.InformationProcessingIndex]: number[];
+    [Variable.PhysiologicalArousal]: number[];
+    [Variable.Engagement]: number[];
+    [Variable.PhysiologicalStress]: number[];
+    [Variable.EmotionalRegulation]: number[];
+    [Variable.MotionStability]: number[];
+    [Variable.EnergySpentFatigue]: number[];
 }
 
-/**
+/*
  * An atom that stores the data for the currently selected recorded sessoion
  */
-export const recordedSession = atom<RecordedSession>({
+export const recordedSessionState = atom<RecordedSession | null>({
     key: "recordedSession",
-    default: {
-        sessionId: 0,
-        startTime: 0,
-        endTime: 100,
-        data: {
-            timestamp: 0,
-            [Variable.CognitiveLoad]: [],
-            [Variable.PerceivedDifficulty]: [],
-            [Variable.Familiarity]: [],
-            [Variable.InformationProcessingIndex]: [],
-            [Variable.PhysiologicalArousal]: [],
-            [Variable.Engagement]: [],
-            [Variable.PhysiologicalStress]: [],
-            [Variable.EmotionalRegulation]: [],
-            [Variable.MotionStability]: [],
-            [Variable.EnergySpentFatigue]: []
-        }
-    }
+    default: null
 });
 
 /**
@@ -72,19 +59,21 @@ export interface TimeInterval {
 /**
  * A selector that gives the time interval of the selected recording
  */
-export const recordingInterval = selector({
+export const recordingInterval = selector<TimeInterval | undefined>({
     key: "recordingInterval1",
     get: ({get}) => {
-        const data = get(recordedSession);
-        const interval = {start: data?.startTime, end: data?.endTime};
-        return interval;
+        const data = get(recordedSessionState);
+        if (data) {
+            const interval = {start: data.startTime, end: data.endTime};
+            return interval;
+        }
     }
 });
 
 /**
  * An atom that stores the current interval
  */
-export const currentRecordingInterval = atom<TimeInterval>({
+export const currentRecordingInterval = atom<TimeInterval | undefined>({
     key: "currentRecordingInterval",
     default: recordingInterval
 });

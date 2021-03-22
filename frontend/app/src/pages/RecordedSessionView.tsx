@@ -2,14 +2,11 @@ import {createStyles, makeStyles} from "@material-ui/core";
 import {useEffect} from "react";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import IntervalSlider from "../components/recordedsessionview/IntervalSlider";
-import {ipcInvoke} from "../ipc";
-import {
-    RecordedSession,
-    recordedSession,
-    recordedSessionInfo,
-    selectedRecordedSessionId
-} from "../state/recordedSession";
 import Header from "../components/recordedsessionview/Header";
+import Container from "../components/dashboard/recording/Container";
+import {Variable} from "../constants";
+import {ipcInvoke} from "../ipc";
+import {selectedRecordedSessionIdState, RecordedSession, recordedSessionState} from "../state/recordedSession";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -36,27 +33,26 @@ const useStyles = makeStyles(() =>
 
 export default function RecordedSessionView(): JSX.Element {
     const classes = useStyles();
-    const recordedSessionId = useRecoilValue(selectedRecordedSessionId);
-    const setRecordedSession = useSetRecoilState(recordedSession);
-    const setRecordedSessionInfo = useSetRecoilState(recordedSessionInfo);
+
+    const recordedSessionId = useRecoilValue(selectedRecordedSessionIdState);
+    const setRecordedSession = useSetRecoilState(recordedSessionState);
 
     useEffect(() => {
-        ipcInvoke("getSession", recordedSessionId).then((session) => {
-            setRecordedSession(session as RecordedSession);
-        });
-        /*
-        *ipcInvoke("getSession", recordedSessionId).then((session) => {
-            setRecordedSessionInfo(session as Session);
-        });
-        */
-    }, []);
+        if (recordedSessionId) {
+            ipcInvoke("getSessionRecording", recordedSessionId).then((session) => {
+                setRecordedSession(session as RecordedSession);
+            });
+        }
+    }, [recordedSessionId]);
 
     return (
         <div className={classes.pageContainer}>
             <div className={classes.header}>
                 <Header />
             </div>
-            <div className={classes.dashboard}></div>
+            <div className={classes.dashboard}>
+                <Container variable={Variable.PerceivedDifficulty} />
+            </div>
         </div>
     );
 }

@@ -7,6 +7,7 @@ import {Data, selectedSessionIdState, sessionDataState, sessionRecordingState} f
 import {useRecoilCallback} from "recoil";
 import {Variable} from "./constants";
 import StartView from "./pages/StartView";
+import RecordedSessionView from "./pages/RecordedSessionView";
 
 export interface DataPoints {
     [key: string]: number;
@@ -57,6 +58,7 @@ function App(): JSX.Element {
                 {/*
                     Add new pages by adding a Route component. (Important! they need to be above the startview route) Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
                 */}
+                <Route path="/recording" component={RecordedSessionView} />
                 <Route path="/create-session" component={CreateSessionView} />
                 <Route path="/session" component={SessionView} />
                 <Route path="/" component={StartView} />
