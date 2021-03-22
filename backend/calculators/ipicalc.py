@@ -44,9 +44,9 @@ class InformationProcessingIndexCalculator(MMDVCalculator):
 
         # Remove counts older than timeframe
         while self.local_count and self.last_end_time - self.local_count[0] > self.timeframe_ms:
-            self.local_count.pop()
+            self.local_count.pop(0)
         while self.global_count and self.last_end_time - self.global_count[0] > self.timeframe_ms:
-            self.global_count.pop()
+            self.global_count.pop(0)
             
 
         # Calculate ratio
