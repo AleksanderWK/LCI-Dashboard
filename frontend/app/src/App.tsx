@@ -56,17 +56,17 @@ function App(): JSX.Element {
                     Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(data.dataPoints[k] * 100).toFixed()]]])
                 ) as unknown) as Data;
             });
-        }
 
-        // If this session is recording push the data to the database
-        const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
-        if (sessionRecording.status) {
-            ipcSend("pushDataPointToSession", {
-                timestamp: now,
-                data: dataPoints,
-                sessionId: sessionId,
-                recordingId: sessionRecording.recordingId
-            });
+            // If this session is recording push the data to the database
+            const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
+            if (sessionRecording.status) {
+                ipcSend("pushDataPointToSession", {
+                    timestamp: now,
+                    data: data.dataPoints,
+                    sessionId: sessionId,
+                    recordingId: sessionRecording.recordingId
+                });
+            }
         }
     });
 
