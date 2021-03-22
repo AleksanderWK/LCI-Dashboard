@@ -3,7 +3,12 @@ import {useEffect} from "react";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import IntervalSlider from "../components/recordedsessionview/IntervalSlider";
 import {ipcInvoke} from "../ipc";
-import {RecordedSession, recordedSession, selectedRecordedSessionId} from "../state/recordedSession";
+import {
+    RecordedSession,
+    recordedSession,
+    recordedSessionInfo,
+    selectedRecordedSessionId
+} from "../state/recordedSession";
 import Header from "../components/recordedsessionview/Header";
 
 const useStyles = makeStyles(() =>
@@ -33,11 +38,17 @@ export default function RecordedSessionView(): JSX.Element {
     const classes = useStyles();
     const recordedSessionId = useRecoilValue(selectedRecordedSessionId);
     const setRecordedSession = useSetRecoilState(recordedSession);
+    const setRecordedSessionInfo = useSetRecoilState(recordedSessionInfo);
 
     useEffect(() => {
         ipcInvoke("getSession", recordedSessionId).then((session) => {
             setRecordedSession(session as RecordedSession);
         });
+        /*
+        *ipcInvoke("getSession", recordedSessionId).then((session) => {
+            setRecordedSessionInfo(session as Session);
+        });
+        */
     }, []);
 
     return (

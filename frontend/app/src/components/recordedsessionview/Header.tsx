@@ -6,6 +6,9 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import PersonIcon from "@material-ui/icons/Person";
 import EventIcon from "@material-ui/icons/Event";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
+import {useRecoilValue} from "recoil";
+import {recordedSessionInfo} from "../../state/recordedSession";
+import {useHistory} from "react-router";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -86,6 +89,9 @@ function ExitIcon(props: SvgIconProps): JSX.Element {
 }
 export default function Header(): JSX.Element {
     const classes = useStyles();
+    const history = useHistory();
+
+    const sessionInfo = useRecoilValue(recordedSessionInfo);
 
     return (
         <div className={classes.container}>
@@ -118,9 +124,9 @@ export default function Header(): JSX.Element {
                     <AddChartIcon viewBox="0 0 29 29" />
                 </IconButton>
                 <IconButton
-                    aria-label="quit student session"
+                    aria-label="exit recording view"
                     onClick={() => {
-                        //history.push("/StartView")
+                        history.push("/");
                     }}
                 >
                     <ExitIcon viewBox="3 3 29 29" />

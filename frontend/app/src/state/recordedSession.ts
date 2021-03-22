@@ -1,5 +1,6 @@
 import {atom, selector} from "recoil";
 import {Variable} from "../constants";
+import {Session} from "./session";
 
 /**
  * An atom that stores the id of a session that has been recorded and selected
@@ -53,6 +54,14 @@ export const recordedSession = atom<RecordedSession>({
             [Variable.EnergySpentFatigue]: []
         }
     }
+});
+
+/**
+ * An atom that stores information about the currently selected recorded session
+ */
+export const recordedSessionInfo = atom<Session | null>({
+    key: "recordedSessionInfo",
+    default: null
 });
 
 export interface TimeInterval {
