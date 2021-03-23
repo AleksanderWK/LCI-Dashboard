@@ -111,19 +111,35 @@ export default function Header(): JSX.Element {
                 ipcInvoke("getUserByID", studentID).then((student) => {
                     const studentObj = student as Student;
                     const name = studentObj.name;
-                    const info: RecordedSessionInfo = {
-                        sessionId: sessionInfo.sessionId,
-                        sessionName: sessionInfo.sessionName,
-                        studentId: sessionInfo.studentId,
-                        eyeTrackingDevice: sessionInfo.eyeTrackingDevice,
-                        startTime: sessionInfo.startTime,
-                        studentName: name
-                    };
-                    setRecordedSessionInfo(info);
+                    if (sessionInfo.endTime) {
+                        const info: RecordedSessionInfo = {
+                            sessionId: sessionInfo._id,
+                            sessionName: sessionInfo.sessionName,
+                            studentId: sessionInfo.studentId,
+                            eyeTrackingDevice: sessionInfo.eyeTrackingDevice,
+                            date: new Date(sessionInfo.startTime).toDateString().slice(4),
+                            startTime: `${("0" + new Date(sessionInfo.startTime).getHours()).slice(-2)}:${(
+                                "0" + new Date(sessionInfo.startTime).getMinutes()
+                            ).slice(-2)}`,
+                            duration: calcDuration(sessionInfo.startTime, sessionInfo.endTime),
+                            studentName: name
+                        };
+                        setRecordedSessionInfo(info);
+                    }
                 });
             });
         }
     }, [recordedSessionId]);
+
+    const calcDuration = (start: number, end: number) => {
+        let distance = end - start;
+        const hours = Math.floor(distance / 3600000);
+        distance -= hours * 3600000;
+        const minutes = Math.floor(distance / 60000);
+        distance -= minutes * 60000;
+        const seconds = Math.floor(distance / 1000);
+        return `${hours}h ${minutes}m ${seconds}s`;
+    };
 
     return (
         <div className={classes.container}>
@@ -140,13 +156,13 @@ export default function Header(): JSX.Element {
                         <Typography>{recordedSessionInfo?.studentName}</Typography>
                         <div></div>
                         <EventIcon className={classes.textColor} />
-                        <Typography>Feb 12. 2021</Typography>
+                        <Typography>{recordedSessionInfo?.date}</Typography>
                         <div></div>
                         <QueryBuilderIcon className={classes.textColor} />
-                        <Typography>09:00</Typography>
+                        <Typography>{recordedSessionInfo?.startTime}</Typography>
                         <div></div>
                         <TimerIcon className={classes.textColor} />
-                        <Typography>1h 0m 0s</Typography>
+                        <Typography>{recordedSessionInfo?.duration}</Typography>
                     </div>
                 </div>
             </div>

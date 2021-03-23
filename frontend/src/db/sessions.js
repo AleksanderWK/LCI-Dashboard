@@ -59,7 +59,6 @@ function getSession(sessionId) {
 
 module.exports = {
   insertSession: insertSession,
-  getSessions: getSessions,
   getSession: getSession,
   updateSessionEndTime: updateSessionEndTime,
   getRecordedSessions: getRecordedSessions,

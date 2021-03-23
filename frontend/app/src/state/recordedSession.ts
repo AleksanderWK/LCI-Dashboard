@@ -48,7 +48,9 @@ export interface RecordedSessionInfo {
     sessionName: string;
     studentId: string;
     eyeTrackingDevice: EyeTrackingDevice;
-    startTime: Date;
+    date: string;
+    startTime: string;
+    duration: string;
     studentName: string;
 }
 

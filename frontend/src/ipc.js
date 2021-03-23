@@ -12,7 +12,6 @@ const {
 } = require("./db/users.js");
 const {
   insertSession,
-  getSessions,
   getSession,
   updateSessionEndTime,
   getRecordedSessions,
