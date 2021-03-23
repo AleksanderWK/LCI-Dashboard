@@ -9,6 +9,7 @@ db.sessions.getAutoincrementId = function (cb) {
       cb && cb(err, autoid.seq);
     }
   );
+  db.sessions.persistence.compactDatafile();
   return this;
 };
 
@@ -22,11 +23,29 @@ function insertSession(data) {
   });
 }
 
-function getSessions() {
+function updateSessionEndTime(id, timestamp) {
+  db.sessions.update({ _id: id }, { $set: { endTime: timestamp } }, {});
+  db.sessions.persistence.compactDatafile();
+}
+
+function getRecordedSessions() {
   return new Promise((resolve, reject) => {
-    db.sessions.find({ _id: { $ne: "__autoid__" } }, (err, docs) => {
-      resolve(docs);
-    });
+    // Find all session ids which has a recording
+    db.recordings.find(
+      {},
+      { startTime: 0, endTime: 0, data: 0 },
+      (err, recordingIds) => {
+        // Find all sessions for those ids
+        db.sessions
+          .find({
+            _id: { $in: recordingIds.map((recordingId) => recordingId._id) },
+          })
+          .sort({ startTime: -1 })
+          .exec((err, docs) => {
+            resolve(docs);
+          });
+      }
+    );
   });
 }
 
@@ -42,4 +61,6 @@ module.exports = {
   insertSession: insertSession,
   getSessions: getSessions,
   getSession: getSession,
+  updateSessionEndTime: updateSessionEndTime,
+  getRecordedSessions: getRecordedSessions,
 };

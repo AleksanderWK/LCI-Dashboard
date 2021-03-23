@@ -19,11 +19,13 @@ export const sessionIdsState = atom<number[]>({
 });
 
 export interface Session {
-    sessionId: number;
+    _id: number;
     sessionName: string;
     studentId: string;
     eyeTrackingDevice: EyeTrackingDevice;
-    startTime: Date;
+    startTime: number;
+    endTime: number | null;
+    sessionCode: string;
 }
 
 /*
@@ -69,12 +71,14 @@ export const selectedSessionRecordingState = selector<Recording>({
 });
 
 export interface SessionWithStudent {
-    sessionId: number;
+    _id: number;
     sessionName: string;
     student: Student;
     eyeTrackingDevice: EyeTrackingDevice;
     recording: Recording;
-    startTime: Date;
+    startTime: number;
+    endTime: number | null;
+    sessionCode: string;
 }
 
 /*
@@ -91,12 +95,14 @@ export const selectedSessionState = selector<SessionWithStudent | undefined>({
 
             if (student) {
                 return {
-                    sessionId: id,
+                    _id: id,
                     sessionName: session.sessionName,
                     student: student,
                     eyeTrackingDevice: session.eyeTrackingDevice,
                     recording: get(sessionRecordingState(id)),
-                    startTime: session.startTime
+                    startTime: session.startTime,
+                    endTime: session.endTime,
+                    sessionCode: session.sessionCode
                 };
             }
         }
@@ -119,12 +125,14 @@ export const sessionsState = selector<SessionWithStudent[]>({
 
                 if (student) {
                     sessions.push({
-                        sessionId: sessionId,
+                        _id: sessionId,
                         sessionName: session.sessionName,
                         student: student,
                         eyeTrackingDevice: session.eyeTrackingDevice,
                         recording: get(sessionRecordingState(sessionId)),
-                        startTime: session.startTime
+                        startTime: session.startTime,
+                        endTime: session.endTime,
+                        sessionCode: session.sessionCode
                     });
                 }
             }
