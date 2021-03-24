@@ -26,6 +26,7 @@ export interface Session {
     startTime: number;
     endTime: number | null;
     sessionCode: string;
+    //activeContainers: ActiveContainers;
 }
 
 /*
@@ -79,6 +80,7 @@ export interface SessionWithStudent {
     startTime: number;
     endTime: number | null;
     sessionCode: string;
+    //activeContainers: ActiveContainers;
 }
 
 /*
@@ -103,6 +105,7 @@ export const selectedSessionState = selector<SessionWithStudent | undefined>({
                     startTime: session.startTime,
                     endTime: session.endTime,
                     sessionCode: session.sessionCode
+                    //activeContainers: session.activeContainers
                 };
             }
         }
@@ -133,6 +136,7 @@ export const sessionsState = selector<SessionWithStudent[]>({
                         startTime: session.startTime,
                         endTime: session.endTime,
                         sessionCode: session.sessionCode
+                        //activeContainers: session.activeContainers
                     });
                 }
             }
@@ -208,3 +212,73 @@ export const selectedSessionLastValueState = selectorFamily<number | null, Varia
         }
     }
 });
+
+export interface VariableDisplay {
+    active: boolean;
+    display: "line" | "numeric";
+}
+
+export interface ActiveContainers {
+    [Variable.CognitiveLoad]: VariableDisplay;
+    [Variable.PerceivedDifficulty]: VariableDisplay;
+    [Variable.Familiarity]: VariableDisplay;
+    [Variable.InformationProcessingIndex]: VariableDisplay;
+    [Variable.PhysiologicalArousal]: VariableDisplay;
+    [Variable.Engagement]: VariableDisplay;
+    [Variable.PhysiologicalStress]: VariableDisplay;
+    [Variable.EmotionalRegulation]: VariableDisplay;
+    [Variable.MotionStability]: VariableDisplay;
+    [Variable.EnergySpentFatigue]: VariableDisplay;
+}
+
+/*
+ *   An atomFamily that stores the active containers for each session
+ */
+export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
+    key: "sessionActiveContainers",
+    default: {
+        [Variable.CognitiveLoad]: {active: false, display: "line"},
+        [Variable.PerceivedDifficulty]: {active: true, display: "line"},
+        [Variable.Familiarity]: {active: false, display: "line"},
+        [Variable.InformationProcessingIndex]: {active: true, display: "numeric"},
+        [Variable.PhysiologicalArousal]: {active: false, display: "line"},
+        [Variable.Engagement]: {active: false, display: "line"},
+        [Variable.PhysiologicalStress]: {active: false, display: "line"},
+        [Variable.EmotionalRegulation]: {active: false, display: "line"},
+        [Variable.MotionStability]: {active: false, display: "line"},
+        [Variable.EnergySpentFatigue]: {active: false, display: "line"}
+    }
+});
+
+/*
+ *  A selector for getting and setting display object for all containers in a session
+ */
+export const selectedSessionActiveContainersState = selector<ActiveContainers>({
+    key: "selectedSessionActiveContainers",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+        return get(sessionActiveContainersState(id));
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedSessionIdState);
+        set(sessionActiveContainersState(id), newValue);
+    }
+});
+
+/*
+ *  A selectorFamily that accesses the container status for a given variable
+ */
+
+/* export const selectedSessionVariableContainerState = selectorFamily<boolean | null, Variable>({
+    key: "selectedSessionVariableContainer",
+    get: (variable: Variable) => ({get}) => {
+        const id = get(selectedSessionIdState);
+
+        return get(sessionActiveContainersState(id))[variable];
+    }
+    set: (variable: Variable) => ({get, set}, newValue) => {
+        const id = get(selectedSessionIdState);
+        set(sessionActiveContainersState(id), newValue);
+    }
+     */
+//});

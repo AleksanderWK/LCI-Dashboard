@@ -10,7 +10,7 @@ it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
         <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} />
+            <Container variable={Variable.CognitiveLoad} display="line" />
         </RecoilRoot>,
         div
     );
@@ -19,7 +19,7 @@ it("renders without crashing", () => {
 it("renders title", () => {
     render(
         <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} />
+            <Container variable={Variable.CognitiveLoad} display="line" />
         </RecoilRoot>
     );
     expect(screen.getByText(MMDVariables[Variable.CognitiveLoad].name)).toBeInTheDocument();
@@ -28,7 +28,7 @@ it("renders title", () => {
 it("tooltip displays variable info", async () => {
     render(
         <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} />
+            <Container variable={Variable.CognitiveLoad} display="line" />
         </RecoilRoot>
     );
     userEvent.hover(screen.getByLabelText("info"));
@@ -41,7 +41,7 @@ it("tooltip displays variable info", async () => {
 it("menu toggle between show more/less", async () => {
     render(
         <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} />
+            <Container variable={Variable.CognitiveLoad} display="line" />
         </RecoilRoot>
     );
 
