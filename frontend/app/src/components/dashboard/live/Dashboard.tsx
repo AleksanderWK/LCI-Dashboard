@@ -23,20 +23,41 @@ function Dashboard(): JSX.Element {
 
     return (
         <div className={classes.dashboard}>
-            {/*Object.keys(Variable).map((key) => {
-                if (useRecoilState(selectedSessionVariableContainerState(key))) {
-                    return <Container variable={Variable[key]} />}
-                })*/}
-            {activeContainers.cl && <Container variable={Variable.CognitiveLoad} />}
-            {activeContainers.pd && <Container variable={Variable.PerceivedDifficulty} />}
-            {activeContainers.fam && <Container variable={Variable.Familiarity} />}
-            {activeContainers.ipi && <Container variable={Variable.InformationProcessingIndex} />}
-            {activeContainers.pa && <Container variable={Variable.PhysiologicalArousal} />}
-            {activeContainers.eng && <Container variable={Variable.Engagement} />}
-            {activeContainers.ps && <Container variable={Variable.PhysiologicalStress} />}
-            {activeContainers.er && <Container variable={Variable.EmotionalRegulation} />}
-            {activeContainers.ms && <Container variable={Variable.MotionStability} />}
-            {activeContainers.esf && <Container variable={Variable.EnergySpentFatigue} />}
+            {/*Object.entries(activeContainers).map(([key, value]) => {
+                if (value.active) {
+                    return <Container variable={Variable[key as keyof typeof Variable]} display={value.display} />;
+                }
+            })*/}
+            {activeContainers.cl.active && (
+                <Container variable={Variable.CognitiveLoad} display={activeContainers.cl.display} />
+            )}
+            {activeContainers.pd.active && (
+                <Container variable={Variable.PerceivedDifficulty} display={activeContainers.pd.display} />
+            )}
+            {activeContainers.fam.active && (
+                <Container variable={Variable.Familiarity} display={activeContainers.fam.display} />
+            )}
+            {activeContainers.ipi.active && (
+                <Container variable={Variable.InformationProcessingIndex} display={activeContainers.ipi.display} />
+            )}
+            {activeContainers.pa.active && (
+                <Container variable={Variable.PhysiologicalArousal} display={activeContainers.pa.display} />
+            )}
+            {activeContainers.eng.active && (
+                <Container variable={Variable.Engagement} display={activeContainers.eng.display} />
+            )}
+            {activeContainers.ps.active && (
+                <Container variable={Variable.PhysiologicalStress} display={activeContainers.ps.display} />
+            )}
+            {activeContainers.er.active && (
+                <Container variable={Variable.EmotionalRegulation} display={activeContainers.er.display} />
+            )}
+            {activeContainers.ms.active && (
+                <Container variable={Variable.MotionStability} display={activeContainers.ms.display} />
+            )}
+            {activeContainers.esf.active && (
+                <Container variable={Variable.EnergySpentFatigue} display={activeContainers.esf.display} />
+            )}
         </div>
     );
 }
