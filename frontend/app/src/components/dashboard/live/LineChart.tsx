@@ -3,9 +3,9 @@ import HighchartsReact from "highcharts-react-official";
 import React, {createRef, RefObject, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
-import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../constants";
-import {selectedSessionDataState} from "../../state/session";
-import theme from "../../theme";
+import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
+import {selectedSessionDataState} from "../../../state/session";
+import theme from "../../../theme";
 
 interface Props {
     variable: Variable;

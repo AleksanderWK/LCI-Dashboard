@@ -23,7 +23,13 @@ import {createSessionValuesState} from "../../state/createSession";
 import {addStudentPopupOpenState, createSessionPopupOpenState} from "../../state/popup";
 import {Student, studentsState} from "../../state/student";
 import {useHistory, useLocation} from "react-router-dom";
-import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../state/session";
+import {
+    selectedSessionIdState,
+    Session,
+    sessionIdsState,
+    sessionRecordingState,
+    sessionState
+} from "../../state/session";
 import {EyeTrackingDevice} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -85,7 +91,7 @@ export default function CreateSession(): JSX.Element {
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
     const [deviceNotSet, setDeviceNotSet] = useState(true);
 
-    const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
+    const setAddStudentPopupOpen = useSetRecoilState(addStudentPopupOpenState);
     const setCreateSessionPopupOpen = useSetRecoilState(createSessionPopupOpenState);
 
     const [students, setStudents] = useRecoilState(studentsState);
@@ -105,7 +111,7 @@ export default function CreateSession(): JSX.Element {
                 studentConnected: true
             }));
         });
-    }, [addStudentPopupOpen]);
+    }, []);
 
     const handleSelectionChange = (selection: string, value: string) => {
         // Overwrite an attribute based on the selection parameter
@@ -118,31 +124,36 @@ export default function CreateSession(): JSX.Element {
         setCreateSessionValues(updatedSessionSelections);
     };
 
-    const createSession = useRecoilCallback(({set}) => (sessionId: number) => {
-        set(sessionState(sessionId), {
-            sessionId: sessionId,
+    const createSession = useRecoilCallback(({set}) => (session: Session) => {
+        set(sessionState(session._id), session);
+
+        set(sessionIdsState, (prevValue) => [...prevValue, session._id]);
+
+        set(sessionRecordingState(session._id), {status: false, startTime: null, recordingId: null});
+
+        set(selectedSessionIdState, session._id);
+    });
+
+    const handleCreateSession = () => {
+        ipcSend("startDatastream", createSessionValues.sessionCode);
+
+        const session: Partial<Session> = {
             sessionName: createSessionValues.sessionName,
             studentId: createSessionValues.studentId,
             eyeTrackingDevice:
                 createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary,
-            startTime: new Date()
+            startTime: new Date().getTime(),
+            endTime: null,
+            sessionCode: createSessionValues.sessionCode
+        };
+
+        ipcInvoke("insertSession", session).then((sessionId) => {
+            session._id = sessionId as number;
+            createSession(session as Session);
         });
 
-        set(sessionIdsState, (prevValue) => [...prevValue, sessionId]);
-
-        set(sessionRecordingState(sessionId), {status: false, startTime: null});
-
-        set(selectedSessionIdState, sessionId);
-    });
-
-    const handleCreateSession = () => {
         // Reset values
         resetCreateSessionValues();
-
-        ipcSend("startDatastream", {});
-        ipcInvoke("insertSession", {...createSessionValues, data: []}).then((sessionId) => {
-            createSession(sessionId as number);
-        });
 
         if (location.pathname === "/create-session") {
             history.push("session");

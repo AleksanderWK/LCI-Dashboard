@@ -1,7 +1,7 @@
 import {Slider, Tooltip} from "@material-ui/core";
 import {makeStyles, Theme, withStyles} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, useEffect} from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {currentRecordingInterval, recordingInterval} from "../../state/recordedSession";
 
@@ -82,22 +82,25 @@ export default function IntervalSlider(): JSX.Element {
 
     // Converts milliseconds to the hh:mm:ss format to display on the labels
     function valuetext(value: number) {
-        const d = new Date(0);
-        d.setSeconds(value);
-        return `${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
+        const d = new Date(value);
+        return `${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(
+            -2
+        )}`;
     }
 
     return (
         <div className={classes.root}>
-            <CustomSlider
-                valueLabelDisplay="on"
-                defaultValue={[completeRecordingInterval.start, completeRecordingInterval.end]}
-                min={completeRecordingInterval.start}
-                max={completeRecordingInterval.end}
-                valueLabelFormat={valuetext}
-                onChange={handleChange}
-                ValueLabelComponent={ValueLabelComponent}
-            />
+            {completeRecordingInterval && (
+                <CustomSlider
+                    valueLabelDisplay="on"
+                    defaultValue={[completeRecordingInterval.start, completeRecordingInterval.end]}
+                    min={completeRecordingInterval.start}
+                    max={completeRecordingInterval.end}
+                    valueLabelFormat={valuetext}
+                    onChange={handleChange}
+                    ValueLabelComponent={ValueLabelComponent}
+                />
+            )}
         </div>
     );
 }

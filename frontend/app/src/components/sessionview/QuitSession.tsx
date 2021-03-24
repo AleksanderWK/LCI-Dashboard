@@ -1,9 +1,16 @@
 import React from "react";
 import {createStyles, makeStyles, Theme, Typography, Button, CardActions} from "@material-ui/core";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilCallback, useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {quitSessionPopupOpenState} from "../../state/popup";
-import {selectedSessionRecordingState, selectedSessionState} from "../../state/session";
+import {
+    selectedSessionIdState,
+    selectedSessionRecordingState,
+    selectedSessionState,
+    sessionIdsState,
+    sessionsState
+} from "../../state/session";
 import {useHistory} from "react-router-dom";
+import {ipcSend} from "../../ipc";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -36,16 +43,41 @@ export default function QuitSesson(): JSX.Element {
     const [recording, setRecording] = useRecoilState(selectedSessionRecordingState);
 
     const selectedSession = useRecoilValue(selectedSessionState);
+    const sessions = useRecoilValue(sessionsState);
 
-    // Stops recording, closes popup, terminates session and goes to the startview
+    // Stops recording, closes popup, sets session end time, terminates session and goes to the startview
     const quitSession = () => {
-        setRecording({status: false, startTime: null});
+        setRecording({status: false, startTime: null, recordingId: null});
         setPopupOpen(false);
 
-        // TERMINATE SESSION HERE
+        if (selectedSession) {
+            ipcSend("updateSessionEndTime", {
+                _id: selectedSession._id,
+                timestamp: new Date().getTime()
+            });
 
-        history.push("/");
+            removeSession(selectedSession._id);
+        }
     };
+
+    const removeSession = useRecoilCallback(({set}) => (sessionId: number) => {
+        // Remove this sessionId from the sessionIdsState
+        set(sessionIdsState, (prevValue) => {
+            const newValue: number[] = [...prevValue];
+            newValue.splice(newValue.indexOf(sessionId), 1);
+            return newValue;
+        });
+
+        // If there is more sessions, set the selectedSessionId to some of them, else go to start view
+        if (sessions.length > 1) {
+            set(selectedSessionIdState, sessions.find((session) => session._id != sessionId)?._id as number | null);
+        } else {
+            history.push("/");
+        }
+
+        // Send terminate signal to the backend with this sessionId
+        ipcSend("terminateSession", sessions.find((session) => session._id == sessionId)?.sessionCode);
+    });
 
     return (
         <div className={classes.grid}>
