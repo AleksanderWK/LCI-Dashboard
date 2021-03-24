@@ -77,6 +77,7 @@ export default function IntervalSlider(): JSX.Element {
 
     // Update state on slider change
     const handleChange = (event: ChangeEvent<unknown>, value: number | number[]) => {
+        console.log({start: (value as number[])[0], end: (value as number[])[1]});
         setInterval({start: (value as number[])[0], end: (value as number[])[1]});
     };
 
@@ -97,7 +98,7 @@ export default function IntervalSlider(): JSX.Element {
                     min={completeRecordingInterval.start}
                     max={completeRecordingInterval.end}
                     valueLabelFormat={valuetext}
-                    onChange={handleChange}
+                    onChangeCommitted={handleChange}
                     ValueLabelComponent={ValueLabelComponent}
                 />
             )}
