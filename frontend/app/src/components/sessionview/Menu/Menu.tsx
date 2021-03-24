@@ -70,9 +70,9 @@ export default function Menu(): JSX.Element {
 
                 {sessions.map((session) => (
                     <StudentButton
-                        key={session.sessionId}
-                        sessionId={session.sessionId}
-                        selected={session.sessionId === selectedSessionId}
+                        key={session._id}
+                        sessionId={session._id}
+                        selected={session._id === selectedSessionId}
                         studentName={session.student.name}
                         recording={session.recording.status}
                     />

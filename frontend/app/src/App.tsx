@@ -3,14 +3,7 @@ import SessionView from "./pages/SessionView";
 import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
 import {ipcOn, ipcSend} from "./ipc";
-import {
-    Data,
-    selectedSessionIdState,
-    sessionDataState,
-    sessionRecordingState,
-    sessionsState,
-    SessionWithStudent
-} from "./state/session";
+import {Data, sessionDataState, sessionRecordingState, sessionsState, SessionWithStudent} from "./state/session";
 import {useRecoilCallback} from "recoil";
 import {Variable} from "./constants";
 import StartView from "./pages/StartView";
@@ -48,7 +41,7 @@ function App(): JSX.Element {
 
         // If we have found the session, set the data in the session state
         if (session != undefined) {
-            const sessionId: number = session.sessionId;
+            const sessionId: number = session._id;
 
             // Set the data in session state
             set(sessionDataState(sessionId), (prevVal) => {

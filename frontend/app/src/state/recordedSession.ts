@@ -1,5 +1,6 @@
-import {atom} from "recoil";
-import {Variable} from "../constants";
+import {atom, selector} from "recoil";
+import {EyeTrackingDevice, Variable} from "../constants";
+import {Session} from "./session";
 
 /*
  * An atom that stores the id of a session that has been recorded and selected
@@ -40,4 +41,50 @@ export interface RecordedData {
 export const recordedSessionState = atom<RecordedSession | null>({
     key: "recordedSession",
     default: null
+});
+
+export interface RecordedSessionInfo {
+    sessionId: number;
+    sessionName: string;
+    studentId: string;
+    eyeTrackingDevice: EyeTrackingDevice;
+    date: string;
+    startTime: string;
+    duration: string;
+    studentName: string;
+}
+
+/**
+ * An atom that stores information about the currently selected recorded session
+ */
+export const recordedSessionInfoState = atom<RecordedSessionInfo | null>({
+    key: "recordedSessionInfo",
+    default: null
+});
+
+export interface TimeInterval {
+    start: number;
+    end: number;
+}
+
+/**
+ * A selector that gives the time interval of the selected recording
+ */
+export const recordingInterval = selector<TimeInterval | undefined>({
+    key: "recordingInterval1",
+    get: ({get}) => {
+        const data = get(recordedSessionState);
+        if (data) {
+            const interval = {start: data.startTime, end: data.endTime};
+            return interval;
+        }
+    }
+});
+
+/**
+ * An atom that stores the current interval
+ */
+export const currentRecordingInterval = atom<TimeInterval | undefined>({
+    key: "currentRecordingInterval",
+    default: recordingInterval
 });

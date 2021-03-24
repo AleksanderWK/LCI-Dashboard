@@ -17,7 +17,7 @@ export const studentState = selectorFamily<Student | undefined, string>({
 });
 
 /*
- *  A selector that returns a list of all students
+ *  An atom that stores a list of all students
  */
 export const studentsState = atom<Student[]>({
     key: "students",
