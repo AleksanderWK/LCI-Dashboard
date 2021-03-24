@@ -23,6 +23,10 @@ function Dashboard(): JSX.Element {
 
     return (
         <div className={classes.dashboard}>
+            {/*Object.keys(Variable).map((key) => {
+                if (useRecoilState(selectedSessionVariableContainerState(key))) {
+                    return <Container variable={Variable[key]} />}
+                })*/}
             {activeContainers.cl && <Container variable={Variable.CognitiveLoad} />}
             {activeContainers.pd && <Container variable={Variable.PerceivedDifficulty} />}
             {activeContainers.fam && <Container variable={Variable.Familiarity} />}

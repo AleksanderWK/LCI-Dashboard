@@ -81,50 +81,6 @@ export interface SessionWithStudent {
     //activeContainers: ActiveContainers;
 }
 
-export interface ActiveContainers {
-    [Variable.CognitiveLoad]: boolean;
-    [Variable.PerceivedDifficulty]: boolean;
-    [Variable.Familiarity]: boolean;
-    [Variable.InformationProcessingIndex]: boolean;
-    [Variable.PhysiologicalArousal]: boolean;
-    [Variable.Engagement]: boolean;
-    [Variable.PhysiologicalStress]: boolean;
-    [Variable.EmotionalRegulation]: boolean;
-    [Variable.MotionStability]: boolean;
-    [Variable.EnergySpentFatigue]: boolean;
-}
-
-/*
- *   An atomFamily that stores the active containers for each session
- */
-export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
-    key: "sessionActiveContainers",
-    default: {
-        [Variable.CognitiveLoad]: true,
-        [Variable.PerceivedDifficulty]: true,
-        [Variable.Familiarity]: true,
-        [Variable.InformationProcessingIndex]: true,
-        [Variable.PhysiologicalArousal]: true,
-        [Variable.Engagement]: true,
-        [Variable.PhysiologicalStress]: true,
-        [Variable.EmotionalRegulation]: true,
-        [Variable.MotionStability]: true,
-        [Variable.EnergySpentFatigue]: true
-    }
-});
-
-export const selectedSessionActiveContainersState = selector<ActiveContainers>({
-    key: "selectedSessionActiveContainers",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        return get(sessionActiveContainersState(id));
-    },
-    set: ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), newValue);
-    }
-});
-
 /*
  *  A selector that returns the session info of the selected session
  */
@@ -251,4 +207,69 @@ export const selectedSessionLastValueState = selectorFamily<number | null, Varia
             return null;
         }
     }
+});
+
+export interface ActiveContainers {
+    [Variable.CognitiveLoad]: boolean;
+    [Variable.PerceivedDifficulty]: boolean;
+    [Variable.Familiarity]: boolean;
+    [Variable.InformationProcessingIndex]: boolean;
+    [Variable.PhysiologicalArousal]: boolean;
+    [Variable.Engagement]: boolean;
+    [Variable.PhysiologicalStress]: boolean;
+    [Variable.EmotionalRegulation]: boolean;
+    [Variable.MotionStability]: boolean;
+    [Variable.EnergySpentFatigue]: boolean;
+}
+
+/*
+ *   An atomFamily that stores the active containers for each session
+ */
+export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
+    key: "sessionActiveContainers",
+    default: {
+        [Variable.CognitiveLoad]: true,
+        [Variable.PerceivedDifficulty]: true,
+        [Variable.Familiarity]: true,
+        [Variable.InformationProcessingIndex]: true,
+        [Variable.PhysiologicalArousal]: true,
+        [Variable.Engagement]: true,
+        [Variable.PhysiologicalStress]: true,
+        [Variable.EmotionalRegulation]: true,
+        [Variable.MotionStability]: true,
+        [Variable.EnergySpentFatigue]: true
+    }
+});
+
+/*
+ *  A selector for getting and setting status for all containers in a session
+ */
+export const selectedSessionActiveContainersState = selector<ActiveContainers>({
+    key: "selectedSessionActiveContainers",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+        return get(sessionActiveContainersState(id));
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedSessionIdState);
+        set(sessionActiveContainersState(id), newValue);
+    }
+});
+
+/*
+ *  A selectorFamily that accesses the container status for a given variable
+ */
+export const selectedSessionVariableContainerState = selectorFamily<boolean | null, Variable>({
+    key: "selectedSessionVariableContainer",
+    get: (variable: Variable) => ({get}) => {
+        const id = get(selectedSessionIdState);
+
+        return get(sessionActiveContainersState(id))[variable];
+    }
+    /*
+    set: (variable: Variable) => ({get, set}, newValue) => {
+        const id = get(selectedSessionIdState);
+        set(sessionActiveContainersState(id), newValue);
+    }
+    */
 });
