@@ -282,3 +282,8 @@ export const selectedSessionActiveContainersState = selector<ActiveContainers>({
     }
      */
 //});
+
+export const snackOpenState = atom<boolean>({
+    key: "snackOpen",
+    default: false
+});
