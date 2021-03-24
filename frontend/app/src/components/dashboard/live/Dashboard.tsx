@@ -1,5 +1,7 @@
 import {createStyles, makeStyles} from "@material-ui/core";
+import {useRecoilState} from "recoil";
 import {Variable} from "../../../constants";
+import {selectedSessionActiveContainersState} from "../../../state/session";
 import Container from "./Container";
 
 const useStyles = makeStyles(() =>
@@ -17,10 +19,20 @@ const useStyles = makeStyles(() =>
 function Dashboard(): JSX.Element {
     const classes = useStyles();
 
+    const [activeContainers, setActiveContainers] = useRecoilState(selectedSessionActiveContainersState);
+
     return (
         <div className={classes.dashboard}>
-            <Container variable={Variable.PerceivedDifficulty} />
-            <Container variable={Variable.InformationProcessingIndex} />
+            {activeContainers.cl && <Container variable={Variable.CognitiveLoad} />}
+            {activeContainers.pd && <Container variable={Variable.PerceivedDifficulty} />}
+            {activeContainers.fam && <Container variable={Variable.Familiarity} />}
+            {activeContainers.ipi && <Container variable={Variable.InformationProcessingIndex} />}
+            {activeContainers.pa && <Container variable={Variable.PhysiologicalArousal} />}
+            {activeContainers.eng && <Container variable={Variable.Engagement} />}
+            {activeContainers.ps && <Container variable={Variable.PhysiologicalStress} />}
+            {activeContainers.er && <Container variable={Variable.EmotionalRegulation} />}
+            {activeContainers.ms && <Container variable={Variable.MotionStability} />}
+            {activeContainers.esf && <Container variable={Variable.EnergySpentFatigue} />}
         </div>
     );
 }
