@@ -33,6 +33,7 @@ export interface MMDVariableInfo {
     name: string;
     device: Device;
     description: string;
+    maxValue?: number;
 }
 
 export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
@@ -46,7 +47,8 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Perceived Difficulty",
         device: Device.EyeTracker,
         description:
-            "Perceived difficulty is the perception of the ease or difficulty of performing in an educational context."
+            "Perceived difficulty is the perception of the ease or difficulty of performing in an educational context.",
+        maxValue: 100
     },
     [Variable.Familiarity]: {
         name: "Familiarity",
@@ -57,7 +59,8 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Information Processing Index",
         device: Device.EyeTracker,
         description:
-            "The ratio of local (100) and global (0) information processing. Staring at one point is local processing, while rapidly scanning a larger area is global processing."
+            "The ratio of local (100) and global (0) information processing. Staring at one point is local processing, while rapidly scanning a larger area is global processing.",
+        maxValue: 100
     },
     [Variable.PhysiologicalArousal]: {
         name: "Physiological Arousal",

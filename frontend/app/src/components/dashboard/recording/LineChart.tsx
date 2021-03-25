@@ -79,7 +79,7 @@ function LineChart(props: Props): JSX.Element {
         },
         yAxis: {
             min: 0,
-            max: 100,
+            max: MMDVariables[props.variable].maxValue,
             title: {
                 text: undefined
             },
@@ -122,7 +122,7 @@ function LineChart(props: Props): JSX.Element {
                         id: recordingId,
                         name: MMDVariables[props.variable].name,
                         data: data.timestamps.map((timestamp, index) => {
-                            return [timestamp, +(data[props.variable][index] * 100).toFixed()];
+                            return [timestamp, +data[props.variable][index].toFixed(2)];
                         }),
                         linkedTo: ":previous"
                     },

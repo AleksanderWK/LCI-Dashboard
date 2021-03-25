@@ -67,7 +67,7 @@ function LineChart(props: Props): JSX.Element {
         },
         yAxis: {
             min: 0,
-            max: 100,
+            max: MMDVariables[props.variable].maxValue,
             title: {
                 text: undefined
             },
