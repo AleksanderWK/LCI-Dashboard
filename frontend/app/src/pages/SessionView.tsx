@@ -5,7 +5,7 @@ import Menu from "../components/sessionview/Menu/Menu";
 import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";
 import CreateSession from "../components/createsessionview/CreateSession";
-import Dashboard from "../components/dashboard/Dashboard";
+import Dashboard from "../components/dashboard/live/Dashboard";
 import {addStudentPopupOpenState, createSessionPopupOpenState, quitSessionPopupOpenState} from "../state/popup";
 import {createSessionValuesState} from "../state/createSession";
 import Header from "../components/sessionview/Header";

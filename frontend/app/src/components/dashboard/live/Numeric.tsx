@@ -1,8 +1,8 @@
 import React from "react";
 import {createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useRecoilValue} from "recoil";
-import {Variable} from "../../constants";
-import {selectedSessionLastValueState} from "../../state/session";
+import {Variable} from "../../../constants";
+import {selectedSessionLastValueState} from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

@@ -8,7 +8,7 @@ export enum Variable {
     CognitiveLoad = "cl",
     PerceivedDifficulty = "pd",
     Familiarity = "fam",
-    InformationProcessingIndex = "ipd",
+    InformationProcessingIndex = "ipi",
     PhysiologicalArousal = "pa",
     Engagement = "eng",
     PhysiologicalStress = "ps",
@@ -56,7 +56,8 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.InformationProcessingIndex]: {
         name: "Information Processing Index",
         device: Device.EyeTracker,
-        description: ""
+        description:
+            "The ratio of local (100) and global (0) information processing. Staring at one point is local processing, while rapidly scanning a larger area is global processing."
     },
     [Variable.PhysiologicalArousal]: {
         name: "Physiological Arousal",
@@ -89,3 +90,18 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         description: ""
     }
 };
+
+export const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];
