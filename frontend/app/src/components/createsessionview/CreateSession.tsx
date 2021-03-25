@@ -292,7 +292,7 @@ export default function CreateSession(): JSX.Element {
                     <IconButton
                         aria-label="copy-to-clipboard"
                         size="small"
-                        style={{marginLeft: "5px"}}
+                        style={{margin: "0px 0px 7px 5px"}}
                         onClick={() => {
                             navigator.clipboard.writeText(createSessionValues.sessionCode);
                         }}
