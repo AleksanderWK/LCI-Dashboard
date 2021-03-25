@@ -106,6 +106,6 @@ it("renders correct based on state", () => {
 
     expect(screen.getByText(/JD/i)).toBeInTheDocument();
     expect(screen.getByText(/JS/i)).toBeInTheDocument();
-    expect(screen.getByText(/REC/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/REC/i)).toHaveLength(1);
+    expect(screen.getByTestId("REC")).toBeInTheDocument();
+    expect(screen.getAllByTestId("REC")).toHaveLength(1);
 });
