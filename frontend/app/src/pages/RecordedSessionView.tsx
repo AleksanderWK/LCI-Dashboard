@@ -1,12 +1,12 @@
 import {createStyles, makeStyles} from "@material-ui/core";
 import {useEffect} from "react";
 import {useRecoilValue, useSetRecoilState} from "recoil";
-import IntervalSlider from "../components/recordedsessionview/IntervalSlider";
 import Header from "../components/recordedsessionview/Header";
 import Container from "../components/dashboard/recording/Container";
 import {Variable} from "../constants";
 import {ipcInvoke} from "../ipc";
 import {selectedRecordedSessionIdState, RecordedSession, recordedSessionState} from "../state/recordedSession";
+import Footer from "../components/recordedsessionview/Footer";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -46,13 +46,16 @@ export default function RecordedSessionView(): JSX.Element {
     }, [recordedSessionId]);
 
     return (
-        <div className={classes.pageContainer}>
-            <div className={classes.header}>
-                <Header />
+        <>
+            <div className={classes.pageContainer}>
+                <div className={classes.header}>
+                    <Header />
+                </div>
+                <div className={classes.dashboard}>
+                    <Container variable={Variable.PerceivedDifficulty} />
+                </div>
             </div>
-            <div className={classes.dashboard}>
-                <Container variable={Variable.PerceivedDifficulty} />
-            </div>
-        </div>
+            <Footer />
+        </>
     );
 }

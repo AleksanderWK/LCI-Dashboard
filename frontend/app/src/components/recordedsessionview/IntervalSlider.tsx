@@ -8,7 +8,8 @@ import {currentRecordingInterval, recordingInterval} from "../../state/recordedS
 const sliderStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            width: "300px"
+            paddingTop: "10px",
+            width: "75%"
         }
     })
 );

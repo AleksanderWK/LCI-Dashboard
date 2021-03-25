@@ -1,8 +1,7 @@
 import {createStyles, makeStyles, Typography, IconButton, SvgIcon, SvgIconProps, Theme} from "@material-ui/core";
 import logo from "../../assets/Images/LCI_logo.png";
 import TimerIcon from "@material-ui/icons/Timer";
-import IntervalSlider from "./IntervalSlider";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
 import PersonIcon from "@material-ui/icons/Person";
 import EventIcon from "@material-ui/icons/Event";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
         btnGroup: {
             display: "grid",
-            gridTemplateColumns: "320px 50px 50px",
+            gridTemplateColumns: "50px 50px",
             gridTemplateRows: "50px",
             alignItems: "center",
             gap: theme.spacing(1),
@@ -167,7 +166,6 @@ export default function Header(): JSX.Element {
                 </div>
             </div>
             <div className={classes.btnGroup}>
-                <IntervalSlider />
                 <IconButton aria-label="add new chart">
                     <AddChartIcon viewBox="0 0 29 29" />
                 </IconButton>
