@@ -10,7 +10,7 @@ class MMDVCollectionCalculator:
         This class calculates a MMD Variable Collection based on the data from the datastream it gets.
         It delegates the actual calculations to the MMDVCalculator-subclasses.
     """
-
+    cl_calc = None
     pd_calc = None
     ds = None
 

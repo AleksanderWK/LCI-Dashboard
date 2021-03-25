@@ -7,38 +7,50 @@ from calculators.mmdvcalc import MMDVCalculator
 
 class CognitiveLoadCalculator(MMDVCalculator):
 
+    # Minimal signal duration in seconds (30s gives a batch size of approx. 600)
+    MIN_SIGNAL_DURATION = 30
+
     prev_data_point = None
     batch = []
+    prev_cl = None
 
     def __init__(self):
         pass
 
     def calculate_dataset(self, data):
-
-        # Append incoming data to batch
         if (len(data) > 0):
+            # Remove old data points if they exceed MIN_SIGNAL_DURATION seconds
+            if (len(self.batch) > 1 and (self.batch[-1].endTime - self.batch[0].initTime)/1000 > self.MIN_SIGNAL_DURATION):
+                for i in range(len(self.batch)):
+                    if ((self.batch[-1].endTime - self.batch[i].initTime)/1000 < self.MIN_SIGNAL_DURATION):
+                        if (i > 0):
+                            self.batch = self.batch[i:]
+                            break
+
+            # Append data to batch (replicate if longer fixations)
             for data_point in data:
-                self.batch.append(data_point)
+                fixation_duration = data_point.endTime - data_point.initTime
+                replication_factor = math.floor(fixation_duration/30)
+                for i in range(replication_factor):
+                    self.batch.append(data_point)
 
         if (len(self.batch) > 0):
-            # Init time and end time for batch in seconds
-            init_time = self.batch[0].initTime / 1000
-            end_time = self.batch[-1].endTime / 1000
-
             # Get signal duration for batch in seconds
-            signal_duration = end_time - init_time
+            signal_duration = (
+                self.batch[-1].endTime - self.batch[0].initTime) / 1000
 
-            # Compute LHIPA when batch contains values covering at least 10 seconds
-            if (signal_duration >= 10):
+            # Compute LHIPA when batch contains values covering at least MIN_SIGNAL_DURATION seconds
+            if (signal_duration >= self.MIN_SIGNAL_DURATION):
                 d = []
 
+                # Find pupil diameter for each data point in batch
                 for i in range(0, len(self.batch)):
                     lpup = self.batch[i].lpup
                     rpup = self.batch[i].rpup
 
                     data_point = None
 
-                    # Choose diameter based on presence in data set
+                    # Choose diameter based on presence in data point
                     if (not (np.isnan(lpup) or np.isnan(rpup))):
                         # Left and right is present; take average
                         data_point = (lpup + rpup)/2
@@ -56,18 +68,22 @@ class CognitiveLoadCalculator(MMDVCalculator):
                         d.append(data_point)
                         self.prev_data_point = data_point
 
-                # Calculate a single LHIPA value for all data points in batch
+                # Calculate LHIPA
                 if (len(d) > 0):
-                    print("\nd", d, "\ntt", signal_duration, "\n")
                     lhipa = self.lhipa(d, signal_duration)
-                    print("lhipa", lhipa)
 
-                    # Would probably remove old points (appended over 10 s ago), instead of clearing the whole batch.
-                    # By clearing the batch, LHIPA is calculated every 10 second, which is probably not what we want.
-                    self.batch = []
+                    if (lhipa != 0):
+                        # LHIPA is expected to decrease with increased cognitive load (therefore taking the reverse)
+                        cl = 1 / lhipa
+                        self.prev_cl = cl
+                        return cl
 
-                    return lhipa
+        if (self.prev_cl != None):
+            return self.prev_cl
 
+        return -1
+
+    # Adapted from Duchowski, A. T., Krejtz, K., Gehrer, N. A., Bafna, T., & Bækgaard, P. (2020, April). The Low/High Index of Pupillary Activity. In Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-12).
     def lhipa(self, d, signal_duration):
         # Find max decomposition level
         w = pywt.Wavelet("sym16")
@@ -95,7 +111,7 @@ class CognitiveLoadCalculator(MMDVCalculator):
         # Threshold using universal threshold lambda_univ = σˆsqrt(2logn)
         # where σˆ is the standard deviation of the noise
         lambda_univ = np.std(cD_LHm) * math.sqrt(2.0 * np.log2(len(cD_LHm)))
-        cD_LHt = pywt.threshold(cD_LHm, lambda_univ, mode="less")
+        cD_LHt = pywt.threshold(cD_LHm, lambda_univ, mode="hard")
 
         # Compute LHIPA
         ctr = 0
@@ -106,7 +122,7 @@ class CognitiveLoadCalculator(MMDVCalculator):
 
         return LHIPA
 
-    # From Duchowski, A. T., Krejtz, K., Krejtz, I., Biele, C., Niedzielska, A., Kiefer, P., . . . Giannopoulos, I.  (2018). The Index of Pupillary Activity: Measuring Cognitive Load vis-à-vis Task Difficulty with Pupil Oscillation.
+    # Adapted from Duchowski, A. T., Krejtz, K., Krejtz, I., Biele, C., Niedzielska, A., Kiefer, P., . . . Giannopoulos, I.  (2018). The Index of Pupillary Activity: Measuring Cognitive Load vis-à-vis Task Difficulty with Pupil Oscillation.
     def modmax(self, d):
         # Compute signal modulus
         m = [0.0]*len(d)
