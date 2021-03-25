@@ -101,6 +101,7 @@ function LineChart(props: Props): JSX.Element {
             dateTimeLabelFormats: {
                 millisecond: "%H:%M:%S"
             },
+            valueDecimals: 2,
             shadow: false,
             borderRadius: 8,
             backgroundColor: theme.palette.background.tooltip,
