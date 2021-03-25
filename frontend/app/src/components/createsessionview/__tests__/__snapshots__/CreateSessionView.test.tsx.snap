@@ -244,7 +244,7 @@ exports[`create session view matches snapshot 1`] = `
               <button
                 aria-label="copy-to-clipboard"
                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
-                style="margin-left: 5px;"
+                style="margin: 0px 0px 7px 5px;"
                 tabindex="0"
                 type="button"
               >
