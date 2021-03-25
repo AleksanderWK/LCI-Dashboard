@@ -20,7 +20,8 @@ class CognitiveLoadCalculator(MMDVCalculator):
     def calculate_dataset(self, data):
         if (len(data) > 0):
             # Remove old data points if they exceed MIN_SIGNAL_DURATION seconds
-            if (len(self.batch) > 1 and (self.batch[-1].endTime - self.batch[0].initTime)/1000 > self.MIN_SIGNAL_DURATION):
+            if (len(self.batch) > 1
+                    and (self.batch[-1].endTime - self.batch[0].initTime) / 1000 > self.MIN_SIGNAL_DURATION):
                 for i in range(len(self.batch)):
                     if ((self.batch[-1].endTime - self.batch[i].initTime)/1000 < self.MIN_SIGNAL_DURATION):
                         if (i > 0):
@@ -83,7 +84,9 @@ class CognitiveLoadCalculator(MMDVCalculator):
 
         return -1
 
-    # Adapted from Duchowski, A. T., Krejtz, K., Gehrer, N. A., Bafna, T., & Bækgaard, P. (2020, April). The Low/High Index of Pupillary Activity. In Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems (pp. 1-12).
+    # Adapted from Duchowski, A. T., Krejtz, K., Gehrer, N. A., Bafna, T., & Bækgaard, P. (2020, April).
+    # The Low/High Index of Pupillary Activity. In Proceedings of the 2020 CHI Conference on
+    # Human Factors in Computing Systems (pp. 1-12).
     def lhipa(self, d, signal_duration):
         # Find max decomposition level
         w = pywt.Wavelet("sym16")
@@ -122,7 +125,9 @@ class CognitiveLoadCalculator(MMDVCalculator):
 
         return LHIPA
 
-    # Adapted from Duchowski, A. T., Krejtz, K., Krejtz, I., Biele, C., Niedzielska, A., Kiefer, P., . . . Giannopoulos, I.  (2018). The Index of Pupillary Activity: Measuring Cognitive Load vis-à-vis Task Difficulty with Pupil Oscillation.
+    # Adapted from Duchowski, A. T., Krejtz, K., Krejtz, I., Biele, C., Niedzielska, A., Kiefer, P., . . .
+    # Giannopoulos, I.  (2018). The Index of Pupillary Activity: Measuring Cognitive Load vis-à-vis Task Difficulty
+    # with Pupil Oscillation.
     def modmax(self, d):
         # Compute signal modulus
         m = [0.0]*len(d)
