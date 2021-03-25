@@ -95,6 +95,9 @@ function LineChart(props: Props): JSX.Element {
             ordinal: false,
             crosshair: false
         },
+        time: {
+            timezoneOffset: new Date().getTimezoneOffset()
+        },
         tooltip: {
             borderWidth: 0,
             split: false,

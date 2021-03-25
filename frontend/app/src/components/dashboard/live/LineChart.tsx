@@ -80,6 +80,9 @@ function LineChart(props: Props): JSX.Element {
             lineWidth: 0,
             tickLength: 0
         },
+        time: {
+            timezoneOffset: new Date().getTimezoneOffset()
+        },
         tooltip: {
             dateTimeLabelFormats: {
                 millisecond: "%H:%M:%S"
