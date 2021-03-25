@@ -46,7 +46,14 @@ function App(): JSX.Element {
             // Set the data in session state
             set(sessionDataState(sessionId), (prevVal) => {
                 return (Object.fromEntries(
-                    Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +data.dataPoints[k].toFixed(2)]]])
+                    Object.entries(prevVal).map(([variable, values]) => [
+                        variable,
+                        [
+                            ...values,
+                            // Add data point for variable only if it is calculated
+                            ...(+data.dataPoints[variable] !== -1 ? [[now, +data.dataPoints[variable].toFixed(2)]] : [])
+                        ]
+                    ])
                 ) as unknown) as Data;
             });
 

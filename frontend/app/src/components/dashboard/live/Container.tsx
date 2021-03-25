@@ -8,6 +8,9 @@ import Tooltip from "../Tooltip";
 import {makeStyles, Theme, createStyles, IconButton, Typography} from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
+import CalculatingIndicator from "./CalculatingIndicator";
+import {useRecoilValue} from "recoil";
+import {selectedSessionDataLengthVariableState} from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,6 +41,8 @@ interface Props {
 
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
+
+    const dataLength = useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
 
     const [isDetailedView, setIsDetailedView] = useState<boolean>(props.display == "line");
 
@@ -84,8 +89,13 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-
-                {isDetailedView ? <LineChart variable={props.variable} /> : <Numeric variable={props.variable} />}
+                {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
+                    <CalculatingIndicator variable={props.variable} />
+                ) : isDetailedView ? (
+                    <LineChart variable={props.variable} />
+                ) : (
+                    <Numeric variable={props.variable} />
+                )}
             </>
         </ContainerCard>
     );
