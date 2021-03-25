@@ -2,8 +2,8 @@ import React, {useEffect, useState} from "react";
 import Button from "@material-ui/core/Button";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
-import {useRecoilState} from "recoil";
-import {selectedSessionRecordingState} from "../../state/session";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import {selectedSessionRecordingState, snackOpenState} from "../../state/session";
 import {createStyles, makeStyles, Theme} from "@material-ui/core";
 import {useInterval} from "../../utils";
 
@@ -22,6 +22,7 @@ export default function RecordingButton(): JSX.Element {
 
     const [recording, setRecording] = useRecoilState(selectedSessionRecordingState);
     const [duration, setDuration] = useState<string>("0:00:00");
+    const setSnackOpen = useSetRecoilState(snackOpenState);
 
     useEffect(() => {
         if (recording.status) {
@@ -59,7 +60,11 @@ export default function RecordingButton(): JSX.Element {
     }
 
     function handleStopRecordingClick(): void {
+        setSnackOpen(true);
         setRecording((prevVal) => ({...prevVal, status: false, startTime: null}));
+        setTimeout(() => {
+            setSnackOpen(false);
+        }, 3000);
     }
 
     useEffect(() => {
