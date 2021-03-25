@@ -100,5 +100,5 @@ export default function StudentButton(props: Props): JSX.Element {
 
 function RecordingLabel() {
     const classes = useStyles();
-    return <div className={classes.recordingLabelContainer}></div>;
+    return <div className={classes.recordingLabelContainer} data-testid="REC"></div>;
 }
