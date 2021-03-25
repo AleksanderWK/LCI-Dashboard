@@ -24,10 +24,10 @@ class InformationProcessingIndexCalculator(MMDVCalculator):
     def calculate_dataset(self, data: List[EyeTrackingDataPoint]):
         # Return last index if insufficient data is provided
         if len(data) == 0:
-            return self.prev_ipi
+            return self.prev_ipi * 100
         elif len(data) == 1 and not self.prev_data_point:
             self.prev_data_point = data[0]
-            return self.prev_ipi
+            return self.prev_ipi * 100
         # Update the index ratio using the last
         else:
             if self.prev_data_point:
