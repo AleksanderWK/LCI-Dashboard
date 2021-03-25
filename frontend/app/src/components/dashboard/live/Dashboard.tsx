@@ -21,6 +21,7 @@ function Dashboard(): JSX.Element {
         <div className={classes.dashboard}>
             <Container variable={Variable.PerceivedDifficulty} />
             <Container variable={Variable.InformationProcessingIndex} />
+            <Container variable={Variable.EnergySpentFatigue} />
         </div>
     );
 }

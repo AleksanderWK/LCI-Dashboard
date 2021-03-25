@@ -14,18 +14,21 @@ class SkeletalNodeDataPoint:
         self.z = dataRow[3]
         self.time = dataRow[4]
 
+    def __str__(self):
+        return str(self.jointType) + " " + str(self.x) + " " + str(self.y) + " " + str(self.z) + " " + str(self.time)
 
+
+JOINT_AMOUNT = 25
 class SkeletalNodeCollection:
 
     time = None
     nodes = []
 
     def __init__(self, dataRowList):
-        for dataRow in dataRowList:
-            self.nodes.append(SkeletalNodeDataPoint(dataRowList))
-        self.time = self.nodes[0].time
-
-    def getJoint(self, jointType):
-        for node in self.nodes:
-            if node.jointType == jointType:
-                return node
+        self.nodes = []
+        self.time = None
+        if len(dataRowList) != 0:
+            for dataRow in dataRowList:
+                node = SkeletalNodeDataPoint(dataRow)
+                self.nodes.append(node)
+            self.time = self.nodes[-1].time
