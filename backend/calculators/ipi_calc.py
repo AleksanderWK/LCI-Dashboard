@@ -8,13 +8,12 @@ from typing import List
 
 class InformationProcessingIndexCalculator(MMDVCalculator):
 
-    
-    prev_ipi = 0.5 # Equal ratio local/global processing
+    prev_ipi = 0.5  # Equal ratio local/global processing
     prev_data_point = []
     last_end_time = 0
     local_count = []
     global_count = []
-    timeframe_ms = 5000 # The timeframe in which the ratio is calculated
+    timeframe_ms = 5000  # The timeframe in which the ratio is calculated
     min_ipi = 0
     med_ipi = 0.5
     max_ipi = 1
@@ -25,10 +24,10 @@ class InformationProcessingIndexCalculator(MMDVCalculator):
     def calculate_dataset(self, data: List[EyeTrackingDataPoint]):
         # Return last index if insufficient data is provided
         if len(data) == 0:
-            return self.prev_ipi
+            return self.prev_ipi * 100
         elif len(data) == 1 and not self.prev_data_point:
             self.prev_data_point = data[0]
-            return self.prev_ipi
+            return self.prev_ipi * 100
         # Update the index ratio using the last
         else:
             if self.prev_data_point:
@@ -47,7 +46,6 @@ class InformationProcessingIndexCalculator(MMDVCalculator):
             self.local_count.pop(0)
         while self.global_count and self.last_end_time - self.global_count[0] > self.timeframe_ms:
             self.global_count.pop(0)
-            
 
         # Calculate ratio
         if not self.local_count and not self.global_count:
@@ -57,8 +55,10 @@ class InformationProcessingIndexCalculator(MMDVCalculator):
         elif not self.local_count:
             self.last_ipi = self.min_ipi
         else:
-            self.last_ipi = len(self.local_count)/(len(self.local_count)+len(self.global_count))
-        return self.last_ipi
+            self.last_ipi = (len(self.local_count) /
+                             (len(self.local_count)+len(self.global_count)))
+
+        return self.last_ipi * 100
 
     def update_ipi(self, prev_init_time, prev_end_time, new_init_time):
         fixation_duration = prev_end_time - prev_init_time
@@ -70,6 +70,7 @@ class InformationProcessingIndexCalculator(MMDVCalculator):
         elif fixation_duration < saccade_duration:
             self.global_count.append(end_time)
         self.last_end_time = end_time
+
 
 # ------------------------------------------------------#
 # The following is for testing purposes

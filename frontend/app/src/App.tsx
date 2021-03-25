@@ -46,7 +46,7 @@ function App(): JSX.Element {
             // Set the data in session state
             set(sessionDataState(sessionId), (prevVal) => {
                 return (Object.fromEntries(
-                    Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(data.dataPoints[k] * 100).toFixed()]]])
+                    Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +data.dataPoints[k].toFixed(2)]]])
                 ) as unknown) as Data;
             });
 

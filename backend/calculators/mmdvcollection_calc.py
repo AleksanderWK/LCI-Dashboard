@@ -1,8 +1,8 @@
 from datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
-from calculators.pdcalc import PerceivedDifficultyCalculator
+from calculators.pd_calc import PerceivedDifficultyCalculator
 from calculators.cl_calc import CognitiveLoadCalculator
-from calculators.ipicalc import InformationProcessingIndexCalculator
+from calculators.ipi_calc import InformationProcessingIndexCalculator
 
 
 class MMDVCollectionCalculator:
@@ -11,10 +11,11 @@ class MMDVCollectionCalculator:
         This class calculates a MMD Variable Collection based on the data from the datastream it gets.
         It delegates the actual calculations to the MMDVCalculator-subclasses.
     """
+
+    ds = None
     cl_calc = None
     pd_calc = None
     ipi_calc = None
-    ds = None
 
     def __init__(self, ds: Datastreams):
         self.ds = ds

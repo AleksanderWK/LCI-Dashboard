@@ -40,7 +40,7 @@ function LineChart(props: Props): JSX.Element {
                         // Show only the label for the latest data point
                         return x === series.data[series.data.length - 1].x &&
                             y === series.data[series.data.length - 1].y
-                            ? y
+                            ? y?.toFixed()
                             : null;
                     }
                 },
@@ -67,7 +67,7 @@ function LineChart(props: Props): JSX.Element {
         },
         yAxis: {
             min: 0,
-            max: 100,
+            max: MMDVariables[props.variable].maxValue,
             title: {
                 text: undefined
             },
@@ -81,11 +81,12 @@ function LineChart(props: Props): JSX.Element {
             tickLength: 0
         },
         tooltip: {
-            borderWidth: 0,
             dateTimeLabelFormats: {
                 millisecond: "%H:%M:%S"
             },
+            valueDecimals: 2,
             shadow: false,
+            borderWidth: 0,
             borderRadius: 8,
             backgroundColor: theme.palette.background.tooltip,
             style: {
