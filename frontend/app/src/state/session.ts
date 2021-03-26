@@ -245,12 +245,12 @@ export const sessionActiveContainersState = atomFamily<ActiveContainers, number 
         [Variable.PerceivedDifficulty]: {active: true, display: "line"},
         [Variable.Familiarity]: {active: false, display: "line"},
         [Variable.InformationProcessingIndex]: {active: true, display: "numeric"},
-        [Variable.PhysiologicalArousal]: {active: false, display: "line"},
+        [Variable.PhysiologicalArousal]: {active: true, display: "line"},
         [Variable.Engagement]: {active: false, display: "line"},
         [Variable.PhysiologicalStress]: {active: false, display: "line"},
         [Variable.EmotionalRegulation]: {active: false, display: "line"},
         [Variable.MotionStability]: {active: false, display: "line"},
-        [Variable.EnergySpentFatigue]: {active: false, display: "line"}
+        [Variable.EnergySpentFatigue]: {active: true, display: "line"}
     }
 });
 

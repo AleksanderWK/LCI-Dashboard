@@ -67,7 +67,9 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.PhysiologicalArousal]: {
         name: "Physiological Arousal",
         device: Device.Wristband,
-        description: ""
+        description:
+            "Physiological Arousal is how strong the current emotions are. This is calculated by taking the average EDA in the current time interval, which is currently 8 seconds.",
+        calculationTime: 8
     },
     [Variable.Engagement]: {
         name: "Engagement",
@@ -93,7 +95,8 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Energy Spent/Fatigue",
         device: Device.VideoBody,
         description:
-            "The amount of energy spent by the student, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position skeletal body."
+            "The amount of energy spent by the student, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position skeletal body.",
+        calculationTime: 4
     }
 };
 
