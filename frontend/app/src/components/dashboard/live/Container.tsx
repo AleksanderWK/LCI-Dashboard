@@ -33,12 +33,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
     variable: Variable;
+    display: string;
 }
 
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
-    const [isDetailedView, setIsDetailedView] = useState<boolean>(true);
+    const [isDetailedView, setIsDetailedView] = useState<boolean>(props.display == "line");
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 

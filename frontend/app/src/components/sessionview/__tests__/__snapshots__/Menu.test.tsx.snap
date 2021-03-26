@@ -97,13 +97,8 @@ exports[`matches snapshot 1`] = `
             </svg>
             <div
               class="makeStyles-recordingLabelContainer-15"
-            >
-              <p
-                class="MuiTypography-root makeStyles-recordingLabel-16 MuiTypography-body1"
-              >
-                REC
-              </p>
-            </div>
+              data-testid="REC"
+            />
           </button>
         </div>
         <button

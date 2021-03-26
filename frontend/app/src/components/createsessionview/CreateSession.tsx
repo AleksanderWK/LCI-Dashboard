@@ -14,7 +14,9 @@ import {
     MenuItem,
     InputLabel,
     FormControl,
-    IconButton
+    IconButton,
+    SvgIconProps,
+    SvgIcon
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import {useRecoilCallback, useRecoilState, useResetRecoilState, useSetRecoilState} from "recoil";
@@ -23,7 +25,13 @@ import {createSessionValuesState} from "../../state/createSession";
 import {addStudentPopupOpenState, createSessionPopupOpenState} from "../../state/popup";
 import {Student, studentsState} from "../../state/student";
 import {useHistory, useLocation} from "react-router-dom";
-import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../state/session";
+import {
+    selectedSessionIdState,
+    Session,
+    sessionIdsState,
+    sessionRecordingState,
+    sessionState
+} from "../../state/session";
 import {EyeTrackingDevice} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -75,6 +83,19 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+function CopyIcon(props: SvgIconProps): JSX.Element {
+    return (
+        <SvgIcon {...props}>
+            <path
+                _ngcontent-axr-c9=""
+                clipRule="evenodd"
+                d="M16.4998 14.1666V2.49992C16.4998 1.58325 15.7498 0.833252 14.8332 0.833252H5.6665C4.74984 0.833252 3.99984 1.58325 3.99984 2.49992V14.1666C3.99984 15.0833 4.74984 15.8333 5.6665 15.8333H14.8332C15.7498 15.8333 16.4998 15.0833 16.4998 14.1666ZM13.9998 17.4999H2.33317V5.83325H0.666504V17.4999C0.666504 18.4166 1.4165 19.1666 2.33317 19.1666H13.9998V17.4999ZM5.6665 14.1666H14.8332V2.49992H5.6665V14.1666Z"
+                fillRule="evenodd"
+            ></path>
+        </SvgIcon>
+    );
+}
+
 export default function CreateSession(): JSX.Element {
     const classes = useStyles();
 
@@ -85,7 +106,7 @@ export default function CreateSession(): JSX.Element {
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
     const [deviceNotSet, setDeviceNotSet] = useState(true);
 
-    const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
+    const setAddStudentPopupOpen = useSetRecoilState(addStudentPopupOpenState);
     const setCreateSessionPopupOpen = useSetRecoilState(createSessionPopupOpenState);
 
     const [students, setStudents] = useRecoilState(studentsState);
@@ -105,7 +126,7 @@ export default function CreateSession(): JSX.Element {
                 studentConnected: true
             }));
         });
-    }, [addStudentPopupOpen]);
+    }, []);
 
     const handleSelectionChange = (selection: string, value: string) => {
         // Overwrite an attribute based on the selection parameter
@@ -118,31 +139,36 @@ export default function CreateSession(): JSX.Element {
         setCreateSessionValues(updatedSessionSelections);
     };
 
-    const createSession = useRecoilCallback(({set}) => (sessionId: number) => {
-        set(sessionState(sessionId), {
-            sessionId: sessionId,
+    const createSession = useRecoilCallback(({set}) => (session: Session) => {
+        set(sessionState(session._id), session);
+
+        set(sessionIdsState, (prevValue) => [...prevValue, session._id]);
+
+        set(sessionRecordingState(session._id), {status: false, startTime: null, recordingId: null});
+
+        set(selectedSessionIdState, session._id);
+    });
+
+    const handleCreateSession = () => {
+        ipcSend("startDatastream", createSessionValues.sessionCode);
+
+        const session: Partial<Session> = {
             sessionName: createSessionValues.sessionName,
             studentId: createSessionValues.studentId,
             eyeTrackingDevice:
                 createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary,
-            startTime: new Date()
+            startTime: new Date().getTime(),
+            endTime: null,
+            sessionCode: createSessionValues.sessionCode
+        };
+
+        ipcInvoke("insertSession", session).then((sessionId) => {
+            session._id = sessionId as number;
+            createSession(session as Session);
         });
 
-        set(sessionIdsState, (prevValue) => [...prevValue, sessionId]);
-
-        set(sessionRecordingState(sessionId), {status: false, startTime: null, recordingId: null});
-
-        set(selectedSessionIdState, sessionId);
-    });
-
-    const handleCreateSession = () => {
         // Reset values
         resetCreateSessionValues();
-
-        ipcSend("startDatastream", {});
-        ipcInvoke("insertSession", createSessionValues).then((sessionId) => {
-            createSession(sessionId as number);
-        });
 
         if (location.pathname === "/create-session") {
             history.push("session");
@@ -259,10 +285,21 @@ export default function CreateSession(): JSX.Element {
 
             <div className={classes.sessionInfoContainer}>
                 <Typography variant="caption">Session code</Typography>
-
-                <Typography variant="caption" className={classes.sessionToken}>
-                    {createSessionValues.sessionCode}
-                </Typography>
+                <div>
+                    <Typography variant="caption" className={classes.sessionToken}>
+                        {createSessionValues.sessionCode}
+                    </Typography>
+                    <IconButton
+                        aria-label="copy-to-clipboard"
+                        size="small"
+                        style={{margin: "0px 0px 7px 5px"}}
+                        onClick={() => {
+                            navigator.clipboard.writeText(createSessionValues.sessionCode);
+                        }}
+                    >
+                        <CopyIcon viewBox="-3 -3 25 25" />
+                    </IconButton>
+                </div>
                 {createSessionValues.studentConnected ? (
                     <Typography variant="caption" style={{color: "#5BA350"}}>
                         Student has connected

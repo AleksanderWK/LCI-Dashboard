@@ -11,6 +11,8 @@ websockets = "*"
 websocket-client = "*"
 autobahn = {extras = ["asyncio"],version = "*"}
 python-baseconv = "*"
+pywavelets = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.8"

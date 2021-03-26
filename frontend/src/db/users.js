@@ -18,7 +18,7 @@ function getUserByName(name) {
 
 function getUserByID(id) {
   return new Promise((resolve, reject) => {
-    db.users.find({ _id: id }, (err, docs) => {
+    db.users.findOne({ _id: id }, (err, docs) => {
       resolve(docs);
     });
   });

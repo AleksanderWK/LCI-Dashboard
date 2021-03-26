@@ -4,7 +4,13 @@ import {render, screen} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
 import {EyeTrackingDevice} from "../../../constants";
 import Menu from "../Menu/Menu";
-import {selectedSessionIdState, sessionIdsState, sessionRecordingState, sessionState} from "../../../state/session";
+import {
+    selectedSessionIdState,
+    Session,
+    sessionIdsState,
+    sessionRecordingState,
+    sessionState
+} from "../../../state/session";
 import {studentsState} from "../../../state/student";
 
 const testSessionIds = [1, 2];
@@ -14,20 +20,24 @@ const testStudents = [
     {_id: "2", name: "Jane Smith"}
 ];
 
-const testSessions = {
+const testSessions: {[key: number]: Session} = {
     1: {
-        sessionId: 1,
+        _id: 1,
         sessionName: "Test1",
         studentId: "1",
         eyeTrackingDevice: EyeTrackingDevice.Mobile,
-        startTime: new Date()
+        startTime: 0,
+        endTime: 100,
+        sessionCode: "abc"
     },
     2: {
-        sessionId: 2,
+        _id: 2,
         sessionName: "Test2",
         studentId: "2",
         eyeTrackingDevice: EyeTrackingDevice.Stationary,
-        startTime: new Date()
+        startTime: 200,
+        endTime: 300,
+        sessionCode: "def"
     }
 };
 
@@ -96,6 +106,6 @@ it("renders correct based on state", () => {
 
     expect(screen.getByText(/JD/i)).toBeInTheDocument();
     expect(screen.getByText(/JS/i)).toBeInTheDocument();
-    expect(screen.getByText(/REC/i)).toBeInTheDocument();
-    expect(screen.getAllByText(/REC/i)).toHaveLength(1);
+    expect(screen.getByTestId("REC")).toBeInTheDocument();
+    expect(screen.getAllByTestId("REC")).toHaveLength(1);
 });
