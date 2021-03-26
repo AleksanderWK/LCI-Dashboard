@@ -3,11 +3,11 @@ import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Checkbox from "@material-ui/core/Checkbox";
-import IconButton from "@material-ui/core/IconButton";
-import CommentIcon from "@material-ui/icons/Comment";
+import {selectedSessionActiveContainersState} from "../../state/session";
+import {useRecoilState} from "recoil";
+import {MMDVariables, Variable} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,43 +21,31 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function SelectCharts(): JSX.Element {
     const classes = useStyles();
-    const [checked, setChecked] = React.useState([0]);
+    const [activeContainers, setActiveContainers] = useRecoilState(selectedSessionActiveContainersState);
 
-    const handleToggle = (value: number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
+    const handleToggle = (key: Variable) => () => {
+        const newContainers = {...activeContainers};
+        newContainers[key] = {...activeContainers[key], active: !activeContainers[key].active};
+        setActiveContainers(newContainers);
     };
 
     return (
         <List className={classes.root}>
-            {[0, 1, 2, 3].map((value) => {
-                const labelId = `checkbox-list-label-${value}`;
-
+            {Object.values(Variable).map((variable, index) => {
+                const name = MMDVariables[variable].name;
+                const labelId = `checkbox-list-label-${name}`;
                 return (
-                    <ListItem key={value} role={undefined} dense button onClick={handleToggle(value)}>
+                    <ListItem key={index} role={undefined} dense button onClick={handleToggle(variable)}>
                         <ListItemIcon>
                             <Checkbox
                                 edge="start"
-                                checked={checked.indexOf(value) !== -1}
+                                checked={activeContainers[variable].active}
                                 tabIndex={-1}
                                 disableRipple
                                 inputProps={{"aria-labelledby": labelId}}
                             />
                         </ListItemIcon>
-                        <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
-                        <ListItemSecondaryAction>
-                            <IconButton edge="end" aria-label="comments">
-                                <CommentIcon />
-                            </IconButton>
-                        </ListItemSecondaryAction>
+                        <ListItemText id={labelId} primary={name} />
                     </ListItem>
                 );
             })}
