@@ -94,11 +94,12 @@ export default function IntervalSlider(): JSX.Element {
             {completeRecordingInterval && (
                 <CustomSlider
                     valueLabelDisplay="on"
+                    key={`slider-${[completeRecordingInterval.start, completeRecordingInterval.end]}`}
                     defaultValue={[completeRecordingInterval.start, completeRecordingInterval.end]}
                     min={completeRecordingInterval.start}
                     max={completeRecordingInterval.end}
                     valueLabelFormat={valuetext}
-                    onChange={handleChange}
+                    onChangeCommitted={handleChange}
                     ValueLabelComponent={ValueLabelComponent}
                 />
             )}

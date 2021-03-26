@@ -5,8 +5,9 @@ import TimerIcon from "@material-ui/icons/Timer";
 import PersonIcon from "@material-ui/icons/Person";
 import EventIcon from "@material-ui/icons/Event";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {
+    currentRecordingInterval,
     RecordedSession,
     RecordedSessionInfo,
     recordedSessionInfoState,
@@ -101,6 +102,7 @@ export default function Header(): JSX.Element {
 
     const recordedSessionId = useRecoilValue(selectedRecordedSessionIdState);
     const [recordedSessionInfo, setRecordedSessionInfo] = useRecoilState(recordedSessionInfoState);
+    const resetInterval = useResetRecoilState(currentRecordingInterval);
 
     useEffect(() => {
         if (recordedSessionId) {
@@ -172,6 +174,7 @@ export default function Header(): JSX.Element {
                 <IconButton
                     aria-label="exit recording view"
                     onClick={() => {
+                        resetInterval();
                         history.push("/");
                     }}
                 >

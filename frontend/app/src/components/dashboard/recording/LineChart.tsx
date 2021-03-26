@@ -4,7 +4,7 @@ import React, {createRef, RefObject, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {MMDVariables, Variable} from "../../../constants";
-import {recordedSessionState} from "../../../state/recordedSession";
+import {currentRecordingInterval, recordedSessionState} from "../../../state/recordedSession";
 import theme from "../../../theme";
 
 interface Props {
@@ -115,6 +115,18 @@ function LineChart(props: Props): JSX.Element {
     });
 
     const recordedSession = useRecoilValue(recordedSessionState);
+    const selectedRecordingInterval = useRecoilValue(currentRecordingInterval);
+
+    // Listens on change in interval state and sets the x-axis' min and max values accordingly
+    useEffect(() => {
+        if (chart.current && selectedRecordingInterval) {
+            chart.current.chart.xAxis[0].setExtremes(
+                selectedRecordingInterval.start,
+                selectedRecordingInterval.end,
+                true // Redraw graph
+            );
+        }
+    }, [selectedRecordingInterval]);
 
     useEffect(() => {
         if (chart.current && recordedSession) {
