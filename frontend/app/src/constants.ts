@@ -1,5 +1,5 @@
 // Frequency in Hz (cycles per second)
-export const FREQUENCY = 1;
+export const FREQUENCY = 2;
 
 // Maximum time interval to show on live charts in seconds
 export const LIVE_CHART_RANGE = 30;

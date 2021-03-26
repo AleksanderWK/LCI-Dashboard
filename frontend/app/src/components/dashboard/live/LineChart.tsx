@@ -17,8 +17,7 @@ function LineChart(props: Props): JSX.Element {
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
         chart: {
-            marginLeft: 40,
-            height: 200
+            marginLeft: 40
         },
         title: {
             text: undefined
@@ -71,7 +70,6 @@ function LineChart(props: Props): JSX.Element {
             title: {
                 text: undefined
             },
-            tickInterval: 20,
             gridLineWidth: 0
         },
         xAxis: {
