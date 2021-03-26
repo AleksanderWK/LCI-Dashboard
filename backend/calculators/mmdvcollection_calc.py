@@ -2,7 +2,7 @@ from datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
 from calculators.pd_calc import PerceivedDifficultyCalculator
 from calculators.ipi_calc import InformationProcessingIndexCalculator
-from calculators.es_fcalc import EnergySpentFatigue
+from calculators.esf_calc import EnergySpentFatigue
 from calculators.cl_calc import CognitiveLoadCalculator
 
 
