@@ -4,6 +4,7 @@ from calculators.pd_calc import PerceivedDifficultyCalculator
 from calculators.ipi_calc import InformationProcessingIndexCalculator
 from calculators.esf_calc import EnergySpentFatigue
 from calculators.cl_calc import CognitiveLoadCalculator
+from calculators.pa_calc import PhysiologicalArousalCalculator
 
 
 class MMDVCollectionCalculator:
@@ -24,6 +25,7 @@ class MMDVCollectionCalculator:
         self.pd_calc = PerceivedDifficultyCalculator()
         self.ipi_calc = InformationProcessingIndexCalculator()
         self.esf_calc = EnergySpentFatigue()
+        self.pa_calc = PhysiologicalArousalCalculator()
 
     def calculate_all(self):
         result = MMDVCollection()
@@ -32,4 +34,5 @@ class MMDVCollectionCalculator:
         result.pd = self.pd_calc.calculate_dataset(eye_tracking_data)
         result.ipi = self.ipi_calc.calculate_dataset(eye_tracking_data)
         result.esf = self.esf_calc.calculate_dataset(self.ds.get_current_skeleton_data())
+        result.pa = self.pa_calc.calculate_dataset(self.ds.get_current_eda_data())
         return result
