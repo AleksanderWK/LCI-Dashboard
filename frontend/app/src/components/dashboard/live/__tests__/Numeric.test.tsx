@@ -3,8 +3,8 @@ import ReactDOM from "react-dom";
 import {render, screen} from "@testing-library/react";
 import Numeric from "../Numeric";
 import {RecoilRoot} from "recoil";
-import {Variable} from "../../../constants";
-import {sessionDataState} from "../../../state/session";
+import {Variable} from "../../../../constants";
+import {sessionDataState} from "../../../../state/session";
 
 it("matches snapshot", () => {
     const {baseElement} = render(

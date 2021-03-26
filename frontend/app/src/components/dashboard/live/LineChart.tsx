@@ -3,9 +3,9 @@ import HighchartsReact from "highcharts-react-official";
 import React, {createRef, RefObject, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
-import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../constants";
-import {selectedSessionDataState} from "../../state/session";
-import theme from "../../theme";
+import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
+import {selectedSessionDataState} from "../../../state/session";
+import theme from "../../../theme";
 
 interface Props {
     variable: Variable;
@@ -40,7 +40,7 @@ function LineChart(props: Props): JSX.Element {
                         // Show only the label for the latest data point
                         return x === series.data[series.data.length - 1].x &&
                             y === series.data[series.data.length - 1].y
-                            ? y
+                            ? y?.toFixed()
                             : null;
                     }
                 },
@@ -67,7 +67,7 @@ function LineChart(props: Props): JSX.Element {
         },
         yAxis: {
             min: 0,
-            max: 100,
+            max: MMDVariables[props.variable].maxValue,
             title: {
                 text: undefined
             },
@@ -80,12 +80,16 @@ function LineChart(props: Props): JSX.Element {
             lineWidth: 0,
             tickLength: 0
         },
+        time: {
+            timezoneOffset: new Date().getTimezoneOffset()
+        },
         tooltip: {
-            borderWidth: 0,
             dateTimeLabelFormats: {
                 millisecond: "%H:%M:%S"
             },
+            valueDecimals: 2,
             shadow: false,
+            borderWidth: 0,
             borderRadius: 8,
             backgroundColor: theme.palette.background.tooltip,
             style: {

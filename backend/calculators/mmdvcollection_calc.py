@@ -1,7 +1,9 @@
 from datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
-from calculators.pdcalc import PerceivedDifficultyCalculator
-from calculators.engcalc import EngagementDifficultyCalculator
+from calculators.pd_calc import PerceivedDifficultyCalculator
+from calculators.ipi_calc import InformationProcessingIndexCalculator
+from calculators.esf_calc import EnergySpentFatigue
+from calculators.cl_calc import CognitiveLoadCalculator
 
 
 class MMDVCollectionCalculator:
@@ -11,19 +13,23 @@ class MMDVCollectionCalculator:
         It delegates the actual calculations to the MMDVCalculator-subclasses.
     """
 
-    pd_calc = None
-    eng_calc = None
     ds = None
+    cl_calc = None
+    pd_calc = None
+    ipi_calc = None
 
     def __init__(self, ds: Datastreams):
         self.ds = ds
+        self.cl_calc = CognitiveLoadCalculator()
         self.pd_calc = PerceivedDifficultyCalculator()
-        self.eng_calc = EngagementDifficultyCalculator()
+        self.ipi_calc = InformationProcessingIndexCalculator()
+        self.esf_calc = EnergySpentFatigue()
 
     def calculate_all(self):
         result = MMDVCollection()
-        result.pd = self.pd_calc.calculate_dataset(
-            self.ds.get_current_eye_tracking_data())
-        result.eng = self.eng_calc.calculate_dataset(
-            self.ds.get_current_eda_data())
+        eye_tracking_data = self.ds.get_current_eye_tracking_data()
+        result.cl = self.cl_calc.calculate_dataset(eye_tracking_data)
+        result.pd = self.pd_calc.calculate_dataset(eye_tracking_data)
+        result.ipi = self.ipi_calc.calculate_dataset(eye_tracking_data)
+        result.esf = self.esf_calc.calculate_dataset(self.ds.get_current_skeleton_data())
         return result

@@ -1,16 +1,19 @@
-import React from "react";
-import {createStyles, makeStyles} from "@material-ui/core";
-import {useRecoilState, useResetRecoilState} from "recoil";
+import React, {useEffect} from "react";
+import {createStyles, makeStyles, Snackbar} from "@material-ui/core";
+import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import Menu from "../components/sessionview/Menu/Menu";
 import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";
 import CreateSession from "../components/createsessionview/CreateSession";
-import Dashboard from "../components/dashboard/Dashboard";
+import Dashboard from "../components/dashboard/live/Dashboard";
 import {addStudentPopupOpenState, createSessionPopupOpenState, quitSessionPopupOpenState} from "../state/popup";
 import {createSessionValuesState} from "../state/createSession";
 import Header from "../components/sessionview/Header";
 import QuitSession from "../components/sessionview/QuitSession";
 import Popup from "../components/common/Popup";
+import {Alert} from "@material-ui/lab";
+import zIndex from "@material-ui/core/styles/zIndex";
+import {selectedSessionRecordingState, snackOpenState} from "../state/session";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -39,6 +42,7 @@ export default function SessionView(): JSX.Element {
 
     const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
 
+    const snackOpen = useRecoilValue(snackOpenState);
     return (
         <>
             <div className={classes.pageContainer}>
@@ -79,6 +83,9 @@ export default function SessionView(): JSX.Element {
                     ) : null}
                 </>
             </PopupContainer>
+            <Snackbar open={snackOpen} anchorOrigin={{vertical: "bottom", horizontal: "right"}} style={{zIndex: 2}}>
+                <Alert severity="success">Recording has been saved</Alert>
+            </Snackbar>
         </>
     );
 }

@@ -93,20 +93,33 @@ export default function Header(): JSX.Element {
     const [duration, setDuration] = useState<string>();
 
     useEffect(() => {
-        //interval that updates the duration state every second
+        // Set the current duration initially when the compnent loads
+        setCurrentDuration();
+
+        // Interval that updates the duration state every second
+        let intervalId: NodeJS.Timeout | null = null;
+        intervalId = setInterval(() => {
+            setCurrentDuration();
+        }, 1000);
+
+        return function cleanup() {
+            if (intervalId) clearInterval(intervalId);
+        };
+    }, [selectedSessionInfo, setCurrentDuration]);
+
+    // This function finds the current Duration based on startTime in selectedSessionInfo and by using the current time
+    function setCurrentDuration() {
         if (selectedSessionInfo) {
-            setInterval(() => {
-                const d = new Date().getTime();
-                let distance = d - selectedSessionInfo.startTime.getTime();
-                const hours = Math.floor(distance / 3600000);
-                distance -= hours * 3600000;
-                const minutes = Math.floor(distance / 60000);
-                distance -= minutes * 60000;
-                const seconds = Math.floor(distance / 1000);
-                setDuration(`${hours}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`);
-            }, 1000);
+            const d = new Date().getTime();
+            let distance = d - selectedSessionInfo.startTime;
+            const hours = Math.floor(distance / 3600000);
+            distance -= hours * 3600000;
+            const minutes = Math.floor(distance / 60000);
+            distance -= minutes * 60000;
+            const seconds = Math.floor(distance / 1000);
+            setDuration(`${hours}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`);
         }
-    }, [selectedSessionInfo, setDuration]);
+    }
 
     return (
         <div className={classes.container}>
