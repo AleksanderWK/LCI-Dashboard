@@ -18,7 +18,7 @@ class SkeletalNodeDataPoint:
         return str(self.jointType) + " " + str(self.x) + " " + str(self.y) + " " + str(self.z) + " " + str(self.time)
 
 
-JOINT_AMOUNT = 25
+JOINT_AMOUNT = 24
 class SkeletalNodeCollection:
 
     time = None
