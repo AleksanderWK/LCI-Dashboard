@@ -36,5 +36,5 @@ def tests():
             ip, random = decodeToken(code.strip())
             print(code.strip(), ip, ip == "192.168.38.101")
 
-# Comment out this to run the tests
+# Uncomment out this to run the tests
 # tests()

@@ -33,7 +33,8 @@ function generateTestCodes(amount) {
   }
 }
 
-generateTestCodes(1000);
+// Uncomment this to generate 1000 codes that can be used in the backend for test cases.
+// generateTestCodes(1000);
 
 module.exports = {
   generateCode: generateCode,
