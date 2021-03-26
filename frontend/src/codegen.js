@@ -21,11 +21,19 @@ function getIPv4() {
 
 function generateCode() {
   let ipNum = ipInt(getIPv4()).toInt();
-  let startCode = Math.floor(10 + Math.random() * 99).toString();
-  let endCode = Math.floor(Math.random() * 100).toString();
+  let startCode = Math.floor(10 + Math.random() * 89).toString();
+  let endCode = Math.floor(10 + Math.random() * 89).toString();
 
   return parseInt(startCode + ipNum + endCode).toString(36);
 }
+
+function generateTestCodes(amount) {
+  for (let i = 0; i < amount; i++) {
+    console.log(generateCode());
+  }
+}
+
+generateTestCodes(1000);
 
 module.exports = {
   generateCode: generateCode,
