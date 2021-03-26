@@ -126,7 +126,8 @@ function LineChart(props: Props): JSX.Element {
                         id: recordingId,
                         name: MMDVariables[props.variable].name,
                         data: data.timestamps.map((timestamp, index) => {
-                            return [timestamp, +data[props.variable][index].toFixed(2)];
+                            const value = +data[props.variable][index];
+                            return [timestamp, +value !== -1 ? +value.toFixed(2) : null];
                         }),
                         linkedTo: ":previous"
                     },

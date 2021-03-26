@@ -26,7 +26,6 @@ export interface Session {
     startTime: number;
     endTime: number | null;
     sessionCode: string;
-    //activeContainers: ActiveContainers;
 }
 
 /*
@@ -80,7 +79,6 @@ export interface SessionWithStudent {
     startTime: number;
     endTime: number | null;
     sessionCode: string;
-    //activeContainers: ActiveContainers;
 }
 
 /*
@@ -105,7 +103,6 @@ export const selectedSessionState = selector<SessionWithStudent | undefined>({
                     startTime: session.startTime,
                     endTime: session.endTime,
                     sessionCode: session.sessionCode
-                    //activeContainers: session.activeContainers
                 };
             }
         }
@@ -136,7 +133,6 @@ export const sessionsState = selector<SessionWithStudent[]>({
                         startTime: session.startTime,
                         endTime: session.endTime,
                         sessionCode: session.sessionCode
-                        //activeContainers: session.activeContainers
                     });
                 }
             }
@@ -196,14 +192,22 @@ export const selectedSessionDataState = selector<Data>({
 });
 
 /*
+ *  A selectorFamily that returns the data for a given variable from the selected session's data
+ */
+export const selectedSessionDataLengthVariableState = selectorFamily<number, Variable>({
+    key: "selectedSessionDataLengthVariable",
+    get: (variable: Variable) => ({get}) => {
+        return get(selectedSessionDataState)[variable].length;
+    }
+});
+
+/*
  *  A selectorFamily that returns the last value for a given variable from the selected session's data
  */
 export const selectedSessionLastValueState = selectorFamily<number | null, Variable>({
     key: "selectedSessionLastValue",
     get: (variable: Variable) => ({get}) => {
-        const id = get(selectedSessionIdState);
-
-        const data = get(sessionDataState(id))[variable];
+        const data = get(selectedSessionDataState)[variable];
 
         if (data.length > 0) {
             return data.slice(-1)[0][1];
@@ -237,7 +241,7 @@ export interface ActiveContainers {
 export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
     key: "sessionActiveContainers",
     default: {
-        [Variable.CognitiveLoad]: {active: false, display: "line"},
+        [Variable.CognitiveLoad]: {active: true, display: "line"},
         [Variable.PerceivedDifficulty]: {active: true, display: "line"},
         [Variable.Familiarity]: {active: false, display: "line"},
         [Variable.InformationProcessingIndex]: {active: true, display: "numeric"},

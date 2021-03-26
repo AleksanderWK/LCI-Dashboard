@@ -34,6 +34,7 @@ export interface MMDVariableInfo {
     device: Device;
     description: string;
     maxValue?: number;
+    calculationTime?: number;
 }
 
 export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
@@ -41,7 +42,8 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Cognitive Load",
         device: Device.EyeTracker,
         description:
-            "Cognitive load refers to the amount of information that the working memory of a person can hold at once. In an educational setting, it is the effort needed for a learner to learn new information."
+            "Cognitive load refers to the amount of information that the working memory of a person can hold at once. In an educational setting, it is the effort needed for a learner to learn new information.",
+        calculationTime: 30
     },
     [Variable.PerceivedDifficulty]: {
         name: "Perceived Difficulty",
