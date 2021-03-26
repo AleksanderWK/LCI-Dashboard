@@ -264,21 +264,3 @@ export const selectedSessionActiveContainersState = selector<ActiveContainers>({
         set(sessionActiveContainersState(id), newValue);
     }
 });
-
-/*
- *  A selectorFamily that accesses the container status for a given variable
- */
-
-/* export const selectedSessionVariableContainerState = selectorFamily<boolean | null, Variable>({
-    key: "selectedSessionVariableContainer",
-    get: (variable: Variable) => ({get}) => {
-        const id = get(selectedSessionIdState);
-
-        return get(sessionActiveContainersState(id))[variable];
-    }
-    set: (variable: Variable) => ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), newValue);
-    }
-     */
-//});
