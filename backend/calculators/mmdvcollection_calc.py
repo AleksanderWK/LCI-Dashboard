@@ -1,8 +1,9 @@
 from datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
-from calculators.pd_calc import PerceivedDifficultyCalculator
+from calculators.pdcalc import PerceivedDifficultyCalculator
+from calculators.ipicalc import InformationProcessingIndexCalculator
+from calculators.esfcalc import EnergySpentFatigue
 from calculators.cl_calc import CognitiveLoadCalculator
-from calculators.ipi_calc import InformationProcessingIndexCalculator
 
 
 class MMDVCollectionCalculator:
@@ -22,6 +23,7 @@ class MMDVCollectionCalculator:
         self.cl_calc = CognitiveLoadCalculator()
         self.pd_calc = PerceivedDifficultyCalculator()
         self.ipi_calc = InformationProcessingIndexCalculator()
+        self.esf_calc = EnergySpentFatigue()
 
     def calculate_all(self):
         result = MMDVCollection()
@@ -29,4 +31,5 @@ class MMDVCollectionCalculator:
         result.cl = self.cl_calc.calculate_dataset(eye_tracking_data)
         result.pd = self.pd_calc.calculate_dataset(eye_tracking_data)
         result.ipi = self.ipi_calc.calculate_dataset(eye_tracking_data)
+        result.esf = self.esf_calc.calculate_dataset(self.ds.get_current_skeleton_data())
         return result

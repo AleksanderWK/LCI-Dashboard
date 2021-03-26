@@ -90,7 +90,8 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.EnergySpentFatigue]: {
         name: "Energy Spent/Fatigue",
         device: Device.VideoBody,
-        description: ""
+        description:
+            "The amount of energy spent by the student, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position skeletal body."
     }
 };
 
