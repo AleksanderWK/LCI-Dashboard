@@ -127,4 +127,4 @@ function LineChart(props: Props): JSX.Element {
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }
 
-export default LineChart;
+export default React.memo(LineChart);
