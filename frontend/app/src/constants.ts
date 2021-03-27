@@ -74,7 +74,9 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.Engagement]: {
         name: "Engagement",
         device: Device.Wristband,
-        description: ""
+        description:
+            "Area under the graph of 16 tonic EDA values. Although the empatica measures at 4Hz, the sampling rate is set to 8 because neurokit does not allow sampling rates under 7.",
+        calculationTime: 8
     },
     [Variable.PhysiologicalStress]: {
         name: "Physiological Stress",
