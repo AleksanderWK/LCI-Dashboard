@@ -1,7 +1,11 @@
 from datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
-from calculators.pdcalc import PerceivedDifficultyCalculator
-from calculators.engcalc import EngagementCalculator
+from calculators.pd_calc import PerceivedDifficultyCalculator
+from calculators.eng_calc import EngagementCalculator
+from calculators.ipi_calc import InformationProcessingIndexCalculator
+from calculators.esf_calc import EnergySpentFatigue
+from calculators.cl_calc import CognitiveLoadCalculator
+from calculators.pa_calc import PhysiologicalArousalCalculator
 
 
 class MMDVCollectionCalculator:
@@ -11,20 +15,29 @@ class MMDVCollectionCalculator:
         It delegates the actual calculations to the MMDVCalculator-subclasses.
     """
 
-    pd_calc = None
     ds = None
+    cl_calc = None
+    pd_calc = None
+    ipi_calc = None
 
     def __init__(self, ds: Datastreams):
         self.ds = ds
+        self.cl_calc = CognitiveLoadCalculator()
         self.pd_calc = PerceivedDifficultyCalculator()
+        self.ipi_calc = InformationProcessingIndexCalculator()
+        self.esf_calc = EnergySpentFatigue()
+        self.pa_calc = PhysiologicalArousalCalculator()
         self.eng_calc = EngagementCalculator()
-
-    def calc_pd(self):
-        return self.pd_calc.calculate_dataset(self.ds.get_current_eye_tracking_data())
 
     def calculate_all(self):
         result = MMDVCollection()
+        eye_tracking_data = self.ds.get_current_eye_tracking_data()
         eda_data = self.ds.get_current_eda_data()
-        result.pd = self.calc_pd()
+        result.cl = self.cl_calc.calculate_dataset(eye_tracking_data)
+        result.pd = self.pd_calc.calculate_dataset(eye_tracking_data)
+        result.ipi = self.ipi_calc.calculate_dataset(eye_tracking_data)
+        result.esf = self.esf_calc.calculate_dataset(
+            self.ds.get_current_skeleton_data())
+        result.pa = self.pa_calc.calculate_dataset(eda_data)
         result.eng = self.eng_calc.calculate_dataset(eda_data)
         return result

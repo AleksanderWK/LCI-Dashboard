@@ -46,7 +46,7 @@ class PerceivedDifficultyCalculator(MMDVCalculator):
 
         # Forumla for perceived difficulty
         perceived_difficulty = 1 / (1 + saccade_speed)
-        return perceived_difficulty
+        return perceived_difficulty * 100
 
 
 # ------------------------------------------------------#

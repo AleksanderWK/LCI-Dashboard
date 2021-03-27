@@ -57,11 +57,13 @@ it("Displays session name and student name correctly", () => {
                 snap.set(selectedSessionRecordingState, {status: true, startTime: new Date(), recordingId: 0});
                 snap.set(studentsState, [{_id: "1", name: "Aleksander"}]);
                 snap.set(sessionState(1), {
-                    sessionId: 1,
+                    _id: 1,
                     eyeTrackingDevice: EyeTrackingDevice.Mobile,
                     sessionName: "Educational Game",
                     studentId: "1",
-                    startTime: new Date()
+                    startTime: 0,
+                    endTime: 0,
+                    sessionCode: "abc"
                 });
                 snap.set(selectedSessionIdState, 1);
             }}

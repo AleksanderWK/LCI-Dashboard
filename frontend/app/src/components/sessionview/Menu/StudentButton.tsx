@@ -3,6 +3,7 @@ import PersonIcon from "@material-ui/icons/Person";
 import {useSetRecoilState} from "recoil";
 import {selectedSessionIdState} from "../../../state/session";
 import MenuButton from "./MenuButton";
+import clsx from "clsx";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -12,23 +13,44 @@ const useStyles = makeStyles(() =>
         },
         initials: {
             fontSize: 10,
+            marginLeft: 2,
             color: "white"
         },
         icon: {
+            marginLeft: 2,
             width: "50px",
             height: "50px"
         },
         recordingLabelContainer: {
             position: "absolute",
             bottom: 4,
-            right: 12,
-            backgroundColor: "#DD5757",
-            borderRadius: 4,
-            padding: "2px 4px 1px 4px"
+            right: 20,
+            width: "15px",
+            height: "15px",
+            backgroundColor: "rgba(221, 87, 87, 1)",
+            borderRadius: "50%",
+            boxShadow: "0 0 0 0 rgba(221, 87, 87, 1)",
+            transform: "scale(1)",
+            animation: "$pulse 2s infinite"
         },
         recordingLabel: {
             color: "white",
             fontSize: 8
+        },
+        "@keyframes pulse": {
+            "0%": {
+                transform: "scale(0.95)",
+                boxShadow: "0 0 0 0 rgba(221, 87, 87, 0.7)"
+            },
+            "70%": {
+                transform: "scale(1)",
+                boxShadow: "0 0 0 7.5px rgba(221, 87, 87, 0)"
+            },
+
+            "100%": {
+                transform: "scale(0.95)",
+                boxShadow: "0 0 0 0 rgba(221, 87, 87, 0)"
+            }
         }
     })
 );
@@ -78,9 +100,5 @@ export default function StudentButton(props: Props): JSX.Element {
 
 function RecordingLabel() {
     const classes = useStyles();
-    return (
-        <div className={classes.recordingLabelContainer}>
-            <Typography className={classes.recordingLabel}>REC</Typography>
-        </div>
-    );
+    return <div className={classes.recordingLabelContainer} data-testid="REC"></div>;
 }

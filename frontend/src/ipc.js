@@ -1,8 +1,25 @@
 const ipc = require("electron").ipcMain;
-const { startServer, sendStartDatastream } = require("./wsserver.js");
-const { getUserByName, getUsers, insertUser } = require("./db/users.js");
-const { insertSession, getSessions } = require("./db/sessions.js");
-const { pushDataPointToSession } = require("./db/recordings.js");
+const {
+  startServer,
+  sendStartDatastream,
+  terminateClient,
+} = require("./wsserver.js");
+const {
+  getUserByName,
+  getUsers,
+  insertUser,
+  getUserByID,
+} = require("./db/users.js");
+const {
+  insertSession,
+  getSession,
+  updateSessionEndTime,
+  getRecordedSessions,
+} = require("./db/sessions.js");
+const {
+  pushDataPointToSession,
+  getSessionRecording,
+} = require("./db/recordings.js");
 const { win, getWindow } = require("./main.js");
 const { generateCode } = require("./codegen.js");
 
@@ -12,6 +29,12 @@ ipc.on("startServer", (event, ready) => {
   if (ready) {
     wss = startServer(getWindow());
   }
+});
+
+ipc.handle("getUserByID", async (event, userID) => {
+  return getUserByID(userID).then((userID) => {
+    return userID;
+  });
 });
 
 ipc.on("getUser", (event, name) => {
@@ -32,15 +55,31 @@ ipc.handle("insertUser", async (event, data) => {
   });
 });
 
-ipc.on("getSessions", (event) => {
-  getSessions().then((sessions) => {
-    event.reply("getSessions-reply", sessions);
+ipc.on("getRecordedSessions", (event) => {
+  getRecordedSessions().then((sessions) => {
+    event.reply("getRecordedSessions-reply", sessions);
+  });
+});
+
+ipc.handle("getSession", async (event, sessionId) => {
+  return getSession(sessionId).then((session) => {
+    return session;
   });
 });
 
 ipc.handle("insertSession", async (event, data) => {
   return insertSession(data).then((sessionId) => {
     return sessionId;
+  });
+});
+
+ipc.on("updateSessionEndTime", (event, data) => {
+  updateSessionEndTime(data._id, data.timestamp);
+});
+
+ipc.handle("getSessionRecording", async (event, sessionId) => {
+  return getSessionRecording(sessionId).then((data) => {
+    return data;
   });
 });
 
@@ -57,6 +96,10 @@ ipc.on("getCode", (event) => {
   event.reply("getCode-reply", generateCode());
 });
 
-ipc.on("startDatastream", (event, user) => {
-  sendStartDatastream(wss);
+ipc.on("startDatastream", (event, sessionCode) => {
+  sendStartDatastream(wss, sessionCode);
+});
+
+ipc.on("terminateSession", (event, sessionCode) => {
+  terminateClient(wss, sessionCode);
 });

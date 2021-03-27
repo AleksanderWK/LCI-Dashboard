@@ -12,3 +12,6 @@ websocket-client = "*"
 autobahn = {extras = ["asyncio"],version = "*"}
 python-baseconv = "*"
 neurokit2 = "*"
+pywavelets = "*"
+numpy = "*"
+

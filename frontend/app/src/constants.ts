@@ -8,7 +8,7 @@ export enum Variable {
     CognitiveLoad = "cl",
     PerceivedDifficulty = "pd",
     Familiarity = "fam",
-    InformationProcessingIndex = "ipd",
+    InformationProcessingIndex = "ipi",
     PhysiologicalArousal = "pa",
     Engagement = "eng",
     PhysiologicalStress = "ps",
@@ -33,6 +33,8 @@ export interface MMDVariableInfo {
     name: string;
     device: Device;
     description: string;
+    maxValue?: number;
+    calculationTime?: number;
 }
 
 export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
@@ -40,13 +42,15 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Cognitive Load",
         device: Device.EyeTracker,
         description:
-            "Cognitive load refers to the amount of information that the working memory of a person can hold at once. In an educational setting, it is the effort needed for a learner to learn new information."
+            "Cognitive load refers to the amount of information that the working memory of a person can hold at once. In an educational setting, it is the effort needed for a learner to learn new information.",
+        calculationTime: 30
     },
     [Variable.PerceivedDifficulty]: {
         name: "Perceived Difficulty",
         device: Device.EyeTracker,
         description:
-            "Perceived difficulty is the perception of the ease or difficulty of performing in an educational context."
+            "Perceived difficulty is the perception of the ease or difficulty of performing in an educational context.",
+        maxValue: 100
     },
     [Variable.Familiarity]: {
         name: "Familiarity",
@@ -56,12 +60,16 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.InformationProcessingIndex]: {
         name: "Information Processing Index",
         device: Device.EyeTracker,
-        description: ""
+        description:
+            "The ratio of local (100) and global (0) information processing. Staring at one point is local processing, while rapidly scanning a larger area is global processing.",
+        maxValue: 100
     },
     [Variable.PhysiologicalArousal]: {
         name: "Physiological Arousal",
         device: Device.Wristband,
-        description: ""
+        description:
+            "Physiological Arousal is how strong the current emotions are. This is calculated by taking the average EDA in the current time interval, which is currently 8 seconds.",
+        calculationTime: 8
     },
     [Variable.Engagement]: {
         name: "Engagement",
@@ -86,6 +94,23 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.EnergySpentFatigue]: {
         name: "Energy Spent/Fatigue",
         device: Device.VideoBody,
-        description: ""
+        description:
+            "The amount of energy spent by the student, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position skeletal body.",
+        calculationTime: 4
     }
 };
+
+export const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+];

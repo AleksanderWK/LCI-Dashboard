@@ -2,9 +2,17 @@ let { db } = require("./nedb.js");
 
 db.recordings.persistence.setAutocompactionInterval(10000);
 
+function getSessionRecording(sessionId) {
+  return new Promise((resolve, reject) => {
+    db.recordings.findOne({ _id: sessionId }, (err, doc) => {
+      resolve(doc);
+    });
+  });
+}
+
 function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
   db.recordings.update(
-    { sessionId: sessionId },
+    { _id: sessionId },
     {
       $min: {
         startTime: timestamp,
@@ -18,7 +26,7 @@ function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
         ["data." + recordingId + ".cl"]: data.cl,
         ["data." + recordingId + ".pd"]: data.pd,
         ["data." + recordingId + ".fam"]: data.fam,
-        ["data." + recordingId + ".ipd"]: data.ipd,
+        ["data." + recordingId + ".ipi"]: data.ipi,
         ["data." + recordingId + ".pa"]: data.pa,
         ["data." + recordingId + ".eng"]: data.eng,
         ["data." + recordingId + ".ps"]: data.ps,
@@ -34,7 +42,7 @@ function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
         "data.cl": [timestamp, data.cl],
         "data.pd": [timestamp, data.pd],
         "data.fam": [timestamp, data.fam],
-        "data.ipd": [timestamp, data.ipd],
+        "data.ipi": [timestamp, data.ipi],
         "data.pa": [timestamp, data.pa],
         "data.eng": [timestamp, data.eng],
         "data.ps": [timestamp, data.ps],
@@ -51,4 +59,5 @@ function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
 
 module.exports = {
   pushDataPointToSession: pushDataPointToSession,
+  getSessionRecording: getSessionRecording,
 };

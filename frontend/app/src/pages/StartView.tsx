@@ -12,7 +12,10 @@ import AddIcon from "@material-ui/icons/Add";
 import {useHistory} from "react-router-dom";
 import {ipcGet} from "../ipc";
 import {useSetRecoilState} from "recoil";
-import {selectedRecordedSessionId} from "../state/recordedSession";
+import {selectedRecordedSessionIdState} from "../state/recordedSession";
+import {Session} from "../state/session";
+import {months} from "../constants";
+import {Student, studentsState} from "../state/student";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -90,7 +93,7 @@ interface Data {
     sessionName: string;
     date: number;
     time: number;
-    duration: number;
+    duration: number | null;
     studentName: string;
 }
 
@@ -106,19 +109,41 @@ const columns: Column[] = [
     {
         id: "date",
         label: "Date",
-
-        format: (value: number) => "-" // new Date(value).toDateString()
+        format: (value: number) => {
+            const date = new Date(value);
+            return months[date.getMonth()].substr(0, 3) + " " + date.getDate() + ", " + date.getFullYear();
+        }
     },
     {
         id: "time",
         label: "Time",
-        format: (value: number) => "-" // new Date(value).toLocaleTimeString("nb-NO")
+        format: (value: number) => {
+            const date = new Date(value);
+            return ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
+        }
     },
     {
         id: "duration",
         label: "Duration",
+        format: (value: number) => {
+            if (value !== 0) {
+                const hours = Math.floor(value / 3600000);
+                value -= hours * 3600000;
+                const minutes = Math.floor(value / 60000);
+                value -= minutes * 60000;
+                const seconds = Math.floor(value / 1000);
 
-        format: (value: number) => "-" // (value / (1000 * 60)).toString()
+                if (hours > 0) {
+                    return `${hours}h ${minutes}m ${seconds}s`;
+                } else if (minutes > 0) {
+                    return `${minutes}m ${seconds}s`;
+                } else {
+                    return `${seconds}s`;
+                }
+            } else {
+                return "undefined";
+            }
+        }
     },
     {
         id: "studentName",
@@ -130,37 +155,30 @@ export default function StartView(): JSX.Element {
     const classes = useStyles();
     const history = useHistory();
 
-    //state management
-    const setSelectedRecordedSessionId = useSetRecoilState(selectedRecordedSessionId);
+    const setSelectedRecordedSessionId = useSetRecoilState(selectedRecordedSessionIdState);
 
-    // Data creation
-    function createData(
-        id: number,
-        sessionName: string,
-        date: number,
-        time: number,
-        duration: number,
-        studentName: string
-    ): Data {
-        return {id, sessionName, date, time, duration, studentName};
-    }
+    const setStudents = useSetRecoilState(studentsState);
 
     const [rows, setRows] = useState<Data[]>([]);
 
     useEffect(() => {
-        ipcGet("getSessions").then((data: any) => {
-            setRows(
-                data.map((session: any) => {
-                    return createData(
-                        session._id,
-                        session.sessionName,
-                        1600000000000,
-                        1600000000000,
-                        360000,
-                        session.studentName
-                    );
-                })
-            );
+        ipcGet<Student[]>("getUsers").then((students) => {
+            setStudents(students);
+
+            ipcGet<Session[]>("getRecordedSessions").then((data) => {
+                setRows(
+                    data.map((session) => {
+                        return {
+                            id: session._id,
+                            sessionName: session.sessionName,
+                            date: session.startTime,
+                            time: session.startTime,
+                            duration: session.endTime ? session.endTime - session.startTime : 0,
+                            studentName: students.find((student) => student._id === session.studentId)?.name
+                        } as Data;
+                    })
+                );
+            });
         });
     }, []);
 
@@ -224,7 +242,7 @@ export default function StartView(): JSX.Element {
                                                     className={classes.row}
                                                     onClick={() => {
                                                         setSelectedRecordedSessionId(row.id);
-                                                        history.push("/RecordedSessionView");
+                                                        history.push("/recording");
                                                     }}
                                                 >
                                                     {columns.map((column) => {

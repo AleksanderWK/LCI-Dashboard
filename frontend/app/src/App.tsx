@@ -3,10 +3,11 @@ import SessionView from "./pages/SessionView";
 import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
 import {ipcOn, ipcSend} from "./ipc";
-import {Data, selectedSessionIdState, sessionDataState, sessionRecordingState} from "./state/session";
+import {Data, sessionDataState, sessionRecordingState, sessionsState, SessionWithStudent} from "./state/session";
 import {useRecoilCallback} from "recoil";
 import {Variable} from "./constants";
 import StartView from "./pages/StartView";
+import RecordedSessionView from "./pages/RecordedSessionView";
 
 export interface DataPoints {
     [key: string]: number;
@@ -22,33 +23,55 @@ export interface DataPoints {
     [Variable.EnergySpentFatigue]: number;
 }
 
+export interface DataPayload {
+    dataPoints: DataPoints;
+    sessionCode: string;
+    timestamp: number;
+}
+
 function App(): JSX.Element {
-    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (dataPoints: DataPoints) => {
-        const now = new Date().getTime();
+    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (data: DataPayload) => {
+        const now: number = new Date().getTime();
 
-        // TEMPORARY: Add incoming data point to selected session
-        const sessionId = snapshot.getLoadable(selectedSessionIdState).getValue();
+        // Find the Session with the same sessionCode as this data has
+        const session: SessionWithStudent | undefined = snapshot
+            .getLoadable(sessionsState)
+            .getValue()
+            .find((session) => session.sessionCode == data.sessionCode);
 
-        set(sessionDataState(sessionId), (prevVal) => {
-            return (Object.fromEntries(
-                Object.entries(prevVal).map(([k, v]) => [k, [...v, [now, +(dataPoints[k] * 100).toFixed()]]])
-            ) as unknown) as Data;
-        });
+        // If we have found the session, set the data in the session state
+        if (session != undefined) {
+            const sessionId: number = session._id;
 
-        const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
-
-        if (sessionRecording.status) {
-            ipcSend("pushDataPointToSession", {
-                timestamp: now,
-                data: dataPoints,
-                sessionId: sessionId,
-                recordingId: sessionRecording.recordingId
+            // Set the data in session state
+            set(sessionDataState(sessionId), (prevVal) => {
+                return (Object.fromEntries(
+                    Object.entries(prevVal).map(([variable, values]) => [
+                        variable,
+                        [
+                            ...values,
+                            // Add data point for variable only if it is calculated
+                            ...(+data.dataPoints[variable] !== -1 ? [[now, +data.dataPoints[variable].toFixed(2)]] : [])
+                        ]
+                    ])
+                ) as unknown) as Data;
             });
+
+            // If this session is recording push the data to the database
+            const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
+            if (sessionRecording.status) {
+                ipcSend("pushDataPointToSession", {
+                    timestamp: now,
+                    data: data.dataPoints,
+                    sessionId: sessionId,
+                    recordingId: sessionRecording.recordingId
+                });
+            }
         }
     });
 
     useEffect(() => {
-        ipcOn("newData", (event: any, data: DataPoints) => {
+        ipcOn("newData", (event: any, data: DataPayload) => {
             addDataPointToState(data);
         });
 
@@ -61,6 +84,7 @@ function App(): JSX.Element {
                 {/*
                     Add new pages by adding a Route component. (Important! they need to be above the startview route) Use the Link component from react-router-dom in other compoenents to navigate to Routes specified here. 
                 */}
+                <Route path="/recording" component={RecordedSessionView} />
                 <Route path="/create-session" component={CreateSessionView} />
                 <Route path="/session" component={SessionView} />
                 <Route path="/" component={StartView} />
