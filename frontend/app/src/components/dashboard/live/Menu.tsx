@@ -44,6 +44,7 @@ export default function Menu(props: Props): JSX.Element {
             anchorEl={props.anchorEl}
             getContentAnchorEl={null}
             disableAutoFocusItem={true}
+            disableScrollLock={true}
             keepMounted
             open={props.open}
             onClose={props.onMenuClose}
