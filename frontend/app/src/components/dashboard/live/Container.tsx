@@ -9,11 +9,8 @@ import {makeStyles, Theme, createStyles, IconButton, Typography} from "@material
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
-import {useRecoilValue, useSetRecoilState} from "recoil";
-import {
-    selectedSessionDataLengthVariableState,
-    selectedSessionVariableContainerVisibleState
-} from "../../../state/session";
+import {useRecoilState, useRecoilValue} from "recoil";
+import {selectedSessionActiveContainersState, selectedSessionDataLengthVariableState} from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,13 +43,23 @@ export default function Container(props: Props): JSX.Element {
 
     const dataLength = useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
 
-    const [isDetailedView, setIsDetailedView] = useState<boolean>(props.display == "line");
+    const [containerOptions, setContainerOptions] = useRecoilState(selectedSessionActiveContainersState);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
-    const setVisible = useSetRecoilState(selectedSessionVariableContainerVisibleState(props.variable));
+    function setChartType(chartType: "line" | "numeric"): void {
+        const newContainerOptions = {...containerOptions};
+        newContainerOptions[props.variable] = {...containerOptions[props.variable], display: chartType};
+        setContainerOptions(newContainerOptions);
+    }
+
+    function removeView(): void {
+        const newContainerOptions = {...containerOptions};
+        newContainerOptions[props.variable] = {...containerOptions[props.variable], active: false};
+        setContainerOptions(newContainerOptions);
+    }
 
     return (
         <ContainerCard>
@@ -86,16 +93,16 @@ export default function Container(props: Props): JSX.Element {
                     <Menu
                         open={menuOpen}
                         anchorEl={menuAnchorElement.current}
-                        isDetailedView={isDetailedView}
-                        onShowMore={() => setIsDetailedView(true)}
-                        onShowLess={() => setIsDetailedView(false)}
-                        onRemoveView={() => setVisible({active: false, display: props.display})}
+                        isDetailedView={containerOptions[props.variable].display === "line"}
+                        onShowMore={() => setChartType("line")}
+                        onShowLess={() => setChartType("numeric")}
+                        onRemoveView={() => removeView()}
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
                 {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                     <CalculatingIndicator variable={props.variable} />
-                ) : isDetailedView ? (
+                ) : containerOptions[props.variable].display === "line" ? (
                     <LineChart variable={props.variable} />
                 ) : (
                     <Numeric variable={props.variable} />
