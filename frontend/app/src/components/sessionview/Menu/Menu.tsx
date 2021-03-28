@@ -15,8 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: "20px 0",
             width: "100%",
             height: "100%",
-            backgroundColor: theme.palette.background.default,
-            boxShadow: "2px 0px 10px 0px rgba(0,0,0,0.25)",
+            backgroundColor: "#E6E6E6", // Background of title bar
             overflow: "scroll",
             gridColumnStart: 1,
             gridColumnEnd: 2,

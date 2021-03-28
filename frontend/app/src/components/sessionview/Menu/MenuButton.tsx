@@ -33,11 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
         indicator: {
             position: "absolute",
             bottom: 7,
-            right: 0,
-            backgroundColor: "#D6D8DD",
+            left: 0,
+            backgroundColor: "#B9B9B9",
             width: "6px",
             height: "46px",
-            borderRadius: "10px 0 0 10px"
+            borderRadius: "0 10px 10px 0"
         }
     })
 );
