@@ -1,0 +1,541 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`popup matches snapshot 1`] = `
+<body>
+  <div>
+    <div
+      class="makeStyles-grid-2"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-h1"
+      >
+        Select Variable Charts
+      </h1>
+      <ul
+        class="MuiList-root MuiList-padding"
+      >
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Cognitive Load"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Cognitive Load"
+          >
+            Cognitive Load
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Perceived Difficulty"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Perceived Difficulty"
+          >
+            Perceived Difficulty
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Familiarity"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Familiarity"
+          >
+            Familiarity
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Information Processing Index"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Information Processing Index"
+          >
+            Information Processing Index
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Physiological Arousal"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Physiological Arousal"
+          >
+            Physiological Arousal
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Engagement"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Engagement"
+          >
+            Engagement
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Physiological Stress"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Physiological Stress"
+          >
+            Physiological Stress
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Emotional Regulation"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Emotional Regulation"
+          >
+            Emotional Regulation
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Motion Stability"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Motion Stability"
+          >
+            Motion Stability
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+        <div
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiListItem-root MuiListItem-dense MuiListItem-gutters MuiListItem-button"
+          tabindex="0"
+        >
+          <div
+            class="MuiListItemIcon-root makeStyles-checkbox-5"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary MuiIconButton-edgeStart"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-labelledby="checkbox-list-label-Energy Spent/Fatigue"
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+          </div>
+          <div
+            class="MuiListItemText-root makeStyles-listItemText-4 MuiListItemText-dense"
+            id="checkbox-list-label-Energy Spent/Fatigue"
+          >
+            Energy Spent/Fatigue
+          </div>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </div>
+      </ul>
+      <div
+        class="makeStyles-btnGroup-3"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-1"
+          data-testid="btn-select-all"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkbox-5 MuiIconButton-colorPrimary"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  class="PrivateSwitchBase-input-9"
+                  data-indeterminate="false"
+                  tabindex="-1"
+                  type="checkbox"
+                  value=""
+                />
+                <svg
+                  aria-hidden="true"
+                  class="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                  />
+                </svg>
+              </span>
+            </span>
+            Select All
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-1"
+          style="margin-left: auto;"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Done
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</body>
+`;

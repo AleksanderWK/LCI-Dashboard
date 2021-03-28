@@ -4,7 +4,7 @@ import {Button, List, ListItem, ListItemIcon, ListItemText, Checkbox, Typography
 import {selectedSessionActiveContainersState} from "../../state/session";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {MMDVariables, Variable} from "../../constants";
-import {addStudentPopupOpenState, selectChartsPopupOpenState} from "../../state/popup";
+import {selectChartsPopupOpenState} from "../../state/popup";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -83,6 +83,7 @@ export default function SelectCharts(): JSX.Element {
                 {Object.values(Variable).some((variable) => activeContainers[variable].active === false) ? (
                     <Button
                         className={classes.btn}
+                        data-testid="btn-select-all"
                         onClick={() => {
                             handleCheckAll(true);
                         }}
@@ -99,6 +100,7 @@ export default function SelectCharts(): JSX.Element {
                 ) : (
                     <Button
                         className={classes.btn}
+                        data-testid="btn-remove-all"
                         onClick={() => {
                             handleCheckAll(false);
                         }}
