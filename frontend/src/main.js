@@ -13,7 +13,7 @@ function createWindow() {
       nodeIntegration: true,
       contextIsolation: false,
     },
-    icon: "src/logo.png",
+    icon: "src/images/logo.png",
     frame: false,
   });
 
