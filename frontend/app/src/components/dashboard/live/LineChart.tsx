@@ -112,7 +112,12 @@ function LineChart(props: Props): JSX.Element {
                     true // Redraw graph
                 );
             } else {
-                chart.current.chart.redraw();
+                // No extremes if data is not covering LIVE_CHART_RANGE
+                chart.current.chart.xAxis[0].setExtremes(
+                    undefined,
+                    undefined,
+                    true // Redraw graph
+                );
             }
         }
     }, [selectedSessionData]);
