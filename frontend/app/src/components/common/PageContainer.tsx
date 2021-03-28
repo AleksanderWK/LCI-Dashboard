@@ -8,16 +8,23 @@ const useStyles = makeStyles(() =>
             width: "100%",
             height: "100%",
             padding: "30px",
-            boxSizing: "border-box"
+            boxSizing: "border-box",
+            overflow: "auto"
         },
         pageContent: {
             position: "relative",
             width: "100%",
             height: "100%"
         },
-        grid: {
+        menuGrid: {
             display: "grid",
             gridTemplateColumns: "100px auto",
+            position: "relative",
+            height: "100%"
+        },
+        footerGrid: {
+            display: "grid",
+            gridTemplateRows: "1fr auto",
             position: "relative",
             width: "100%",
             height: "100%"
@@ -28,6 +35,7 @@ const useStyles = makeStyles(() =>
 interface Props {
     children: JSX.Element;
     menu?: JSX.Element;
+    footer?: JSX.Element;
 }
 
 function Container(props: {children: JSX.Element}): JSX.Element {
@@ -45,9 +53,18 @@ export default function PageContainer(props: Props): JSX.Element {
 
     if (props.menu) {
         return (
-            <div className={classes.grid}>
+            <div className={classes.menuGrid}>
                 {props.menu}
                 <Container>{props.children}</Container>
+            </div>
+        );
+    }
+
+    if (props.footer) {
+        return (
+            <div className={classes.footerGrid}>
+                <Container>{props.children}</Container>
+                {props.footer}
             </div>
         );
     }

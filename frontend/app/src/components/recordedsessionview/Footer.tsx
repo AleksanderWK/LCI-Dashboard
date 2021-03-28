@@ -1,12 +1,11 @@
+import React from "react";
 import {makeStyles, createStyles, Theme} from "@material-ui/core";
-import react from "react";
 import IntervalSlider from "./IntervalSlider";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         menu: {
-            position: "fixed",
-            bottom: 0,
+            position: "relative",
             height: "75px",
             boxSizing: "border-box",
             width: "100%",
