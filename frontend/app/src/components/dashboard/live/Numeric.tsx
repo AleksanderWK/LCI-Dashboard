@@ -8,7 +8,10 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         numericWrapper: {
             width: "100%",
-            padding: "20px 0"
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
         },
         numeric: {
             fontSize: 50,

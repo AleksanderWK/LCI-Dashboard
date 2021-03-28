@@ -1,4 +1,4 @@
-import {Card, CardContent, createStyles, makeStyles, SvgIcon, SvgIconProps} from "@material-ui/core";
+import {Card, CardContent, createStyles, makeStyles, SvgIcon, SvgIconProps, Theme} from "@material-ui/core";
 
 function ResizeIcon(props: SvgIconProps): JSX.Element {
     return (
@@ -8,11 +8,22 @@ function ResizeIcon(props: SvgIconProps): JSX.Element {
     );
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         card: {
-            maxWidth: 500,
+            width: "100%",
+            height: "100%",
             position: "relative"
+        },
+        content: {
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gridTemplateRows: "auto 1fr",
+            gap: theme.spacing(2),
+            position: "relative",
+            height: "100%",
+            width: "100%",
+            boxSizing: "border-box"
         },
         resizeIcon: {
             position: "absolute",
@@ -36,7 +47,7 @@ export default function Container(props: Props): JSX.Element {
 
     return (
         <Card variant="outlined" className={classes.card}>
-            <CardContent>{props.children}</CardContent>
+            <CardContent className={classes.content}>{props.children}</CardContent>
 
             <ResizeIcon className={classes.resizeIcon} color="action" />
         </Card>

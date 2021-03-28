@@ -13,8 +13,7 @@ const useStyles = makeStyles((theme: Theme) =>
         header: {
             display: "grid",
             gridTemplateColumns: "1fr 56px",
-            gap: theme.spacing(2),
-            marginBottom: theme.spacing(2)
+            gap: theme.spacing(2)
         },
         menu: {
             display: "grid",

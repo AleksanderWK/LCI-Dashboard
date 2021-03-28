@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {RecoilRoot} from "recoil";
 import IntervalSlider from "../IntervalSlider";
 import {RecordedSession, recordedSessionState} from "../../../state/recordedSession";
-import {screen} from "@testing-library/react";
+import {screen, waitFor} from "@testing-library/react";
 
 const testRecordedSession: RecordedSession = {
     sessionId: 1,
@@ -39,7 +39,7 @@ const testRecordedSession: RecordedSession = {
     }
 };
 
-it("renders without crashing", () => {
+it("renders without crashing", async () => {
     const div = document.createElement("div");
     ReactDOM.render(
         <RecoilRoot
@@ -51,6 +51,10 @@ it("renders without crashing", () => {
         </RecoilRoot>,
         div
     );
+
+    await waitFor(() => {
+        null;
+    });
 });
 
 // Converts milliseconds to the hh:mm:ss format to display on the labels
@@ -59,7 +63,7 @@ function valuetext(value: number) {
     return `${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(-2)}`;
 }
 
-it("Label values convert correctly", () => {
+it("Label values convert correctly", async () => {
     const div = document.createElement("div");
     ReactDOM.render(
         <RecoilRoot
@@ -71,5 +75,10 @@ it("Label values convert correctly", () => {
         </RecoilRoot>,
         div
     );
+
+    await waitFor(() => {
+        null;
+    });
+
     expect(screen.getAllByRole("tooltip", {name: valuetext(testRecordedSession.startTime)}).pop()).toBeInTheDocument();
 });

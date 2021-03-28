@@ -8,7 +8,6 @@ import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
 import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
 import {
     currentRecordingInterval,
-    RecordedSession,
     RecordedSessionInfo,
     recordedSessionInfoState,
     selectedRecordedSessionIdState
@@ -22,6 +21,10 @@ import {Student} from "../../state/student";
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         container: {
+            gridColumnStart: 1,
+            gridColumnEnd: 4,
+            gridRowStart: 1,
+            gridRowEnd: 2,
             width: "100%",
             height: "100%",
             display: "flex",

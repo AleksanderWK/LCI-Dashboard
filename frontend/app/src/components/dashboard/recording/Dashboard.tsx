@@ -1,7 +1,5 @@
-import {makeStyles, createStyles} from "@material-ui/core";
-import {useRecoilValue} from "recoil";
 import {Variable} from "../../../constants";
-import {selectedSessionActiveContainersState} from "../../../state/session";
+import {createStyles, makeStyles} from "@material-ui/core";
 import Container from "./Container";
 
 const useStyles = makeStyles(() =>
@@ -10,10 +8,9 @@ const useStyles = makeStyles(() =>
             gridColumnStart: 2,
             gridColumnEnd: 3,
             gridRowStart: 2,
-            gridRowEnd: 3,
             position: "relative",
             width: "100%",
-            padding: "20px 40px",
+            padding: "20px 0",
             boxSizing: "border-box",
 
             // Temporary grid
@@ -28,17 +25,11 @@ const useStyles = makeStyles(() =>
 function Dashboard(): JSX.Element {
     const classes = useStyles();
 
-    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
-
     return (
         <div className={classes.dashboard}>
-            {Object.values(Variable)
-                .filter((variable) => activeContainers[variable].active)
-                .map((variable) => {
-                    return (
-                        <Container key={variable} variable={variable} display={activeContainers[variable].display} />
-                    );
-                })}
+            {Object.values(Variable).map((variable) => {
+                return <Container key={variable} variable={variable} />;
+            })}
         </div>
     );
 }
