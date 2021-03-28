@@ -5,12 +5,9 @@ import Container from "./Container";
 const useStyles = makeStyles(() =>
     createStyles({
         dashboard: {
-            gridColumnStart: 2,
-            gridColumnEnd: 3,
-            gridRowStart: 2,
             position: "relative",
             width: "100%",
-            padding: "20px 0",
+            padding: "30px 0",
             boxSizing: "border-box",
 
             // Temporary grid

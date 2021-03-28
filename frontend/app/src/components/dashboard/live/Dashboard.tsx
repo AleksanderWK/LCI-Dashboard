@@ -13,7 +13,7 @@ const useStyles = makeStyles(() =>
             gridRowEnd: 3,
             position: "relative",
             width: "100%",
-            padding: "20px 40px",
+            padding: "30px 0",
             boxSizing: "border-box",
 
             // Temporary grid
