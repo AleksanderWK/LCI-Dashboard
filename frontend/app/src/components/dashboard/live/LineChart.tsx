@@ -4,7 +4,7 @@ import React, {createRef, RefObject, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
-import {selectedSessionDataState} from "../../../state/session";
+import {selectedSessionActiveContainersState, selectedSessionDataState} from "../../../state/session";
 import theme from "../../../theme";
 
 interface Props {
@@ -97,6 +97,7 @@ function LineChart(props: Props): JSX.Element {
     });
 
     const selectedSessionData = useRecoilValue(selectedSessionDataState);
+    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
 
     useEffect(() => {
         if (chart.current) {
@@ -121,6 +122,13 @@ function LineChart(props: Props): JSX.Element {
             }
         }
     }, [selectedSessionData]);
+
+    useEffect(() => {
+        // If active containers is changed, reflow graph as container size may have changed
+        if (chart.current) {
+            chart.current.chart.reflow();
+        }
+    }, [activeContainers]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }
