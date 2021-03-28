@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
         menu: {
             position: "relative",
             boxSizing: "border-box",
-            padding: "20px 0",
+            padding: "30px 0",
             width: "100%",
             height: "100%",
             backgroundColor: "#E6E6E6", // Background of title bar
