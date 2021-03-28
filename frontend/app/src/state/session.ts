@@ -246,7 +246,7 @@ export const sessionActiveContainersState = atomFamily<ActiveContainers, number 
         [Variable.Familiarity]: {active: false, display: "line"},
         [Variable.InformationProcessingIndex]: {active: true, display: "line"},
         [Variable.PhysiologicalArousal]: {active: true, display: "line"},
-        [Variable.Engagement]: {active: false, display: "line"},
+        [Variable.Engagement]: {active: true, display: "line"},
         [Variable.PhysiologicalStress]: {active: false, display: "line"},
         [Variable.EmotionalRegulation]: {active: false, display: "line"},
         [Variable.MotionStability]: {active: false, display: "line"},
