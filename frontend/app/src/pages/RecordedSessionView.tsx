@@ -6,6 +6,7 @@ import {selectedRecordedSessionIdState, RecordedSession, recordedSessionState} f
 import Footer from "../components/recordedsessionview/Footer";
 import Dashboard from "../components/dashboard/recording/Dashboard";
 import {createStyles, makeStyles} from "@material-ui/core";
+import PageContainer from "../components/common/PageContainer";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -35,10 +36,12 @@ export default function RecordedSessionView(): JSX.Element {
 
     return (
         <>
-            <div className={classes.pageContainer}>
-                <Header />
-                <Dashboard />
-            </div>
+            <PageContainer>
+                <>
+                    <Header />
+                    <Dashboard />
+                </>
+            </PageContainer>
             <Footer />
         </>
     );

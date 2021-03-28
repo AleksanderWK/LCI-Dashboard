@@ -4,247 +4,96 @@ exports[`create session view matches snapshot 1`] = `
 <body>
   <div>
     <div
-      class="makeStyles-pageContainer-1"
+      class="makeStyles-pageContainer-3"
     >
-      <img
-        alt="The LCI-lab logo"
-        class="makeStyles-pageLogo-2"
-        src="LCI_logo.png"
-      />
       <div
-        class="makeStyles-pageContent-3"
+        class="makeStyles-pageContent-4"
       >
+        <img
+          alt="LCI lab logo"
+          class="makeStyles-logo-6 makeStyles-absolute-7"
+          src="LCI_logo.png"
+        />
         <div
-          class="makeStyles-form-5"
+          class="makeStyles-content-1"
         >
-          <h1
-            class="MuiTypography-root MuiTypography-h1"
-            style="color: rgb(0, 0, 0);"
-          >
-            Create New Learning Session
-          </h1>
           <div
-            class="MuiFormControl-root MuiTextField-root makeStyles-inputNewSessionName-6"
+            class="makeStyles-form-8"
           >
-            <label
-              class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
-              data-shrink="false"
+            <h1
+              class="MuiTypography-root MuiTypography-h1"
+              style="color: rgb(0, 0, 0);"
             >
-              Session name
-            </label>
+              Create New Learning Session
+            </h1>
             <div
-              class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
-            >
-              <input
-                aria-invalid="false"
-                class="MuiInputBase-input MuiInput-input"
-                type="text"
-                value=""
-              />
-            </div>
-          </div>
-          <div
-            class="makeStyles-addStudentContainer-10"
-          >
-            <div
-              class="MuiFormControl-root"
+              class="MuiFormControl-root MuiTextField-root makeStyles-inputNewSessionName-9"
             >
               <label
-                class="MuiFormLabel-root MuiInputLabel-root makeStyles-placeholder-14 MuiInputLabel-formControl MuiInputLabel-animated"
+                class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
                 data-shrink="false"
-                id="label"
               >
-                Student
+                Session name
               </label>
               <div
                 class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
               >
-                <div
-                  aria-haspopup="listbox"
-                  aria-labelledby="label"
-                  class="MuiSelect-root makeStyles-inputSelectStudent-8 MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
-                  role="button"
-                  tabindex="0"
-                >
-                  <span>
-                    ​
-                  </span>
-                </div>
                 <input
-                  aria-hidden="true"
-                  class="MuiSelect-nativeInput"
-                  tabindex="-1"
+                  aria-invalid="false"
+                  class="MuiInputBase-input MuiInput-input"
+                  type="text"
                   value=""
                 />
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSelect-icon"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M7 10l5 5 5-5z"
-                  />
-                </svg>
               </div>
             </div>
-            <button
-              aria-label="add new student"
-              class="MuiButtonBase-root MuiIconButton-root makeStyles-addStudentBtn-9 MuiIconButton-colorPrimary"
-              tabindex="0"
-              type="button"
-            >
-              <span
-                class="MuiIconButton-label"
-              >
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H8c-.55 0-1-.45-1-1s.45-1 1-1h3V8c0-.55.45-1 1-1s1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1z"
-                  />
-                </svg>
-              </span>
-              <span
-                class="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
-          <div>
-            <span
-              class="MuiTypography-root MuiTypography-caption"
-            >
-              Eye tracking device
-            </span>
             <div
-              aria-label="eye tracker decive"
-              class="MuiFormGroup-root MuiFormGroup-row"
-              role="radiogroup"
+              class="makeStyles-addStudentContainer-13"
             >
-              <label
-                class="MuiFormControlLabel-root"
+              <div
+                class="MuiFormControl-root"
               >
-                <span
-                  aria-disabled="false"
-                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
+                <label
+                  class="MuiFormLabel-root MuiInputLabel-root makeStyles-placeholder-17 MuiInputLabel-formControl MuiInputLabel-animated"
+                  data-shrink="false"
+                  id="label"
                 >
-                  <span
-                    class="MuiIconButton-label"
+                  Student
+                </label>
+                <div
+                  class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
+                >
+                  <div
+                    aria-haspopup="listbox"
+                    aria-labelledby="label"
+                    class="MuiSelect-root makeStyles-inputSelectStudent-11 MuiSelect-select MuiSelect-selectMenu MuiInputBase-input MuiInput-input"
+                    role="button"
+                    tabindex="0"
                   >
-                    <input
-                      class="PrivateSwitchBase-input-19"
-                      name="eyetracker"
-                      type="radio"
-                      value="stationary"
-                    />
-                    <div
-                      class="PrivateRadioButtonIcon-root-20"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                        />
-                      </svg>
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-21"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                        />
-                      </svg>
-                    </div>
-                  </span>
-                  <span
-                    class="MuiTouchRipple-root"
+                    <span>
+                      ​
+                    </span>
+                  </div>
+                  <input
+                    aria-hidden="true"
+                    class="MuiSelect-nativeInput"
+                    tabindex="-1"
+                    value=""
                   />
-                </span>
-                <span
-                  class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-                >
-                  Stationary
-                </span>
-              </label>
-              <label
-                class="MuiFormControlLabel-root"
-                style="margin-left: 20px;"
-              >
-                <span
-                  aria-disabled="false"
-                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-16 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
-                >
-                  <span
-                    class="MuiIconButton-label"
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSelect-icon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
                   >
-                    <input
-                      class="PrivateSwitchBase-input-19"
-                      name="eyetracker"
-                      type="radio"
-                      value="mobile"
+                    <path
+                      d="M7 10l5 5 5-5z"
                     />
-                    <div
-                      class="PrivateRadioButtonIcon-root-20"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                        />
-                      </svg>
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-21"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                        />
-                      </svg>
-                    </div>
-                  </span>
-                  <span
-                    class="MuiTouchRipple-root"
-                  />
-                </span>
-                <span
-                  class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-                >
-                  Mobile
-                </span>
-              </label>
-            </div>
-          </div>
-          <div
-            class="makeStyles-sessionInfoContainer-12"
-          >
-            <span
-              class="MuiTypography-root MuiTypography-caption"
-            >
-              Session code
-            </span>
-            <div>
-              <span
-                class="MuiTypography-root makeStyles-sessionToken-11 MuiTypography-caption"
-              />
+                  </svg>
+                </div>
+              </div>
               <button
-                aria-label="copy-to-clipboard"
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
-                style="margin: 0px 0px 7px 5px;"
+                aria-label="add new student"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addStudentBtn-12 MuiIconButton-colorPrimary"
                 tabindex="0"
                 type="button"
               >
@@ -255,13 +104,10 @@ exports[`create session view matches snapshot 1`] = `
                     aria-hidden="true"
                     class="MuiSvgIcon-root"
                     focusable="false"
-                    viewBox="-3 -3 25 25"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      _ngcontent-axr-c9=""
-                      clip-rule="evenodd"
-                      d="M16.4998 14.1666V2.49992C16.4998 1.58325 15.7498 0.833252 14.8332 0.833252H5.6665C4.74984 0.833252 3.99984 1.58325 3.99984 2.49992V14.1666C3.99984 15.0833 4.74984 15.8333 5.6665 15.8333H14.8332C15.7498 15.8333 16.4998 15.0833 16.4998 14.1666ZM13.9998 17.4999H2.33317V5.83325H0.666504V17.4999C0.666504 18.4166 1.4165 19.1666 2.33317 19.1666H13.9998V17.4999ZM5.6665 14.1666H14.8332V2.49992H5.6665V14.1666Z"
-                      fill-rule="evenodd"
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H8c-.55 0-1-.45-1-1s.45-1 1-1h3V8c0-.55.45-1 1-1s1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1z"
                     />
                   </svg>
                 </span>
@@ -270,65 +116,223 @@ exports[`create session view matches snapshot 1`] = `
                 />
               </button>
             </div>
-            <span
-              class="MuiTypography-root MuiTypography-caption"
-              style="color: rgb(221, 87, 87);"
-            >
-              Waiting for student connection...
-            </span>
-          </div>
-          <div>
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-13 MuiButton-containedPrimary Mui-disabled Mui-disabled"
-              disabled=""
-              name="submitBtn"
-              style="margin-right: 8px;"
-              tabindex="-1"
-              type="button"
-            >
+            <div>
               <span
-                class="MuiButton-label"
+                class="MuiTypography-root MuiTypography-caption"
               >
-                Create session
+                Eye tracking device
               </span>
-            </button>
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-13"
-              name="cancelBtn"
-              tabindex="0"
-              type="button"
+              <div
+                aria-label="eye tracker decive"
+                class="MuiFormGroup-root MuiFormGroup-row"
+                role="radiogroup"
+              >
+                <label
+                  class="MuiFormControlLabel-root"
+                >
+                  <span
+                    aria-disabled="false"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-19 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
+                  >
+                    <span
+                      class="MuiIconButton-label"
+                    >
+                      <input
+                        class="PrivateSwitchBase-input-22"
+                        name="eyetracker"
+                        type="radio"
+                        value="stationary"
+                      />
+                      <div
+                        class="PrivateRadioButtonIcon-root-23"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                          />
+                        </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-24"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                          />
+                        </svg>
+                      </div>
+                    </span>
+                    <span
+                      class="MuiTouchRipple-root"
+                    />
+                  </span>
+                  <span
+                    class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+                  >
+                    Stationary
+                  </span>
+                </label>
+                <label
+                  class="MuiFormControlLabel-root"
+                  style="margin-left: 20px;"
+                >
+                  <span
+                    aria-disabled="false"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-19 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
+                  >
+                    <span
+                      class="MuiIconButton-label"
+                    >
+                      <input
+                        class="PrivateSwitchBase-input-22"
+                        name="eyetracker"
+                        type="radio"
+                        value="mobile"
+                      />
+                      <div
+                        class="PrivateRadioButtonIcon-root-23"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                          />
+                        </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-24"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                          />
+                        </svg>
+                      </div>
+                    </span>
+                    <span
+                      class="MuiTouchRipple-root"
+                    />
+                  </span>
+                  <span
+                    class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+                  >
+                    Mobile
+                  </span>
+                </label>
+              </div>
+            </div>
+            <div
+              class="makeStyles-sessionInfoContainer-15"
             >
               <span
-                class="MuiButton-label"
+                class="MuiTypography-root MuiTypography-caption"
               >
-                Cancel
+                Session code
               </span>
+              <div>
+                <span
+                  class="MuiTypography-root makeStyles-sessionToken-14 MuiTypography-caption"
+                />
+                <button
+                  aria-label="copy-to-clipboard"
+                  class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
+                  style="margin: 0px 0px 7px 5px;"
+                  tabindex="0"
+                  type="button"
+                >
+                  <span
+                    class="MuiIconButton-label"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root"
+                      focusable="false"
+                      viewBox="-3 -3 25 25"
+                    >
+                      <path
+                        _ngcontent-axr-c9=""
+                        clip-rule="evenodd"
+                        d="M16.4998 14.1666V2.49992C16.4998 1.58325 15.7498 0.833252 14.8332 0.833252H5.6665C4.74984 0.833252 3.99984 1.58325 3.99984 2.49992V14.1666C3.99984 15.0833 4.74984 15.8333 5.6665 15.8333H14.8332C15.7498 15.8333 16.4998 15.0833 16.4998 14.1666ZM13.9998 17.4999H2.33317V5.83325H0.666504V17.4999C0.666504 18.4166 1.4165 19.1666 2.33317 19.1666H13.9998V17.4999ZM5.6665 14.1666H14.8332V2.49992H5.6665V14.1666Z"
+                        fill-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
               <span
-                class="MuiTouchRipple-root"
-              />
-            </button>
+                class="MuiTypography-root MuiTypography-caption"
+                style="color: rgb(221, 87, 87);"
+              >
+                Waiting for student connection...
+              </span>
+            </div>
+            <div>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-16 MuiButton-containedPrimary Mui-disabled Mui-disabled"
+                disabled=""
+                name="submitBtn"
+                style="margin-right: 8px;"
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="MuiButton-label"
+                >
+                  Create session
+                </span>
+              </button>
+              <button
+                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-16"
+                name="cancelBtn"
+                tabindex="0"
+                type="button"
+              >
+                <span
+                  class="MuiButton-label"
+                >
+                  Cancel
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </button>
+            </div>
           </div>
+          <img
+            alt="dashboard illustration"
+            class="makeStyles-illustration-2"
+            src="dashboardIllustration.svg"
+          />
         </div>
-        <img
-          alt="dashboard illustration"
-          class="makeStyles-illustration-4"
-          src="dashboardIllustration.svg"
-        />
       </div>
     </div>
     <div
       aria-hidden="true"
-      class="MuiBackdrop-root makeStyles-backdrop-23"
+      class="MuiBackdrop-root makeStyles-backdrop-26"
       style="opacity: 0; visibility: hidden;"
     >
       <div
-        class="MuiPaper-root MuiCard-root makeStyles-card-24 MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root MuiCard-root makeStyles-card-27 MuiPaper-elevation1 MuiPaper-rounded"
       >
         <div
-          class="MuiCardContent-root makeStyles-cardContent-25"
+          class="MuiCardContent-root makeStyles-cardContent-28"
         >
           <div
-            class="makeStyles-form-26"
+            class="makeStyles-form-29"
           >
             <h1
               class="MuiTypography-root MuiTypography-h1"
@@ -337,7 +341,7 @@ exports[`create session view matches snapshot 1`] = `
               Add Student
             </h1>
             <div
-              class="MuiFormControl-root MuiTextField-root makeStyles-inputNewStudentName-27"
+              class="MuiFormControl-root MuiTextField-root makeStyles-inputNewStudentName-30"
             >
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -362,7 +366,7 @@ exports[`create session view matches snapshot 1`] = `
               style="width: 100%; justify-content: flex-end;"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-28"
+                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-31"
                 tabindex="0"
                 type="button"
               >
@@ -376,7 +380,7 @@ exports[`create session view matches snapshot 1`] = `
                 />
               </button>
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-28 MuiButton-containedPrimary"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-31 MuiButton-containedPrimary"
                 tabindex="0"
                 type="button"
               >

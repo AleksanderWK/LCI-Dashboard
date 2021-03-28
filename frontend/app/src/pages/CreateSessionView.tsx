@@ -1,6 +1,5 @@
-import React, {Suspense} from "react";
+import React from "react";
 import {makeStyles, createStyles} from "@material-ui/core";
-import logo from "../assets/Images/LCI_logo.png";
 import dashboardIllustration from "../assets/Images/dashboardIllustration.svg";
 import CreateSession from "../components/createsessionview/CreateSession";
 import PopupContainer from "../components/common/PopupContainer";
@@ -8,32 +7,18 @@ import AddStudent from "../components/createsessionview/AddStudent";
 import {useRecoilState} from "recoil";
 import {addStudentPopupOpenState} from "../state/popup";
 import Popup from "../components/common/Popup";
+import PageContainer from "../components/common/PageContainer";
+import Logo from "../components/common/Logo";
 
 const useStyles = makeStyles(() =>
     createStyles({
-        pageContainer: {
-            width: "100%",
+        content: {
             height: "100%",
-            display: "grid",
-            gridTemplateColumns: "30px 140px auto 140px 30px",
-            gridTemplateRows: "30px auto 30px"
-        },
-        pageLogo: {
-            gridColumnStart: 2,
-            gridColumnEnd: 3,
-            gridRowStart: 2,
-            gridRowEnd: 3
-        },
-        pageContent: {
+            width: "fit-content",
             display: "flex",
-            justifyContent: "center",
             alignItems: "center",
-            width: "100%",
-            height: "100%",
-            gridColumnStart: 3,
-            gridColumnEnd: 4,
-            gridRowStart: 2,
-            gridRowEnd: 3
+            padding: "0 97px",
+            margin: "auto"
         },
         illustration: {
             width: "400px",
@@ -50,15 +35,19 @@ export default function CreateSessionView(): JSX.Element {
 
     return (
         <>
-            <div className={classes.pageContainer}>
-                <img className={classes.pageLogo} src={logo} alt="The LCI-lab logo" />
-                <div className={classes.pageContent}>
-                    <Suspense fallback={<div>Loading...</div>}>
+            <PageContainer>
+                <>
+                    <Logo absolute />
+                    <div className={classes.content}>
                         <CreateSession />
-                    </Suspense>
-                    <img className={classes.illustration} src={dashboardIllustration} alt="dashboard illustration" />
-                </div>
-            </div>
+                        <img
+                            className={classes.illustration}
+                            src={dashboardIllustration}
+                            alt="dashboard illustration"
+                        />
+                    </div>
+                </>
+            </PageContainer>
 
             <PopupContainer
                 open={addStudentPopupOpen}

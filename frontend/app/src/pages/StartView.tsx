@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {makeStyles, createStyles, Theme, Fab, Typography} from "@material-ui/core";
-import logo from "../assets/Images/LCI_logo.png";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -16,42 +15,26 @@ import {selectedRecordedSessionIdState} from "../state/recordedSession";
 import {Session} from "../state/session";
 import {months} from "../constants";
 import {Student, studentsState} from "../state/student";
+import PageContainer from "../components/common/PageContainer";
+import Logo from "../components/common/Logo";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
-        pageContainer: {
-            width: "100%",
-            height: "100%",
-            display: "grid",
-            gridTemplateColumns: "30px 140px auto 140px 30px",
-            gridTemplateRows: "30px auto 30px"
-        },
-        pageLogo: {
-            gridColumnStart: 2,
-            gridColumnEnd: 3,
-            gridRowStart: 2,
-            gridRowEnd: 3
-        },
-        pageContent: {
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100%",
-            height: "100%",
-            gridColumnStart: 3,
-            gridColumnEnd: 4,
-            gridRowStart: 2,
-            gridRowEnd: 3,
-            floodColor: "#ffffff"
-        },
         root: {
+            boxSizing: "border-box",
             width: "100%",
-            maxWidth: 1200,
-            maxHeight: "80vh",
-            minHeight: 200,
-            boxShadow: "none"
+            height: "100%",
+            maxWidth: 1300,
+            boxShadow: "none",
+            overflow: "hidden",
+            padding: "0 97px",
+            margin: "auto",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center"
         },
         header: {
+            flexShrink: 0,
             marginBottom: theme.spacing(1)
         },
         button: {
@@ -64,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
             lineHeight: "40px"
         },
         container: {
-            maxHeight: "70vh"
+            flexShrink: 1
         },
         row: {
             cursor: "pointer"
@@ -78,6 +61,10 @@ const useStyles = makeStyles((theme: Theme) =>
             borderColor: theme.palette.background.default,
             borderWidth: "5px 0px 5px 0px",
             color: theme.palette.text.default
+        },
+        pagination: {
+            flexShrink: 0,
+            height: "52px"
         }
     })
 );
@@ -196,9 +183,9 @@ export default function StartView(): JSX.Element {
     };
 
     return (
-        <div className={classes.pageContainer}>
-            <img className={classes.pageLogo} src={logo} alt="The LCI-lab logo" />
-            <div className={classes.pageContent}>
+        <PageContainer>
+            <>
+                <Logo absolute />
                 <div className={classes.root}>
                     <div className={classes.header}>
                         <Fab
@@ -262,7 +249,7 @@ export default function StartView(): JSX.Element {
                                 </Table>
                             </TableContainer>
                             <TablePagination
-                                style={{minHeight: "50px"}}
+                                className={classes.pagination}
                                 rowsPerPageOptions={[6, 12, 25]}
                                 component="div"
                                 count={rows.length}
@@ -276,7 +263,7 @@ export default function StartView(): JSX.Element {
                         <Typography>No recorded sessions.</Typography>
                     )}
                 </div>
-            </div>
-        </div>
+            </>
+        </PageContainer>
     );
 }
