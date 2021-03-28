@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         pagination: {
             flexShrink: 0,
-            height: "52px"
+            height: "auto"
         }
     })
 );
