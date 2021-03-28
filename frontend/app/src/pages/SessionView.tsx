@@ -6,9 +6,15 @@ import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";
 import CreateSession from "../components/createsessionview/CreateSession";
 import Dashboard from "../components/dashboard/live/Dashboard";
-import {addStudentPopupOpenState, createSessionPopupOpenState, quitSessionPopupOpenState} from "../state/popup";
+import {
+    addStudentPopupOpenState,
+    createSessionPopupOpenState,
+    selectChartsPopupOpenState,
+    quitSessionPopupOpenState
+} from "../state/popup";
 import {createSessionValuesState} from "../state/createSession";
 import Header from "../components/sessionview/Header";
+import SelectCharts from "../components/sessionview/SelectCharts";
 import QuitSession from "../components/sessionview/QuitSession";
 import Popup from "../components/common/Popup";
 import {Alert} from "@material-ui/lab";
@@ -18,6 +24,7 @@ import PageContainer from "../components/common/PageContainer";
 export default function SessionView(): JSX.Element {
     const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
     const [createSessionPopupOpen, setCreateSessionPopupOpen] = useRecoilState(createSessionPopupOpenState);
+    const [selectChartsPopupOpen, setSelectChartsPopupOpen] = useRecoilState(selectChartsPopupOpenState);
     const [quitSessionPopupOpen, setQuitSessionPopupOpen] = useRecoilState(quitSessionPopupOpenState);
 
     const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
@@ -33,7 +40,7 @@ export default function SessionView(): JSX.Element {
             </PageContainer>
 
             <PopupContainer
-                open={createSessionPopupOpen || addStudentPopupOpen || quitSessionPopupOpen}
+                open={createSessionPopupOpen || addStudentPopupOpen || selectChartsPopupOpen || quitSessionPopupOpen}
                 onClose={(e) => {
                     if (addStudentPopupOpen) {
                         e.preventDefault();
@@ -43,6 +50,8 @@ export default function SessionView(): JSX.Element {
                         setTimeout(() => {
                             resetCreateSessionValues();
                         }, 100);
+                    } else if (selectChartsPopupOpen) {
+                        setSelectChartsPopupOpen(false);
                     } else if (quitSessionPopupOpen) {
                         setQuitSessionPopupOpen(false);
                     }
@@ -52,6 +61,10 @@ export default function SessionView(): JSX.Element {
                     {quitSessionPopupOpen ? (
                         <Popup>
                             <QuitSession />
+                        </Popup>
+                    ) : selectChartsPopupOpen ? (
+                        <Popup>
+                            <SelectCharts />
                         </Popup>
                     ) : addStudentPopupOpen ? (
                         <Popup>

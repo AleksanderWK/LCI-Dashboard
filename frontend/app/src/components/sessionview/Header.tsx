@@ -4,10 +4,10 @@ import TimerIcon from "@material-ui/icons/Timer";
 import RecordingButton from "./RecordingButton";
 import {selectedSessionState} from "../../state/session";
 import {useRecoilValue, useSetRecoilState} from "recoil";
-import {quitSessionPopupOpenState} from "../../state/popup";
 import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
 import {AddChartIcon, CloseIcon} from "../common/Icons";
+import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function Header(): JSX.Element {
     const classes = useStyles();
 
+    const setSelectChartsPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const setQuitSessionPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
 
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
@@ -80,7 +81,12 @@ export default function Header(): JSX.Element {
                     buttonGroup={
                         <>
                             <RecordingButton />
-                            <IconButton aria-label="add new chart">
+                            <IconButton
+                                aria-label="add new chart"
+                                onClick={() => {
+                                    setSelectChartsPopupOpen(true);
+                                }}
+                            >
                                 <AddChartIcon />
                             </IconButton>
                             <IconButton

@@ -14,3 +14,8 @@ export const addStudentPopupOpenState = atom<boolean>({
     key: "addStudentPopupOpen",
     default: false
 });
+
+export const selectChartsPopupOpenState = atom<boolean>({
+    key: "selectChartsPopupOpen",
+    default: false
+});

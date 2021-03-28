@@ -1,4 +1,4 @@
-import {makeStyles, createStyles} from "@material-ui/core";
+import {createStyles, makeStyles, Typography} from "@material-ui/core";
 import {useRecoilValue} from "recoil";
 import {Variable} from "../../../constants";
 import {selectedSessionActiveContainersState} from "../../../state/session";
@@ -32,6 +32,9 @@ function Dashboard(): JSX.Element {
 
     return (
         <div className={classes.dashboard}>
+            {Object.values(Variable).every((variable) => activeContainers[variable].active === false) && (
+                <Typography>No charts added</Typography>
+            )}
             {Object.values(Variable)
                 .filter((variable) => activeContainers[variable].active)
                 .map((variable) => {
