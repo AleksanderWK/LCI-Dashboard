@@ -244,13 +244,13 @@ export const sessionActiveContainersState = atomFamily<ActiveContainers, number 
         [Variable.CognitiveLoad]: {active: true, display: "line"},
         [Variable.PerceivedDifficulty]: {active: true, display: "line"},
         [Variable.Familiarity]: {active: false, display: "line"},
-        [Variable.InformationProcessingIndex]: {active: true, display: "line"},
-        [Variable.PhysiologicalArousal]: {active: true, display: "line"},
-        [Variable.Engagement]: {active: true, display: "line"},
+        [Variable.InformationProcessingIndex]: {active: true, display: "numeric"},
+        [Variable.PhysiologicalArousal]: {active: false, display: "line"},
+        [Variable.Engagement]: {active: false, display: "line"},
         [Variable.PhysiologicalStress]: {active: false, display: "line"},
         [Variable.EmotionalRegulation]: {active: false, display: "line"},
         [Variable.MotionStability]: {active: false, display: "line"},
-        [Variable.EnergySpentFatigue]: {active: true, display: "line"}
+        [Variable.EnergySpentFatigue]: {active: false, display: "line"}
     }
 });
 
@@ -270,22 +270,25 @@ export const selectedSessionActiveContainersState = selector<ActiveContainers>({
 });
 
 /*
- *  A selectorFamily that accesses the container status for a given variable
+ *  A selectorFamily that accesses a sessions containers active state
  */
 
-/* export const selectedSessionVariableContainerState = selectorFamily<boolean | null, Variable>({
+export const selectedSessionVariableContainerVisibleState = selectorFamily<VariableDisplay, Variable>({
     key: "selectedSessionVariableContainer",
     get: (variable: Variable) => ({get}) => {
         const id = get(selectedSessionIdState);
-
         return get(sessionActiveContainersState(id))[variable];
-    }
+    },
     set: (variable: Variable) => ({get, set}, newValue) => {
         const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), newValue);
+        set(sessionActiveContainersState(id), (activeContainerPrevState) => {
+            return {
+                ...activeContainerPrevState,
+                [variable]: newValue
+            };
+        });
     }
-     */
-//});
+});
 
 export const snackOpenState = atom<boolean>({
     key: "snackOpen",

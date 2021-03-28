@@ -9,8 +9,11 @@ import {makeStyles, Theme, createStyles, IconButton, Typography} from "@material
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
-import {useRecoilValue} from "recoil";
-import {selectedSessionDataLengthVariableState} from "../../../state/session";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import {
+    selectedSessionDataLengthVariableState,
+    selectedSessionVariableContainerVisibleState
+} from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
     variable: Variable;
-    display: string;
+    display: "line" | "numeric";
 }
 
 export default function Container(props: Props): JSX.Element {
@@ -48,6 +51,8 @@ export default function Container(props: Props): JSX.Element {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
+
+    const setVisible = useSetRecoilState(selectedSessionVariableContainerVisibleState(props.variable));
 
     return (
         <ContainerCard>
@@ -84,7 +89,7 @@ export default function Container(props: Props): JSX.Element {
                         isDetailedView={isDetailedView}
                         onShowMore={() => setIsDetailedView(true)}
                         onShowLess={() => setIsDetailedView(false)}
-                        onRemoveView={() => null}
+                        onRemoveView={() => setVisible({active: false, display: props.display})}
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
