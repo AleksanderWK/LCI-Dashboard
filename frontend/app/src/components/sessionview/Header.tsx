@@ -5,7 +5,7 @@ import RecordingButton from "./RecordingButton";
 import {selectedSessionState} from "../../state/session";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import {useEffect, useState} from "react";
-import {quitSessionPopupOpenState} from "../../state/popup";
+import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -87,6 +87,7 @@ function CloseIcon(props: SvgIconProps): JSX.Element {
 export default function Header(): JSX.Element {
     const classes = useStyles();
 
+    const setSelectChartsPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const setQuitSessionPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
 
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
@@ -143,7 +144,12 @@ export default function Header(): JSX.Element {
             </div>
             <div className={classes.btnGroup}>
                 <RecordingButton />
-                <IconButton aria-label="add new chart">
+                <IconButton
+                    aria-label="add new chart"
+                    onClick={() => {
+                        setSelectChartsPopupOpen(true);
+                    }}
+                >
                     <AddChartIcon
                         width="29"
                         height="29"
