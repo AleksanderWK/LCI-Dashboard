@@ -95,6 +95,7 @@ exports[`create session view matches snapshot 1`] = `
                 aria-label="add new student"
                 class="MuiButtonBase-root MuiIconButton-root makeStyles-addStudentBtn-13 MuiIconButton-colorPrimary"
                 tabindex="0"
+                title="Add student"
                 type="button"
               >
                 <span
@@ -132,19 +133,19 @@ exports[`create session view matches snapshot 1`] = `
                 >
                   <span
                     aria-disabled="false"
-                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-20 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
                   >
                     <span
                       class="MuiIconButton-label"
                     >
                       <input
-                        class="PrivateSwitchBase-input-23"
+                        class="PrivateSwitchBase-input-24"
                         name="eyetracker"
                         type="radio"
                         value="stationary"
                       />
                       <div
-                        class="PrivateRadioButtonIcon-root-24"
+                        class="PrivateRadioButtonIcon-root-25"
                       >
                         <svg
                           aria-hidden="true"
@@ -158,7 +159,7 @@ exports[`create session view matches snapshot 1`] = `
                         </svg>
                         <svg
                           aria-hidden="true"
-                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-25"
+                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
                           focusable="false"
                           viewBox="0 0 24 24"
                         >
@@ -184,19 +185,19 @@ exports[`create session view matches snapshot 1`] = `
                 >
                   <span
                     aria-disabled="false"
-                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-20 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
                   >
                     <span
                       class="MuiIconButton-label"
                     >
                       <input
-                        class="PrivateSwitchBase-input-23"
+                        class="PrivateSwitchBase-input-24"
                         name="eyetracker"
                         type="radio"
                         value="mobile"
                       />
                       <div
-                        class="PrivateRadioButtonIcon-root-24"
+                        class="PrivateRadioButtonIcon-root-25"
                       >
                         <svg
                           aria-hidden="true"
@@ -210,7 +211,7 @@ exports[`create session view matches snapshot 1`] = `
                         </svg>
                         <svg
                           aria-hidden="true"
-                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-25"
+                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
                           focusable="false"
                           viewBox="0 0 24 24"
                         >
@@ -249,6 +250,7 @@ exports[`create session view matches snapshot 1`] = `
                   class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall"
                   style="margin: 0px 0px 7px 5px;"
                   tabindex="0"
+                  title="Copy"
                   type="button"
                 >
                   <span
@@ -322,17 +324,17 @@ exports[`create session view matches snapshot 1`] = `
     </div>
     <div
       aria-hidden="true"
-      class="MuiBackdrop-root makeStyles-backdrop-27"
+      class="MuiBackdrop-root makeStyles-backdrop-29"
       style="opacity: 0; visibility: hidden;"
     >
       <div
-        class="MuiPaper-root MuiCard-root makeStyles-card-28 MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root MuiCard-root makeStyles-card-30 MuiPaper-elevation1 MuiPaper-rounded"
       >
         <div
-          class="MuiCardContent-root makeStyles-cardContent-29"
+          class="MuiCardContent-root makeStyles-cardContent-31"
         >
           <div
-            class="makeStyles-form-30"
+            class="makeStyles-form-32"
           >
             <h1
               class="MuiTypography-root MuiTypography-h1"
@@ -341,7 +343,7 @@ exports[`create session view matches snapshot 1`] = `
               Add Student
             </h1>
             <div
-              class="MuiFormControl-root MuiTextField-root makeStyles-inputNewStudentName-31"
+              class="MuiFormControl-root MuiTextField-root makeStyles-inputNewStudentName-33"
             >
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -366,7 +368,7 @@ exports[`create session view matches snapshot 1`] = `
               style="width: 100%; justify-content: flex-end;"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-32"
+                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-34"
                 tabindex="0"
                 type="button"
               >
@@ -380,7 +382,7 @@ exports[`create session view matches snapshot 1`] = `
                 />
               </button>
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-32 MuiButton-containedPrimary"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-34 MuiButton-containedPrimary"
                 tabindex="0"
                 type="button"
               >

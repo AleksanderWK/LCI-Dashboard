@@ -18,6 +18,7 @@ import {Student} from "../../state/student";
 import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
 import {AddChartIcon, ExitIcon} from "../common/Icons";
+import {StyledTooltipBottom} from "../common/Tooltips";
 
 export default function Header(): JSX.Element {
     const history = useHistory();
@@ -82,18 +83,22 @@ export default function Header(): JSX.Element {
                     }
                     buttonGroup={
                         <>
-                            <IconButton aria-label="add new chart">
-                                <AddChartIcon />
-                            </IconButton>
-                            <IconButton
-                                aria-label="exit recording view"
-                                onClick={() => {
-                                    resetInterval();
-                                    history.push("/");
-                                }}
-                            >
-                                <ExitIcon />
-                            </IconButton>
+                            <StyledTooltipBottom title="Select views">
+                                <IconButton aria-label="select views">
+                                    <AddChartIcon />
+                                </IconButton>
+                            </StyledTooltipBottom>
+                            <StyledTooltipBottom title="Exit">
+                                <IconButton
+                                    aria-label="exit recording view"
+                                    onClick={() => {
+                                        resetInterval();
+                                        history.push("/");
+                                    }}
+                                >
+                                    <ExitIcon />
+                                </IconButton>
+                            </StyledTooltipBottom>
                         </>
                     }
                 />

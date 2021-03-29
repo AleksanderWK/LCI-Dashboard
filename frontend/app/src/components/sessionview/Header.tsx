@@ -8,6 +8,7 @@ import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
 import {AddChartIcon, CloseIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
+import {StyledTooltipBottom} from "../common/Tooltips";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -81,22 +82,26 @@ export default function Header(): JSX.Element {
                     buttonGroup={
                         <>
                             <RecordingButton />
-                            <IconButton
-                                aria-label="add new chart"
-                                onClick={() => {
-                                    setSelectChartsPopupOpen(true);
-                                }}
-                            >
-                                <AddChartIcon />
-                            </IconButton>
-                            <IconButton
-                                aria-label="quit student session"
-                                onClick={() => {
-                                    setQuitSessionPopupOpen(true);
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
+                            <StyledTooltipBottom title="Select views">
+                                <IconButton
+                                    aria-label="select views"
+                                    onClick={() => {
+                                        setSelectChartsPopupOpen(true);
+                                    }}
+                                >
+                                    <AddChartIcon />
+                                </IconButton>
+                            </StyledTooltipBottom>
+                            <StyledTooltipBottom title="Quit session">
+                                <IconButton
+                                    aria-label="quit student session"
+                                    onClick={() => {
+                                        setQuitSessionPopupOpen(true);
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                            </StyledTooltipBottom>
                         </>
                     }
                 />
