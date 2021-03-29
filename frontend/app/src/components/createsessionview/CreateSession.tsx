@@ -33,6 +33,7 @@ import {
     sessionState
 } from "../../state/session";
 import {EyeTrackingDevice} from "../../constants";
+import {StyledTooltipBottom, StyledTooltipRight} from "../common/Tooltips";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -253,16 +254,18 @@ export default function CreateSession(): JSX.Element {
                         )}
                     </Select>
                 </FormControl>
-                <IconButton
-                    color="primary"
-                    aria-label="add new student"
-                    className={classes.addStudentBtn}
-                    onClick={() => {
-                        setAddStudentPopupOpen(true);
-                    }}
-                >
-                    <AddCircleRoundedIcon />
-                </IconButton>
+                <StyledTooltipBottom title="Add student" placement="bottom">
+                    <IconButton
+                        color="primary"
+                        aria-label="add new student"
+                        className={classes.addStudentBtn}
+                        onClick={() => {
+                            setAddStudentPopupOpen(true);
+                        }}
+                    >
+                        <AddCircleRoundedIcon />
+                    </IconButton>
+                </StyledTooltipBottom>
             </div>
 
             <div>
@@ -289,16 +292,18 @@ export default function CreateSession(): JSX.Element {
                     <Typography variant="caption" className={classes.sessionToken}>
                         {createSessionValues.sessionCode}
                     </Typography>
-                    <IconButton
-                        aria-label="copy-to-clipboard"
-                        size="small"
-                        style={{margin: "0px 0px 7px 5px"}}
-                        onClick={() => {
-                            navigator.clipboard.writeText(createSessionValues.sessionCode);
-                        }}
-                    >
-                        <CopyIcon viewBox="-3 -3 25 25" />
-                    </IconButton>
+                    <StyledTooltipRight title="Copy" placement="right">
+                        <IconButton
+                            aria-label="copy-to-clipboard"
+                            size="small"
+                            style={{margin: "0px 0px 7px 5px"}}
+                            onClick={() => {
+                                navigator.clipboard.writeText(createSessionValues.sessionCode);
+                            }}
+                        >
+                            <CopyIcon viewBox="-3 -3 25 25" />
+                        </IconButton>
+                    </StyledTooltipRight>
                 </div>
                 {createSessionValues.studentConnected ? (
                     <Typography variant="caption" style={{color: "#5BA350"}}>
