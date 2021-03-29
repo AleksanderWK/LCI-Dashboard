@@ -19,6 +19,7 @@ const useStyles = makeStyles(() =>
         menuGrid: {
             display: "grid",
             gridTemplateColumns: "100px auto",
+            gridTemplateRows: "1fr",
             position: "relative",
             height: "100%"
         },
