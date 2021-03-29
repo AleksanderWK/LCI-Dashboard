@@ -9,6 +9,7 @@ import {
     currentRecordingInterval,
     RecordedSessionInfo,
     recordedSessionInfoState,
+    recordedSessionState,
     selectedRecordedSessionIdState
 } from "../../state/recordedSession";
 import {useHistory} from "react-router";
@@ -24,7 +25,10 @@ export default function Header(): JSX.Element {
     const history = useHistory();
 
     const recordedSessionId = useRecoilValue(selectedRecordedSessionIdState);
+    const resetRecordedSessionId = useResetRecoilState(selectedRecordedSessionIdState);
     const [recordedSessionInfo, setRecordedSessionInfo] = useRecoilState(recordedSessionInfoState);
+    const resetRecordedSessionInfo = useResetRecoilState(recordedSessionInfoState);
+    const resetRecordedSession = useResetRecoilState(recordedSessionState);
     const resetInterval = useResetRecoilState(currentRecordingInterval);
 
     useEffect(() => {
@@ -92,6 +96,9 @@ export default function Header(): JSX.Element {
                                 <IconButton
                                     aria-label="exit recording view"
                                     onClick={() => {
+                                        resetRecordedSessionId();
+                                        resetRecordedSessionInfo();
+                                        resetRecordedSession();
                                         resetInterval();
                                         history.push("/");
                                     }}
