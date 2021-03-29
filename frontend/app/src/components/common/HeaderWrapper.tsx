@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-    title: string;
+    title: string | undefined;
     infoBar: JSX.Element;
     buttonGroup: JSX.Element;
 }

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
     icon: JSX.Element;
-    text: string;
+    text: string | undefined;
 }
 
 export default function InfoItem(props: Props): JSX.Element {

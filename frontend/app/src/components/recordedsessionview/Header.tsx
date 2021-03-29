@@ -74,42 +74,40 @@ export default function Header(): JSX.Element {
 
     return (
         <>
-            {recordedSessionInfo && (
-                <HeaderWrapper
-                    title={recordedSessionInfo.sessionName}
-                    infoBar={
-                        <>
-                            <InfoItem icon={<PersonIcon />} text={recordedSessionInfo.studentName} />
-                            <InfoItem icon={<EventIcon />} text={recordedSessionInfo.date} />
-                            <InfoItem icon={<QueryBuilderIcon />} text={recordedSessionInfo.startTime} />
-                            <InfoItem icon={<TimerIcon />} text={recordedSessionInfo.duration} />
-                        </>
-                    }
-                    buttonGroup={
-                        <>
-                            <StyledTooltipBottom title="Select views">
-                                <IconButton aria-label="select views">
-                                    <AddChartIcon />
-                                </IconButton>
-                            </StyledTooltipBottom>
-                            <StyledTooltipBottom title="Exit">
-                                <IconButton
-                                    aria-label="exit recording view"
-                                    onClick={() => {
-                                        resetRecordedSessionId();
-                                        resetRecordedSessionInfo();
-                                        resetRecordedSession();
-                                        resetInterval();
-                                        history.push("/");
-                                    }}
-                                >
-                                    <ExitIcon />
-                                </IconButton>
-                            </StyledTooltipBottom>
-                        </>
-                    }
-                />
-            )}
+            <HeaderWrapper
+                title={recordedSessionInfo?.sessionName}
+                infoBar={
+                    <>
+                        <InfoItem icon={<PersonIcon />} text={recordedSessionInfo?.studentName} />
+                        <InfoItem icon={<EventIcon />} text={recordedSessionInfo?.date} />
+                        <InfoItem icon={<QueryBuilderIcon />} text={recordedSessionInfo?.startTime} />
+                        <InfoItem icon={<TimerIcon />} text={recordedSessionInfo?.duration} />
+                    </>
+                }
+                buttonGroup={
+                    <>
+                        <StyledTooltipBottom title="Select views">
+                            <IconButton aria-label="select views">
+                                <AddChartIcon />
+                            </IconButton>
+                        </StyledTooltipBottom>
+                        <StyledTooltipBottom title="Exit">
+                            <IconButton
+                                aria-label="exit recording view"
+                                onClick={() => {
+                                    resetRecordedSessionId();
+                                    resetRecordedSessionInfo();
+                                    resetRecordedSession();
+                                    resetInterval();
+                                    history.push("/");
+                                }}
+                            >
+                                <ExitIcon />
+                            </IconButton>
+                        </StyledTooltipBottom>
+                    </>
+                }
+            />
         </>
     );
 }
