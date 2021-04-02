@@ -29,7 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         infoIcon: {
             cursor: "default"
-        }
+        },
+        drag: {}
     })
 );
 
@@ -69,7 +70,7 @@ export default function Container(props: Props): JSX.Element {
                         {MMDVariables[props.variable].name}
                     </Typography>
 
-                    <div className={classes.menu} ref={menuAnchorElement}>
+                    <div className={`${classes.menu} ${"noDrag"}`} ref={menuAnchorElement}>
                         <Tooltip variable={props.variable}>
                             <IconButton
                                 aria-label="info"
@@ -100,13 +101,15 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
-                    <CalculatingIndicator variable={props.variable} />
-                ) : containerOptions[props.variable].display === "line" ? (
-                    <LineChart variable={props.variable} />
-                ) : (
-                    <Numeric variable={props.variable} />
-                )}
+                <div className={`${"noDrag"}`}>
+                    {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
+                        <CalculatingIndicator variable={props.variable} />
+                    ) : containerOptions[props.variable].display === "line" ? (
+                        <LineChart variable={props.variable} />
+                    ) : (
+                        <Numeric variable={props.variable} />
+                    )}
+                </div>
             </>
         </ContainerCard>
     );
