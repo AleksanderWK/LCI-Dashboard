@@ -6,6 +6,7 @@ from datamodels.datapayload import DataPayload
 from calculators.mmdvcollection_calc import MMDVCollectionCalculator
 from wsclient import WebSocketClient
 from tokendecode import decodeToken
+from openface import OpenFaceInstance
 
 
 def process_current_data():
@@ -75,6 +76,7 @@ def checkStartDatastream(ws, message):
     """
     if message == "Start":
         ds.add_all_to_event_loop(loop)
+        openface.start()
         loop.call_later(1, process_current_data)
 
 
@@ -84,6 +86,7 @@ def checkTerminate(ws, message):
     """
     if message == "Terminate":
         ds.terminate()
+        openface.terminate()
         asyncio.run_coroutine_threadsafe(ws.close(), loop)
         loop.stop()
 
@@ -91,6 +94,7 @@ def checkTerminate(ws, message):
 # The code below is the startpoint of the backend application. Here all the essential objects get initialized.
 ws = WebSocketClient()
 ds = Datastreams("S001")
+openface = OpenFaceInstance()
 mmdv_calc = MMDVCollectionCalculator(ds)
 loop = asyncio.get_event_loop()
 setup()
