@@ -170,3 +170,6 @@ class FileDatastreams(Datastreams):
 
     def get_current_skeleton_data(self):
         return SkeletalNodeCollection(self.current_skeleton_data)
+
+    def get_current_au_data(self):
+        return []

@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from datastreams.live_datastreams import LiveDatastreams
 from datastreams.file_datastreams import FileDatastreams
 from datastreams.openface.openface import OpenFaceInstance
 from datamodels.mmdvcollection import MMDVCollection
@@ -18,6 +19,7 @@ def process_current_data():
 
     # Get the final payload that will be sent to the dashboard
     data_payload = DataPayload(mmdv_collection, getSessionCode()).get_json()
+    print(data_payload)
 
     # Sending the data payload to dashboard
     asyncio.run_coroutine_threadsafe(ws.send(data_payload), loop)
@@ -92,6 +94,6 @@ def checkTerminate(ws, message):
 # The code below is the startpoint of the backend application. Here all the essential objects get initialized.
 loop = asyncio.get_event_loop()
 ws = WebSocketClient()
-ds = FileDatastreams("S001", loop)
+ds = LiveDatastreams()
 mmdv_calc = MMDVCollectionCalculator(ds)
 setup()

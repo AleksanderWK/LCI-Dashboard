@@ -40,7 +40,8 @@ class OpenFaceInstance:
 
     def startDataRead(self):
         try:
-            self.file = open("./processed/data.csv", newline="")
+            self.file = open(
+                "./datastreams/openface/processed/data.csv", newline="")
             self.reader = csv.reader(self.file)
             self.header_data = next(self.reader)
         except FileNotFoundError:
@@ -52,10 +53,11 @@ class OpenFaceInstance:
     def readNextData(self):
         while True:
             try:
-                row = next(self.reader)
-                self.current_data.append(
-                    OpenFaceDataPoint(self.header_data, row)
-                )
+                if self.reader:
+                    row = next(self.reader)
+                    self.current_data.append(
+                        OpenFaceDataPoint(self.header_data, row)
+                    )
                 print(row[0])
             except StopIteration:
                 break

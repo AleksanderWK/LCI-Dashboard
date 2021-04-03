@@ -6,6 +6,7 @@ from calculators.ipi_calc import InformationProcessingIndexCalculator
 from calculators.esf_calc import EnergySpentFatigue
 from calculators.cl_calc import CognitiveLoadCalculator
 from calculators.pa_calc import PhysiologicalArousalCalculator
+from calculators.ese_calc import EducationSpecificEmotionsCalculator
 
 
 class MMDVCollectionCalculator:
@@ -16,9 +17,6 @@ class MMDVCollectionCalculator:
     """
 
     ds = None
-    cl_calc = None
-    pd_calc = None
-    ipi_calc = None
 
     def __init__(self, ds: Datastreams):
         self.ds = ds
@@ -28,6 +26,7 @@ class MMDVCollectionCalculator:
         self.esf_calc = EnergySpentFatigue()
         self.pa_calc = PhysiologicalArousalCalculator()
         self.eng_calc = EngagementCalculator()
+        self.ese_calc = EducationSpecificEmotionsCalculator()
 
     def calculate_all(self):
         result = MMDVCollection()
@@ -37,7 +36,11 @@ class MMDVCollectionCalculator:
         result.pd = self.pd_calc.calculate_dataset(eye_tracking_data)
         result.ipi = self.ipi_calc.calculate_dataset(eye_tracking_data)
         result.esf = self.esf_calc.calculate_dataset(
-            self.ds.get_current_skeleton_data())
+            self.ds.get_current_skeleton_data()
+        )
         result.pa = self.pa_calc.calculate_dataset(eda_data)
         result.eng = self.eng_calc.calculate_dataset(eda_data)
+        result.ese = self.ese_calc.calculate_dataset(
+            self.ds.get_current_au_data()
+        )
         return result

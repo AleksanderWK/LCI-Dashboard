@@ -5,8 +5,10 @@ class OpenFaceDataPoint:
     au_list = []
 
     def __init__(self, headerRow, dataRow):
-        start_index = headerRow.index("AU01_c")
-        for i in range(0, 46):
-            self.au_list.append(None)
-        for i in range(start_index, len(headerRow)):
-            self.au_list[int(headerRow[i][2:4])] = dataRow[i]
+        try:
+            start_index = headerRow.index(" AU01_c")
+            self.au_list = [None] * 46
+            for i in range(start_index, len(headerRow)):
+                self.au_list[int(headerRow[i][3:5])] = int(float(dataRow[i]))
+        except IndexError:
+            pass

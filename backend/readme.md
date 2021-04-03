@@ -35,5 +35,5 @@ Move the contents of the unzipped file (not including the folder the files are i
 
 ### 2. Download all the models
 
-Run the following command while being in /openface2:
+Run the following command while being in backend/datastreams/openface/bin/:
 `powershell -noexit -executionpolicy bypass -File download_models.ps1`
