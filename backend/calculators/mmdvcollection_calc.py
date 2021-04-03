@@ -1,4 +1,4 @@
-from datastreams.file_datastreams import Datastreams
+from datastreams.datastreams import Datastreams
 from datamodels.mmdvcollection import MMDVCollection
 from calculators.pd_calc import PerceivedDifficultyCalculator
 from calculators.eng_calc import EngagementCalculator

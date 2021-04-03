@@ -23,7 +23,7 @@ class OpenFaceInstance:
     def __init__(self):
         pass
 
-    def start(self):
+    def startProcess(self):
         try:
             self.process = Popen("\".\datastreams\openface\\bin\FeatureExtraction.exe\"" +
                                  " -device " + str(self.device_id) +
@@ -34,14 +34,17 @@ class OpenFaceInstance:
             print(
                 "Couldn't find the OpenFace binaries, make sure they are installed correctly.")
 
-    def terminate(self):
+    def terminateProcess(self):
         if self.process:
             self.process.terminate()
 
     def startDataRead(self):
-        self.file = open("./processed/data.csv", newline="")
-        self.reader = csv.reader(self.file)
-        self.header_data = next(self.reader)
+        try:
+            self.file = open("./processed/data.csv", newline="")
+            self.reader = csv.reader(self.file)
+            self.header_data = next(self.reader)
+        except FileNotFoundError:
+            print("Couldn't find the OpenFace data files.")
 
     def stopDataRead(self):
         self.file.close()

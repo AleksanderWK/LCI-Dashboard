@@ -31,7 +31,7 @@ The installation guide is taken from the OpenFace github: https://github.com/Tad
 
 Install binaries from the following link: https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_2.2.0_win_x64.zip
 
-Move the contents of the unzipped file to a new folder called `openface2` under backend.
+Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under backend/datastreams/openface/.
 
 ### 2. Download all the models
 
