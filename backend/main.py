@@ -1,12 +1,12 @@
 import asyncio
 import sys
-from datastreams import Datastreams
+from datastreams.file_datastreams import Datastreams
+from datastreams.openface.openface import OpenFaceInstance
 from datamodels.mmdvcollection import MMDVCollection
 from datamodels.datapayload import DataPayload
 from calculators.mmdvcollection_calc import MMDVCollectionCalculator
 from wsclient import WebSocketClient
 from tokendecode import decodeToken
-from openface import OpenFaceInstance
 
 
 def process_current_data():
