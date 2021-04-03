@@ -15,6 +15,7 @@ def process_current_data():
     """
     # Code for calculating variables based on current_data will be done here.
     mmdv_collection = mmdv_calc.calculate_all()
+    openface.readNextData()
 
     # Get the final payload that will be sent to the dashboard
     data_payload = DataPayload(mmdv_collection, getSessionCode()).get_json()
@@ -33,6 +34,7 @@ def setup():
     """
     Sets up the websocket connection with the dashboard and starts the event loop
     """
+    openface.start()
     asyncio.run_coroutine_threadsafe(
         ws.connect("ws://" + getHost() + ":8080/" + getSessionCode()), loop)
     print(getHost())
@@ -75,8 +77,8 @@ def checkStartDatastream(ws, message):
     Checks if a start signal has been sent by the dashboard on the websocket connection. If so, it should start the datastreams and start the main event loop.
     """
     if message == "Start":
+        openface.startDataRead()
         ds.add_all_to_event_loop(loop)
-        openface.start()
         loop.call_later(1, process_current_data)
 
 
