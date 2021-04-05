@@ -3,7 +3,7 @@ from datastreams.openface.openface import OpenFaceInstance
 from datamodels.skeletal import SkeletalNodeCollection
 
 
-class LiveDatastreams(Datastreams):
+class DeviceDatastreams(Datastreams):
 
     openface = None  # OpenFace Instance
 
