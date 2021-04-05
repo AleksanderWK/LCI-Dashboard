@@ -94,8 +94,8 @@ export default function Header(): JSX.Element {
                             <InfoItem icon={<TimerIcon />} text={duration} />
                         </>
                     ) : (
-                        <div className={classes.indicatorContainer}>
-                            <Icon device={Device.Wristband} color={"#535353"} />
+                        <div className={classes.indicatorContainer} style={{gridTemplateColumns: "16px max-content"}}>
+                            <Icon device={Device.VideoBody} color={"#535353"} />
                             <Typography>{"Wristband"}</Typography>
                         </div>
                     )

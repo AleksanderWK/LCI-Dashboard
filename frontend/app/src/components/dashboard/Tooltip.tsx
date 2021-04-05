@@ -18,11 +18,10 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: theme.spacing(1)
         },
         icon: {
-            width: "16px",
-            height: "16px",
+            width: "20px",
+            height: "20px",
             verticalAlign: "text-bottom",
-            marginRight: theme.spacing(1),
-            marginTop: "4px"
+            marginRight: theme.spacing(1)
         },
         device: {
             color: theme.palette.primary.main
