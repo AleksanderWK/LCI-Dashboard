@@ -130,7 +130,7 @@ function LineChart(props: Props): JSX.Element {
         }
     }, [activeContainers]);
 
-    return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
+    return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} className={`${"noDrag"}`} />;
 }
 
 export default React.memo(LineChart);

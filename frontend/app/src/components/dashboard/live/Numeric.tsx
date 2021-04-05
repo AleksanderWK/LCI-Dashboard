@@ -11,10 +11,11 @@ const useStyles = makeStyles((theme: Theme) =>
             height: "100%",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            userSelect: "none"
         },
         numeric: {
-            fontSize: 50,
+            fontSize: 70,
             color: theme.palette.text.default,
             textAlign: "center"
         },
@@ -36,9 +37,9 @@ function Numeric(props: Props): JSX.Element {
     const dataPoint = useRecoilValue(selectedSessionLastValueState(props.variable));
 
     return (
-        <div className={classes.numericWrapper}>
+        <div className={`${"noDrag"} ${classes.numericWrapper}`}>
             {dataPoint ? (
-                <Typography className={classes.numeric}>{dataPoint}</Typography>
+                <Typography className={classes.numeric}>{Math.round(dataPoint)}</Typography>
             ) : (
                 <Typography className={classes.noData}>No data received</Typography>
             )}

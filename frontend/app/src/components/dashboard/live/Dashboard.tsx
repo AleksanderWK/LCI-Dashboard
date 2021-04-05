@@ -3,7 +3,8 @@ import {useRecoilValue} from "recoil";
 import {Variable} from "../../../constants";
 import {selectedSessionActiveContainersState} from "../../../state/session";
 import Container from "./Container";
-import {Layouts, Responsive, WidthProvider} from "react-grid-layout";
+import {ItemCallback, Layout, Layouts, Responsive, WidthProvider} from "react-grid-layout";
+import LayoutItem from "react-grid-layout";
 import {useEffect, useState} from "react";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -66,17 +67,13 @@ function Dashboard(): JSX.Element {
     const [col, setCols] = useState(5);
     const prev: context = {info: null};
 
+    let totalWidth = 0;
+
     const decideX = (type: string): number => {
-        if (prev.info != null) {
-            if (type == "line" && (prev.info.end == col - 1 || prev.info.end == col)) {
-                prev.info = null;
-            } else if (type == "numeric" && prev.info.end == col) {
-                prev.info = null;
-            }
-        }
-        const x = prev.info != null ? prev.info.end : 0;
-        prev.info = {type: type, start: x, end: type == "numeric" ? x + 1 : x + 2};
-        return x;
+        const temp = totalWidth;
+        totalWidth += type == "line" ? 2 : 1;
+        console.log(temp % col);
+        return temp % col;
     };
 
     return (
@@ -100,6 +97,10 @@ function Dashboard(): JSX.Element {
                         }}
                         onLayoutChange={(layout) => {
                             //console.log(layout);
+                        }}
+                        onResizeStop={(layout, oldItem, newItem) => {
+                            totalWidth -= oldItem.w;
+                            totalWidth += newItem.w;
                         }}
                     >
                         {Object.values(Variable)

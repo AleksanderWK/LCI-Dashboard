@@ -66,7 +66,7 @@ export default function Container(props: Props): JSX.Element {
         <ContainerCard>
             <>
                 <div className={classes.header}>
-                    <Typography variant="h2" noWrap={true}>
+                    <Typography variant="h2" noWrap={true} style={{userSelect: "none"}}>
                         {MMDVariables[props.variable].name}
                     </Typography>
 
@@ -101,15 +101,14 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                <div className={`${"noDrag"}`}>
-                    {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
-                        <CalculatingIndicator variable={props.variable} />
-                    ) : containerOptions[props.variable].display === "line" ? (
-                        <LineChart variable={props.variable} />
-                    ) : (
-                        <Numeric variable={props.variable} />
-                    )}
-                </div>
+
+                {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
+                    <CalculatingIndicator variable={props.variable} />
+                ) : containerOptions[props.variable].display === "line" ? (
+                    <LineChart variable={props.variable} />
+                ) : (
+                    <Numeric variable={props.variable} />
+                )}
             </>
         </ContainerCard>
     );
