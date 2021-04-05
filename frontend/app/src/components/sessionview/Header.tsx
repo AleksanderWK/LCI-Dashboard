@@ -2,13 +2,19 @@ import React, {useEffect, useState} from "react";
 import {createStyles, makeStyles, Typography, IconButton, Theme} from "@material-ui/core";
 import TimerIcon from "@material-ui/icons/Timer";
 import RecordingButton from "./RecordingButton";
-import {selectedSessionState} from "../../state/session";
+import {selectedSessionIdState, selectedSessionState} from "../../state/session";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
 import {AddChartIcon, CloseIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import WatchIcon from "@material-ui/icons/Watch";
+import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
+import FaceIcon from "@material-ui/icons/Face";
+import {Icon} from "../dashboard/Tooltip";
+import {Device} from "../../constants";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,6 +38,9 @@ export default function Header(): JSX.Element {
 
     const setSelectChartsPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const setQuitSessionPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
+    const selectedSession = useRecoilValue(selectedSessionIdState);
+
+    // TODO: use all sessions state to get current variable
 
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
     const [duration, setDuration] = useState<string>("");
@@ -67,45 +76,57 @@ export default function Header(): JSX.Element {
 
     return (
         <>
-            {selectedSessionInfo && (
-                <HeaderWrapper
-                    title={selectedSessionInfo.sessionName}
-                    infoBar={
+            <HeaderWrapper
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                /**@ts-ignore */
+                title={selectedSession != null ? selectedSessionInfo.sessionName : "All Sessions"}
+                infoBar={
+                    selectedSession != null ? (
                         <>
                             <div className={classes.indicatorContainer}>
                                 <div className={classes.indicatorIcon}></div>
+
+                                {/**
+                                 * eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                 * @ts-ignore */}
                                 <Typography>{selectedSessionInfo.student.name}</Typography>
                             </div>
                             <InfoItem icon={<TimerIcon />} text={duration} />
                         </>
-                    }
-                    buttonGroup={
-                        <>
-                            <RecordingButton />
-                            <StyledTooltipBottom title="Select views">
-                                <IconButton
-                                    aria-label="select views"
-                                    onClick={() => {
-                                        setSelectChartsPopupOpen(true);
-                                    }}
-                                >
-                                    <AddChartIcon />
-                                </IconButton>
-                            </StyledTooltipBottom>
-                            <StyledTooltipBottom title="Quit session">
-                                <IconButton
-                                    aria-label="quit student session"
-                                    onClick={() => {
-                                        setQuitSessionPopupOpen(true);
-                                    }}
-                                >
-                                    <CloseIcon />
-                                </IconButton>
-                            </StyledTooltipBottom>
-                        </>
-                    }
-                />
-            )}
+                    ) : (
+                        <div className={classes.indicatorContainer}>
+                            <Icon device={Device.Wristband} color={"#535353"} />
+                            <Typography>{"Wristband"}</Typography>
+                        </div>
+                    )
+                }
+                buttonGroup={
+                    <>
+                        {selectedSession != null ? <RecordingButton /> : <></>}
+
+                        <StyledTooltipBottom title="Select views">
+                            <IconButton
+                                aria-label="select views"
+                                onClick={() => {
+                                    setSelectChartsPopupOpen(true);
+                                }}
+                            >
+                                <AddChartIcon />
+                            </IconButton>
+                        </StyledTooltipBottom>
+                        <StyledTooltipBottom title="Quit session">
+                            <IconButton
+                                aria-label="quit student session"
+                                onClick={() => {
+                                    setQuitSessionPopupOpen(true);
+                                }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </StyledTooltipBottom>
+                    </>
+                }
+            />
         </>
     );
 }

@@ -21,7 +21,8 @@ const useStyles = makeStyles((theme: Theme) =>
             width: "16px",
             height: "16px",
             verticalAlign: "text-bottom",
-            marginRight: theme.spacing(1)
+            marginRight: theme.spacing(1),
+            marginTop: "4px"
         },
         device: {
             color: theme.palette.primary.main
@@ -31,20 +32,21 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IconProps {
     device: Device;
+    color?: string;
 }
 
-function Icon(props: IconProps): JSX.Element {
+export function Icon(props: IconProps): JSX.Element {
     const classes = useStyles();
 
     switch (props.device) {
         case Device.EyeTracker:
-            return <VisibilityOutlinedIcon className={classes.icon} />;
+            return <VisibilityOutlinedIcon className={classes.icon} style={{color: props.color}} />;
         case Device.Wristband:
-            return <WatchIcon className={classes.icon} />;
+            return <WatchIcon className={classes.icon} style={{color: props.color}} />;
         case Device.VideoBody:
-            return <AccessibilityNewIcon className={classes.icon} />;
+            return <AccessibilityNewIcon className={classes.icon} style={{color: props.color}} />;
         default:
-            return <FaceIcon className={classes.icon} />;
+            return <FaceIcon className={classes.icon} style={{color: props.color}} />;
     }
 }
 
