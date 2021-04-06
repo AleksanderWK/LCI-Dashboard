@@ -10,7 +10,13 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {selectedSessionActiveContainersState, selectedSessionDataLengthVariableState} from "../../../state/session";
+import {
+    selectedSessionActiveContainersState,
+    selectedSessionDataLengthVariableState,
+    selectedSessionIdState
+} from "../../../state/session";
+import PersonIcon from "@material-ui/icons/Person";
+import InfoItem from "../../common/InfoItem";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -48,6 +54,8 @@ export default function Container(props: Props): JSX.Element {
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
+
+    const selectedSession = useRecoilValue(selectedSessionIdState);
 
     function setChartType(chartType: "line" | "numeric"): void {
         const newContainerOptions = {...containerOptions};
@@ -100,6 +108,11 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
+                {selectedSession == null && (
+                    <div style={{marginBottom: "8px"}}>
+                        <InfoItem icon={<PersonIcon style={{marginLeft: "-2px"}} />} text={"Aleksander"} />
+                    </div>
+                )}
                 {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                     <CalculatingIndicator variable={props.variable} />
                 ) : containerOptions[props.variable].display === "line" ? (
