@@ -98,6 +98,8 @@ class Main():
         self.device_manager = DeviceManager()
         self.device_manager.subscribe_to_all_devices()
 
+        time.sleep(5)
+
         # Do stuff here
         # ...
 
