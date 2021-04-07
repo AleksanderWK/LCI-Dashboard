@@ -1,10 +1,11 @@
 import pandas as pd
+from datastreams.datastreams import Datastreams
 from datamodels.wristband import *
 from datamodels.skeletal import *
 from datamodels.eye_tracking import *
 
 
-class Datastreams:
+class FileDatastreams(Datastreams):
 
     """
     This class takes the data stored in the csv-files and simulates the datastreams as if they were streamed in real-time by the devices.
@@ -34,29 +35,48 @@ class Datastreams:
     skeleton = None
 
     terminated = False
+    loop = None
 
-    def __init__(self, studentID):
+    file_path = "./datastreams/dataset"
+
+    def __init__(self, studentID, loop):
         """
         studnetID is needed for reading the appropriate files. For example "S001".
         """
-        self.acc = pd.read_csv("./data/empatica/" + studentID + "/ACC.csv")
-        self.bvp = pd.read_csv("./data/empatica/" + studentID + "/BVP.csv")
-        self.eda = pd.read_csv("./data/empatica/" + studentID + "/EDA.csv")
-        self.hr = pd.read_csv("./data/empatica/" + studentID + "/HR.csv")
-        self.ibi = pd.read_csv("./data/empatica/" + studentID + "/IBI.csv")
-        self.temp = pd.read_csv("./data/empatica/" + studentID + "/TEMP.csv")
+        self.acc = pd.read_csv(
+            self.file_path + "/empatica/" + studentID + "/ACC.csv"
+        )
+        self.bvp = pd.read_csv(
+            self.file_path + "/empatica/" + studentID + "/BVP.csv"
+        )
+        self.eda = pd.read_csv(
+            self.file_path + "/empatica/" + studentID + "/EDA.csv"
+        )
+        self.hr = pd.read_csv(
+            self.file_path + "/empatica/" + studentID + "/HR.csv"
+        )
+        self.ibi = pd.read_csv(
+            self.file_path + "/empatica/" + studentID + "/IBI.csv"
+        )
+        self.temp = pd.read_csv(
+            self.file_path + "/empatica/" + studentID + "/TEMP.csv"
+        )
         self.eye_tracking = pd.read_csv(
-            "./data/eye-tracking/ET-data-" + studentID + ".csv")
+            self.file_path + "/eye-tracking/ET-data-" + studentID + ".csv"
+        )
         self.skeleton = pd.read_csv(
-            "./data/skeleton/skeleton-" + studentID + ".csv")
+            self.file_path + "/skeleton/skeleton-" + studentID + ".csv"
+        )
+        self.loop = loop
 
     def generate_frequency_datastream(self, data, time, current_data, loop):
         if self.terminated:
             return
         freq = data.loc[0][0]
         current_data.append(data.loc[time])
-        loop.call_later(1 / freq, self.generate_frequency_datastream,
-                        data, time + 1, current_data, loop)
+        loop.call_later(
+            1 / freq, self.generate_frequency_datastream, data, time + 1, current_data, loop
+        )
 
     def generate_eye_tracking_datastream(self, data, row, current_data, loop):
         if self.terminated:
@@ -65,8 +85,10 @@ class Datastreams:
         end_time = data_row[2]
         next_end_time = data.loc[row + 1][2]
         current_data.append(data_row)
-        loop.call_later((next_end_time - end_time) / 1000,
-                        self.generate_eye_tracking_datastream, data, row + 1, current_data, loop)
+        loop.call_later(
+            (next_end_time - end_time) /
+            1000, self.generate_eye_tracking_datastream, data, row + 1, current_data, loop
+        )
 
     def generate_skeleton_datastream(self, data, row, current_data, loop):
         if self.terminated:
@@ -81,24 +103,36 @@ class Datastreams:
                 break
             current_data.append(data_row)
             row_counter += 1
-        loop.call_later(time - init_time, self.generate_skeleton_datastream,
-                        data, row_counter, current_data, loop)
+        loop.call_later(
+            time - init_time, self.generate_skeleton_datastream, data, row_counter, current_data, loop
+        )
 
-    def add_all_to_event_loop(self, loop):
-        loop.call_soon(self.generate_eye_tracking_datastream,
-                       self.eye_tracking, 1, self.current_eye_tracking_data, loop)
-        loop.call_soon(self.generate_skeleton_datastream,
-                       self.skeleton, 1, self.current_skeleton_data, loop)
-        loop.call_soon(self.generate_frequency_datastream,
-                       self.acc, 1, self.current_acc_data, loop)
-        loop.call_soon(self.generate_frequency_datastream,
-                       self.bvp, 1, self.current_bvp_data, loop)
-        loop.call_soon(self.generate_frequency_datastream,
-                       self.eda, 1, self.current_eda_data, loop)
-        loop.call_soon(self.generate_frequency_datastream,
-                       self.hr, 1, self.current_hr_data, loop)
-        loop.call_soon(self.generate_frequency_datastream,
-                       self.temp, 1, self.current_temp_data, loop)
+    def start(self):
+        self.loop.call_soon(
+            self.generate_eye_tracking_datastream, self.eye_tracking, 1, self.current_eye_tracking_data, self.loop
+        )
+        self.loop.call_soon(
+            self.generate_skeleton_datastream, self.skeleton, 1, self.current_skeleton_data, self.loop
+        )
+        self.loop.call_soon(
+            self.generate_frequency_datastream, self.acc, 1, self.current_acc_data, self.loop
+        )
+        self.loop.call_soon(
+            self.generate_frequency_datastream, self.bvp, 1, self.current_bvp_data, self.loop
+        )
+        self.loop.call_soon(
+            self.generate_frequency_datastream, self.eda, 1, self.current_eda_data, self.loop
+        )
+        self.loop.call_soon(
+            self.generate_frequency_datastream, self.hr, 1, self.current_hr_data, self.loop
+        )
+        self.loop.call_soon(
+            self.generate_frequency_datastream, self.temp, 1, self.current_temp_data, self.loop
+        )
+
+    def terminate(self):
+        self.clear_current_data()
+        self.terminated = True
 
     def clear_current_data(self):
         self.current_acc_data.clear()
@@ -110,12 +144,9 @@ class Datastreams:
         self.current_eye_tracking_data.clear()
         self.current_skeleton_data.clear()
 
-    def terminate(self):
-        self.clear_current_data()
-        self.terminated = True
-
     # ----------------------------------------------------------------------
     # The following methods are getters so that you get the data as data classes we have made, not the raw data rows.
+
     def get_current_acc_data(self):
         return list(map(lambda row: AccDataPoint(row), self.current_acc_data))
 
@@ -139,3 +170,6 @@ class Datastreams:
 
     def get_current_skeleton_data(self):
         return SkeletalNodeCollection(self.current_skeleton_data)
+
+    def get_current_au_data(self):
+        return []
