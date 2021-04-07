@@ -2,6 +2,8 @@ import tobii_research as tr
 import math
 import numpy as np
 import ctypes
+from datamodels.eye_tracking import EyeTrackingDataPoint
+import warnings
 
 # Get screen resolution
 user32 = ctypes.windll.user32
@@ -19,6 +21,9 @@ GAZE_POINT_THRESHOLD = 5
 
 
 class StationaryEyeTracker():
+
+    # A list of all fixations calculated in this batch
+    current_fixations = []
 
     current_fixation_id = 0
     current_fixation_init_time = None
@@ -41,15 +46,16 @@ class StationaryEyeTracker():
                   self.stationary_eye_tracker.model + ".")
         else:
             print("ERROR: Could not connect to stationary eye tracker.")
-            quit()
 
     def subscribe(self):
-        self.stationary_eye_tracker.subscribe_to(tr.EYETRACKER_GAZE_DATA,
-                                                 self.gaze_data_callback, as_dictionary=True)
+        if hasattr(self, "stationary_eye_tracker"):
+            self.stationary_eye_tracker.subscribe_to(tr.EYETRACKER_GAZE_DATA,
+                                                     self.gaze_data_callback, as_dictionary=True)
 
     def unsubsribe(self):
-        self.stationary_eye_tracker.unsubscribe_from(
-            tr.EYETRACKER_GAZE_DATA, self.gaze_data_callback)
+        if hasattr(self, "stationary_eye_tracker"):
+            self.stationary_eye_tracker.unsubscribe_from(
+                tr.EYETRACKER_GAZE_DATA, self.gaze_data_callback)
 
     def gaze_data_callback(self, gaze_data):
         fx, fy = self.get_coordinate(gaze_data)
@@ -88,8 +94,12 @@ class StationaryEyeTracker():
                             self.current_fixation_id += 1
                             end_time = round(self.prev_gaze_data[0] / 1000)
 
-                            mean_values = np.nanmean(
-                                np.asarray(self.current_fixation_points), axis=0)
+                            # Suppress warnings that come from for example all left pupil diameters being NaN
+                            with warnings.catch_warnings():
+                                warnings.simplefilter(
+                                    "ignore", category=RuntimeWarning)
+                                mean_values = np.nanmean(
+                                    np.asarray(self.current_fixation_points), axis=0)
 
                             mean_fx_screen, mean_fy_screen = self.map_to_screen_resolution(
                                 mean_values[2], mean_values[3])
@@ -97,7 +107,8 @@ class StationaryEyeTracker():
                             fixation = [self.current_fixation_id, self.current_fixation_init_time,
                                         end_time, mean_values[0], mean_values[1], mean_fx_screen, mean_fy_screen]
 
-                            print(fixation)
+                            self.current_fixations.append(
+                                EyeTrackingDataPoint(fixation))
 
                             # Clear fixation data
                             self.current_fixation_init_time = None
@@ -152,3 +163,9 @@ class StationaryEyeTracker():
 
     def map_to_screen_resolution(self, x, y):
         return round(x * screen_size[0]), round(y * screen_size[1])
+
+    def get_current_data(self):
+        return self.current_fixations
+
+    def clear_current_data(self):
+        self.current_fixations.clear()

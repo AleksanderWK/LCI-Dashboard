@@ -98,9 +98,8 @@ class Main():
         self.session_code = session_code
         self.ws = WebSocketClient()
         self.ds = DeviceDatastreams()
+        self.mmdv_calc = MMDVCollectionCalculator(self.ds)
         self.setup()
-        # Do stuff here
-        # ...
 
 
 @click.command(help="Connect to a dashbord with a session code, retrieve data from either devices or a dataset, calculate variables and send the results to the dashboard in real-time.")

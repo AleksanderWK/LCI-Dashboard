@@ -58,7 +58,6 @@ class OpenFaceInstance:
                     self.current_data.append(
                         OpenFaceDataPoint(self.header_data, row)
                     )
-                print(row[0])
             except StopIteration:
                 break
 
