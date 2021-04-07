@@ -2,6 +2,7 @@ from math import sqrt
 from calculators.mmdvcalc import MMDVCalculator
 from datamodels.skeletal import SkeletalNodeCollection, JOINT_AMOUNT
 
+
 class EnergySpentFatigue(MMDVCalculator):
 
     last_positions = None
@@ -32,7 +33,7 @@ class EnergySpentFatigue(MMDVCalculator):
 
     def total_vel(self, last_positions, current_positions):
         return self.total_distance(last_positions, current_positions) / (current_positions.time - last_positions.time)
-    
+
     def total_acc(self, last_positions, current_positions):
         return self.total_vel(last_positions, current_positions) / (current_positions.time - last_positions.time)
 
@@ -45,10 +46,10 @@ class EnergySpentFatigue(MMDVCalculator):
 
         if self.last_total_acc != None:
             self.last_total_jerk = self.total_jerk(self.last_positions, data)
-        
+
         if self.last_total_vel != None:
             self.last_total_acc = self.total_acc(self.last_positions, data)
-        
+
         if self.last_positions != None:
             self.last_total_vel = self.total_vel(self.last_positions, data)
 

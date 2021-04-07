@@ -1,13 +1,15 @@
 import asyncio
+import sys
 import click
 import time
-from datastreams import Datastreams
+from datastreams.datastreams import Datastreams
+from datastreams.device_datastreams import DeviceDatastreams
+from datastreams.file_datastreams import FileDatastreams
 from datamodels.mmdvcollection import MMDVCollection
 from datamodels.datapayload import DataPayload
 from calculators.mmdvcollection_calc import MMDVCollectionCalculator
 from wsclient import WebSocketClient
 from tokendecode import decodeToken
-from devices.device_manager import DeviceManager
 
 
 class Main():
@@ -82,24 +84,22 @@ class Main():
         """
         Initializes a session using the provided dataset
         """
+        self.loop = asyncio.get_event_loop()
         self.session_code = session_code
         self.ws = WebSocketClient()
-        self.ds = Datastreams(dataset)
+        self.ds = FileDatastreams(dataset, self.loop)
         self.mmdv_calc = MMDVCollectionCalculator(self.ds)
-        self.loop = asyncio.get_event_loop()
         self.setup()
 
     def init_session_with_devices(self, session_code):
         """
         Initializes a session using the connected devices
         """
+        self.loop = asyncio.get_event_loop()
         self.session_code = session_code
-
-        self.device_manager = DeviceManager()
-        self.device_manager.subscribe_to_all_devices()
-
-        time.sleep(5)
-
+        self.ws = WebSocketClient()
+        self.ds = DeviceDatastreams()
+        self.setup()
         # Do stuff here
         # ...
 

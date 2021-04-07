@@ -52,7 +52,7 @@ export default function SelectCharts(): JSX.Element {
     return (
         <div className={classes.grid}>
             <Typography variant="h1">Select Variable Charts</Typography>
-            <List>
+            <List style={{maxHeight: "400px", overflowY: "auto"}}>
                 {Object.values(Variable).map((variable, index) => {
                     const name = MMDVariables[variable].name;
                     const labelId = `checkbox-list-label-${name}`;

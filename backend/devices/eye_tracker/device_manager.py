@@ -1,4 +1,4 @@
-from devices.stationary_eye_tracker import StationaryEyeTracker
+from devices.eye_tracker.stationary_eye_tracker import StationaryEyeTracker
 
 
 class DeviceManager():
