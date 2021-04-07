@@ -73,7 +73,7 @@ export default function SelectCharts(): JSX.Element {
     return (
         <div className={classes.grid}>
             <Typography variant="h1">
-                {selectedSession == null ? "Select Variable Chart" : "Select Variable Charts"}
+                {selectedSession == null ? "Select Variable View" : "Select Variable Views"}
             </Typography>
             {selectedSession == null ? (
                 <List style={{maxHeight: "400px", overflowY: "auto"}}>
@@ -184,7 +184,7 @@ export default function SelectCharts(): JSX.Element {
                         setPopupOpen(false);
                     }}
                 >
-                    Done
+                    Close
                 </Button>
             </div>
         </div>
