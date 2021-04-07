@@ -6,7 +6,7 @@ import {selectedSessionIdState, selectedSessionState} from "../../state/session"
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
-import {AddChartIcon, CloseIcon} from "../common/Icons";
+import {AddChartIcon, CloseIcon, ExitIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
@@ -114,16 +114,29 @@ export default function Header(): JSX.Element {
                                 <AddChartIcon />
                             </IconButton>
                         </StyledTooltipBottom>
-                        <StyledTooltipBottom title="Quit session">
-                            <IconButton
-                                aria-label="quit student session"
-                                onClick={() => {
-                                    setQuitSessionPopupOpen(true);
-                                }}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </StyledTooltipBottom>
+                        {selectedSession == null ? (
+                            <StyledTooltipBottom title="Exit">
+                                <IconButton
+                                    aria-label="Exit"
+                                    onClick={() => {
+                                        setQuitSessionPopupOpen(true);
+                                    }}
+                                >
+                                    <ExitIcon />
+                                </IconButton>
+                            </StyledTooltipBottom>
+                        ) : (
+                            <StyledTooltipBottom title="Quit session">
+                                <IconButton
+                                    aria-label="quit student session"
+                                    onClick={() => {
+                                        setQuitSessionPopupOpen(true);
+                                    }}
+                                >
+                                    <CloseIcon />
+                                </IconButton>
+                            </StyledTooltipBottom>
+                        )}
                     </>
                 }
             />
