@@ -25,7 +25,7 @@ class DeviceDatastreams(Datastreams):
     def terminate(self):
         self.openface.stopDataRead()
         self.openface.terminateProcess()
-        self.stationary_eye_tracker.unsubsribe()
+        self.stationary_eye_tracker.unsubscribe()
         self.wristband.unsubscribe()
 
     def clear_current_data(self):
