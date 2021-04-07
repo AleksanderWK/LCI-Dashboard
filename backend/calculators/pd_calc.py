@@ -1,4 +1,4 @@
-import math
+import numpy as np
 import statistics
 from calculators.mmdvcalc import MMDVCalculator
 from datamodels.eye_tracking import EyeTrackingDataPoint
@@ -36,7 +36,8 @@ class PerceivedDifficultyCalculator(MMDVCalculator):
 
     def calculate(self, fx0, fy0, fx1, fy1, et0, it1):
         # The Euclidian distance between two fixations
-        saccade_length = math.dist([fx0, fy0], [fx1, fy1])
+        saccade_length = np.linalg.norm(
+            np.array([fx0, fy0]) - np.array([fx1, fy1]))
 
         # Duration between end time of previous fixation and start time of the new fixation
         saccade_duration = it1 - et0

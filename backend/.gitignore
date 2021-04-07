@@ -1,5 +1,5 @@
 /__pycache__
 /calculators/__pycache__
 /datamodels/__pycache__
-/datastreams/openface/bin
-/datastreams/openface/processed
+/devices/openface/bin
+/devices/openface/processed
