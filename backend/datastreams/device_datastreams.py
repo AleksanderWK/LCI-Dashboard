@@ -20,6 +20,7 @@ class DeviceDatastreams(Datastreams):
     def terminate(self):
         self.openface.stopDataRead()
         self.openface.terminateProcess()
+        self.device_manager.unsubscribe_to_all_devices()
 
     def clear_current_data(self):
         self.openface.clearCurrentData()

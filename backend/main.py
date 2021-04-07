@@ -67,7 +67,7 @@ class Main():
         Checks if a start signal has been sent by the dashboard on the websocket connection. If so, it should start the datastreams and start the main event loop.
         """
         if message == "Start":
-            self.ds.add_all_to_event_loop(self.loop)
+            self.ds.start()
             self.loop.call_later(1, self.process_current_data)
 
     def checkTerminate(self, ws, message):
@@ -76,7 +76,6 @@ class Main():
         """
         if message == "Terminate":
             self.ds.terminate()
-            self.device_manager.unsubscribe_to_all_devices()
             asyncio.run_coroutine_threadsafe(self.ws.close(), self.loop)
             self.loop.stop()
 
