@@ -37,7 +37,7 @@ class FileDatastreams(Datastreams):
     terminated = False
     loop = None
 
-    file_path = "./datastreams/dataset"
+    file_path = "./dataset"
 
     def __init__(self, studentID, loop):
         """
