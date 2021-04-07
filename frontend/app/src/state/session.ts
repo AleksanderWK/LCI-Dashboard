@@ -241,10 +241,10 @@ export interface ActiveContainers {
 export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
     key: "sessionActiveContainers",
     default: {
-        [Variable.CognitiveLoad]: {active: true, display: "line"},
-        [Variable.PerceivedDifficulty]: {active: true, display: "line"},
+        [Variable.CognitiveLoad]: {active: false, display: "line"},
+        [Variable.PerceivedDifficulty]: {active: false, display: "line"},
         [Variable.Familiarity]: {active: false, display: "line"},
-        [Variable.InformationProcessingIndex]: {active: true, display: "numeric"},
+        [Variable.InformationProcessingIndex]: {active: false, display: "line"},
         [Variable.PhysiologicalArousal]: {active: false, display: "line"},
         [Variable.Engagement]: {active: false, display: "line"},
         [Variable.PhysiologicalStress]: {active: false, display: "line"},
