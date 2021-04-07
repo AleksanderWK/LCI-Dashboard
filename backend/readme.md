@@ -17,76 +17,25 @@ Install all dependencies needed:
 pipenv install
 ```
 
-## Devices Setup
-
-If you want to run the program using a dataset, you can ignore this subsection. If you want to run the program with actual devices, these must be set up and configured correctly to be able to communicate with the program.
-
-Devices needed:
-
-- Tobii Pro X3-120 (stationary eye tracker) or ??? (mobile eye tracker)
-- Empatica E4 (wristband)
-- HD camera
-
-The following sections will cover how to set these up correctly to be used with the program.
-
-### Tobii Pro X3-120 (Stationary Eye Tracker)
-
-1. Install the official [Eye Tracker Manager](https://www.tobiipro.com/product-listing/eye-tracker-manager/) from Tobii Pro.
-2. Run the installed program and follow the instructions on the screen. When asked, install the drivers for the correct eye tracker (Tobii Pro X3-120).
-3. When the eye tracker is up and running, make sure to calibrate it by pressing the "Calibrate" button and follow the instructions.
-
-### ??? (Mobile Eye Tracker)
-
-...
-
-### Empatica E4 (wristband)
-
-...
-
-### HD Camera
-
-#### OpenFace (if stationary eye tracker)
-
-The installation guide is taken from the OpenFace github: https://github.com/TadasBaltrusaitis/OpenFace/wiki/Windows-Installation:
-
-##### Requirement
-
-1. Windows 64-bit operating systetm
-2. 64-bit Visual C++ redistributable package, that can be found here: https://aka.ms/vs/16/release/vc_redist.x64.exe
-
-##### 1. Install OpenFace Binaries
-
-Install binaries from the following link: https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_2.2.0_win_x64.zip
-
-Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under backend/datastreams/openface/.
-
-##### 2. Download all the models
-
-Run the following command while being in backend/datastreams/openface/bin/:
-`powershell -noexit -executionpolicy bypass -File download_models.ps1`
-
-#### OpenPose (if mobile eye tracker)
-
-...
-
-## Run the program
+## Run the Program
 
 Start the virtual environment:
 
-```bash
+```
 pipenv shell
 ```
 
 Run the program:
 
-```bash
+```
 python main.py SESSION_CODE [OPTIONS]
 ```
 
 Options:
 
 - --devices
-  - Retrieve data from devices.
+  - Retrieve data from devices
+  - Devices must be set up correctly; see the [devices setup](#devices-setup) section below
 - --dataset=[id]
   - Retrieve data from a dataset (1-15).
 
@@ -94,7 +43,7 @@ If no options are specified, dataset 1 will be used.
 
 ### Example: Run with Dataset 12
 
-```bash
+```
 python main.py SESSION_CODE --dataset=12
 ```
 
@@ -102,6 +51,69 @@ python main.py SESSION_CODE --dataset=12
 
 Before launching, make sure all devices are connected and up and running.
 
-```bash
+```
 python main.py SESSION_CODE --devices
 ```
+
+## Devices Setup
+
+If you want to run the program using a dataset, you can ignore this section. If you want to run the program with actual devices, these must be set up and configured correctly to be able to communicate with the program.
+
+Devices needed:
+
+- Tobii Pro X3-120 (stationary eye tracker) **or** ??? (mobile eye tracker)
+- Empatica E4 (wristband)
+- HD camera
+
+The following subsections will cover how to set these up correctly to be used with the program.
+
+### Tobii Pro X3-120 (Stationary Eye Tracker)
+
+1. Install the official [Eye Tracker Manager](https://www.tobiipro.com/product-listing/eye-tracker-manager/) from Tobii Pro.
+2. Run the installed program and follow the instructions on the screen. When asked, install the drivers for the correct eye tracker (Tobii Pro X3-120).
+3. When the eye tracker is up and running, make sure to calibrate it by pressing the "Calibrate" button and follow the instructions.
+4. Close the Eye Tracker Manager.
+
+### ??? (Mobile Eye Tracker)
+
+...
+
+### Empatica E4 (wristband)
+
+1. Plug in the Bluetooth dongle (USB) to the computer.
+2. Create an account and log in to https://www.empatica.com/connect/login.php.
+3. Go to https://www.empatica.com/connect/developer.php.
+4. Click on the "Become a developer" button.
+5. Copy the API key.
+6. Install the E4 Streaming Server from [here](http://developer.empatica.com/windows-streaming-server-usage.html) and launch it.
+7. Paste in the API key.
+8. Go to the settings tab and check that the [correct configuration](../documentation/e4_streaming_server_settings.png) is made.
+9. Find the device ID on the back of the wristband.
+10. Follow the guide from [here](https://developer.empatica.com/windows-streaming-server-usage.html) to connect the wristband to the computer over Bluetooth (under "Using the server" and "Connecting an E4").
+
+### HD Camera: OpenFace (if stationary eye tracker is used)
+
+The installation guide is taken from the [OpenFace github](https://github.com/TadasBaltrusaitis/OpenFace/wiki/Windows-Installation).
+
+#### Requirements:
+
+1. Windows 64-bit operating systetm
+2. 64-bit Visual C++ redistributable package, that can be found [here](https://aka.ms/vs/16/release/vc_redist.x64.exe)
+
+#### 1. Install OpenFace Binaries
+
+Install the binaries from [here](https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_2.2.0_win_x64.zip).
+
+Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under `backend/datastreams/openface/`.
+
+#### 2. Download all the models
+
+Run the following command from `backend/datastreams/openface/bin/`:
+
+```
+powershell -noexit -executionpolicy bypass -File download_models.ps1
+```
+
+### HD Camera: OpenPose (if mobile eye tracker)
+
+...
