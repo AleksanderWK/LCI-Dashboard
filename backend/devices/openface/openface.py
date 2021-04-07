@@ -7,7 +7,7 @@ class OpenFaceInstance:
 
     process = None
     out_filename = "data"
-    out_dir = ".\datastreams\openface\processed"
+    out_dir = ".\devices\openface\processed"
     device_id = 0
 
     file = None
@@ -25,7 +25,7 @@ class OpenFaceInstance:
 
     def startProcess(self):
         try:
-            self.process = Popen("\".\datastreams\openface\\bin\FeatureExtraction.exe\"" +
+            self.process = Popen("\".\devices\openface\\bin\FeatureExtraction.exe\"" +
                                  " -device " + str(self.device_id) +
                                  " -of " + "\"" + self.out_filename + "\"" +
                                  " -out_dir " + self.out_dir)

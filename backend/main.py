@@ -10,7 +10,6 @@ from datamodels.datapayload import DataPayload
 from calculators.mmdvcollection_calc import MMDVCollectionCalculator
 from wsclient import WebSocketClient
 from tokendecode import decodeToken
-from devices.device_manager import DeviceManager
 
 
 class Main():
@@ -100,9 +99,6 @@ class Main():
         self.session_code = session_code
         self.ws = WebSocketClient()
         self.ds = DeviceDatastreams()
-        self.device_manager = DeviceManager()
-        self.device_manager.subscribe_to_all_devices()
-
         self.setup()
         # Do stuff here
         # ...

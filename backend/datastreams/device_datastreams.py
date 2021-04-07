@@ -1,6 +1,7 @@
 from datastreams.datastreams import Datastreams
-from datastreams.openface.openface import OpenFaceInstance
+from devices.openface.openface import OpenFaceInstance
 from datamodels.skeletal import SkeletalNodeCollection
+from devices.eye_tracker.device_manager import DeviceManager
 
 
 class DeviceDatastreams(Datastreams):
@@ -10,6 +11,8 @@ class DeviceDatastreams(Datastreams):
     def __init__(self):
         self.openface = OpenFaceInstance()
         self.openface.startProcess()
+        self.device_manager = DeviceManager()
+        self.device_manager.subscribe_to_all_devices()
 
     def start(self):
         self.openface.startDataRead()
