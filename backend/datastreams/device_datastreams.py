@@ -68,7 +68,10 @@ class DeviceDatastreams(Datastreams):
         return []
 
     def get_current_skeleton_data(self):
-        return self.openpose.getCurrentData()
+        if self.device_mode == "stationary":
+            return SkeletalNodeCollection([])
+        elif self.device_mode == "mobile":
+            return self.openpose.getCurrentData()
 
     def get_current_eye_tracking_data(self):
         if self.device_mode == "stationary":

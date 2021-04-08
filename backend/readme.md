@@ -58,16 +58,30 @@ The installation guide is taken from the OpenFace github: https://github.com/Tad
 
 Install binaries from the following link: https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_2.2.0_win_x64.zip
 
-Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under backend/datastreams/openface/.
+Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under backend/devices/openface/.
 
 ##### 2. Download all the models
 
-Run the following command while being in backend/datastreams/openface/bin/:
+Run the following command while being in backend/devices/openface/bin/:
 `powershell -noexit -executionpolicy bypass -File download_models.ps1`
 
 #### OpenPose (if mobile eye tracker)
 
-...
+##### Requirement
+
+1. Windows 64-bit operating systetm
+2. 64-bit Visual C++ redistributable package, that can be found here: https://aka.ms/vs/16/release/vc_redist.x64.exe
+
+##### 1. Install OpenPose Binaries
+
+Install binaries from the following link: https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases/download/v1.7.0/openpose-1.7.0-binaries-win64-cpu-python3.7-flir-3d.zip
+
+Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under backend/devices/openpose/
+
+##### 2. Download all the models
+
+Run the following command while being in backend/devices/openpose/bin/models:
+`getBaseModels.bat`
 
 ## Run the program
 
