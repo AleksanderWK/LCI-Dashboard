@@ -9,6 +9,7 @@ import InfoItem from "../common/InfoItem";
 import {AddChartIcon, CloseIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
+import {duration} from "../../utils/duration";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -34,36 +35,26 @@ export default function Header(): JSX.Element {
     const setQuitSessionPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
 
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
-    const [duration, setDuration] = useState<string>("");
+    const [dur, setDuration] = useState<string>("");
 
     useEffect(() => {
         // Set the current duration initially when the compnent loads
-        setCurrentDuration();
+        if (selectedSessionInfo) {
+            setDuration(duration(selectedSessionInfo.startTime, undefined, 1));
+        }
 
         // Interval that updates the duration state every second
         let intervalId: NodeJS.Timeout | null = null;
         intervalId = setInterval(() => {
-            setCurrentDuration();
+            if (selectedSessionInfo) {
+                setDuration(duration(selectedSessionInfo.startTime, undefined, 1));
+            }
         }, 1000);
 
         return function cleanup() {
             if (intervalId) clearInterval(intervalId);
         };
-    }, [selectedSessionInfo, setCurrentDuration]);
-
-    // This function finds the current duration based on startTime in selectedSessionInfo and by using the current time
-    function setCurrentDuration() {
-        if (selectedSessionInfo) {
-            const d = new Date().getTime();
-            let distance = d - selectedSessionInfo.startTime;
-            const hours = Math.floor(distance / 3600000);
-            distance -= hours * 3600000;
-            const minutes = Math.floor(distance / 60000);
-            distance -= minutes * 60000;
-            const seconds = Math.floor(distance / 1000);
-            setDuration(`${hours}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`);
-        }
-    }
+    }, [selectedSessionInfo]);
 
     return (
         <>
@@ -76,7 +67,7 @@ export default function Header(): JSX.Element {
                                 <div className={classes.indicatorIcon}></div>
                                 <Typography>{selectedSessionInfo.student.name}</Typography>
                             </div>
-                            <InfoItem icon={<TimerIcon />} text={duration} />
+                            <InfoItem icon={<TimerIcon />} text={dur} />
                         </>
                     }
                     buttonGroup={
