@@ -80,16 +80,17 @@ The following subsections will cover how to set these up correctly to be used wi
 
 ### Empatica E4 (wristband)
 
-1. Plug in the Bluetooth dongle (USB) to the computer.
-2. Create an account and log in to https://www.empatica.com/connect/login.php.
-3. Go to https://www.empatica.com/connect/developer.php.
-4. Click on the "Become a developer" button.
-5. Copy the API key.
-6. Install the E4 Streaming Server from [here](http://developer.empatica.com/windows-streaming-server-usage.html) and launch it.
-7. Paste in the API key.
-8. Go to the settings tab and check that the [correct configuration](../documentation/e4_streaming_server_settings.png) is made.
-9. Find the device ID on the back of the wristband.
-10. Follow the guide from [here](https://developer.empatica.com/windows-streaming-server-usage.html) to connect the wristband to the computer over Bluetooth (under "Using the server" and "Connecting an E4").
+1. Create an account and log in to https://www.empatica.com/connect/login.php.
+2. Go to https://www.empatica.com/connect/developer.php.
+3. Click on the "Become a developer" button.
+4. Copy the API key.
+5. Make sure your device is connected to your profile, by entering the purchase code.
+6. Install the E4 Streaming Server from [here](http://developer.empatica.com/windows-streaming-server-usage.html). Make sure you have all requirements fulfilled.
+7. Plug in the Bluetooth dongle (USB) to the computer.
+8. Launch the E4 Streaming Server.
+9. Paste in the API key when prompted.
+10. Go to the settings tab and check that the [correct configuration](../documentation/e4_streaming_server_settings.png) is made.
+11. Follow the guide from [here](https://developer.empatica.com/windows-streaming-server-usage.html) to connect the wristband to the computer over Bluetooth (under "Using the server" and "Connecting an E4").
 
 ### HD Camera: OpenFace (if stationary eye tracker is used)
 
