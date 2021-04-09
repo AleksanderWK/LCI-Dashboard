@@ -90,7 +90,7 @@ The following subsections will cover how to set these up correctly to be used wi
 8. Launch the E4 Streaming Server.
 9. Paste in the API key when prompted.
 10. Go to the settings tab and check that the [correct configuration](../documentation/e4_streaming_server_settings.png) is made.
-11. Follow the guide from [here](https://developer.empatica.com/windows-streaming-server-usage.html) to connect the wristband to the computer over Bluetooth (under "Using the server" and "Connecting an E4").
+11. Follow the guide from [here](https://developer.empatica.com/windows-streaming-server-usage.html) to connect the wristband to the E4 Streaming Server over Bluetooth (under _Using the server_ and _Connecting an E4_).
 
 ### HD Camera: OpenFace (if stationary eye tracker is used)
 
@@ -105,16 +105,33 @@ The installation guide is taken from the [OpenFace github](https://github.com/Ta
 
 Install the binaries from [here](https://github.com/TadasBaltrusaitis/OpenFace/releases/download/OpenFace_2.2.0/OpenFace_2.2.0_win_x64.zip).
 
-Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under `backend/datastreams/openface/`.
+Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under `backend/devices/openface/`.
 
-#### 2. Download all the models
+#### 2. Download Models
 
-Run the following command from `backend/datastreams/openface/bin/`:
+Run the following command from `backend/devices/openface/bin/`:
 
 ```
 powershell -noexit -executionpolicy bypass -File download_models.ps1
 ```
 
-### HD Camera: OpenPose (if mobile eye tracker)
+### HD Camera: OpenPose (if mobile eye tracker is used)
 
-...
+#### Requirements:
+
+1. Windows 64-bit operating systetm
+2. 64-bit Visual C++ redistributable package, that can be found here: https://aka.ms/vs/16/release/vc_redist.x64.exe
+
+#### 1. Install OpenPose Binaries
+
+Install the binaries from [here](https://github.com/CMU-Perceptual-Computing-Lab/openpose/releases/download/v1.7.0/openpose-1.7.0-binaries-win64-cpu-python3.7-flir-3d.zip).
+
+Move the contents of the unzipped file (not including the folder the files are in) to a new folder called `bin` under `backend/devices/openpose/`.
+
+#### 2. Download Models
+
+Run the following command from `backend/devices/openpose/bin/models`:
+
+```
+getBaseModels.bat
+```

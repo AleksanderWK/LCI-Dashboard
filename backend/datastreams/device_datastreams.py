@@ -1,3 +1,4 @@
+from devices.openpose.openpose import OpenPoseInstance
 from datastreams.datastreams import Datastreams
 from devices.openface.openface import OpenFaceInstance
 from devices.eye_tracker.stationary_eye_tracker import StationaryEyeTracker
@@ -8,33 +9,55 @@ from datamodels.skeletal import SkeletalNodeCollection
 class DeviceDatastreams(Datastreams):
 
     openface = None
+    openpose = None
     stationary_eye_tracker = None
     wristband = None
 
-    def __init__(self):
-        self.openface = OpenFaceInstance()
-        self.openface.startProcess()
-        self.stationary_eye_tracker = StationaryEyeTracker()
+    device_mode = "stationary"
+
+    def __init__(self, device_mode):
+        self.device_mode = device_mode
+        if self.device_mode == "stationary":
+            self.openface = OpenFaceInstance()
+            self.openface.startProcess()
+            self.stationary_eye_tracker = StationaryEyeTracker()
+        elif self.device_mode == "mobile":
+            self.openpose = OpenPoseInstance()
+            self.openpose.startProcess()
+
         self.wristband = Wristband()
 
     def start(self):
-        self.openface.startDataRead()
-        self.stationary_eye_tracker.subscribe()
+        if self.device_mode == "stationary":
+            self.openface.startDataRead()
+            self.stationary_eye_tracker.subscribe()
+
         self.wristband.subscribe()
 
     def terminate(self):
-        self.openface.stopDataRead()
-        self.openface.terminateProcess()
-        self.stationary_eye_tracker.unsubscribe()
+        if self.device_mode == "stationary":
+            self.openface.stopDataRead()
+            self.openface.terminateProcess()
+            self.stationary_eye_tracker.unsubscribe()
+        elif self.device_mode == "mobile":
+            self.openpose.terminateProcess()
+
         self.wristband.unsubscribe()
 
     def clear_current_data(self):
-        self.openface.clearCurrentData()
-        self.stationary_eye_tracker.clear_current_data()
+        if self.device_mode == "stationary":
+            self.openface.clearCurrentData()
+            self.stationary_eye_tracker.clear_current_data()
+        elif self.device_mode == "mobile":
+            self.openpose.clearCurrentData()
+
         self.wristband.clear_current_data()
 
     def get_current_au_data(self):
-        return self.openface.getCurrentData()
+        if self.device_mode == "stationary":
+            return self.openface.getCurrentData()
+        else:
+            return []
 
     def get_current_acc_data(self):
         return self.wristband.get_current_acc_data()
@@ -55,7 +78,13 @@ class DeviceDatastreams(Datastreams):
         return self.wristband.get_current_tmp_data()
 
     def get_current_skeleton_data(self):
-        return SkeletalNodeCollection([])
+        if self.device_mode == "stationary":
+            return SkeletalNodeCollection([])
+        elif self.device_mode == "mobile":
+            return self.openpose.getCurrentData()
 
     def get_current_eye_tracking_data(self):
-        return self.stationary_eye_tracker.get_current_data()
+        if self.device_mode == "stationary":
+            return self.stationary_eye_tracker.get_current_data()
+        else:
+            return []
