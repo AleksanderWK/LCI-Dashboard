@@ -41,7 +41,7 @@ class OpenFaceInstance:
     def startDataRead(self):
         try:
             self.file = open(
-                "./datastreams/openface/processed/data.csv", newline="")
+                "./devices/openface/processed/data.csv", newline="")
             self.reader = csv.reader(self.file)
             self.header_data = next(self.reader)
         except FileNotFoundError:
