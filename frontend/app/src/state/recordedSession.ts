@@ -1,6 +1,6 @@
 import {atom, selector} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
-import {Session} from "./session";
+import {EducationalSpecificEmotions} from "./session";
 
 /*
  * An atom that stores the id of a session that has been recorded and selected
@@ -33,6 +33,7 @@ export interface RecordedData {
     [Variable.EmotionalRegulation]: number[];
     [Variable.MotionStability]: number[];
     [Variable.EnergySpentFatigue]: number[];
+    [Variable.EducationalSpecificEmotions]: EducationalSpecificEmotions[];
 }
 
 /*

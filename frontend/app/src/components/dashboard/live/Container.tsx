@@ -11,6 +11,7 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {selectedSessionActiveContainersState, selectedSessionDataLengthVariableState} from "../../../state/session";
+import XRangeChart from "./XRangeChart";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -102,8 +103,11 @@ export default function Container(props: Props): JSX.Element {
                 </div>
                 {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                     <CalculatingIndicator variable={props.variable} />
-                ) : containerOptions[props.variable].display === "line" ? (
+                ) : containerOptions[props.variable].display === "line" &&
+                  props.variable != Variable.EducationalSpecificEmotions ? (
                     <LineChart variable={props.variable} />
+                ) : containerOptions[props.variable].display === "line" ? (
+                    <XRangeChart variable={props.variable} />
                 ) : (
                     <Numeric variable={props.variable} />
                 )}
