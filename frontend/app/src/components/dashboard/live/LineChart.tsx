@@ -1,6 +1,6 @@
 import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import React, {createRef, RefObject, useState} from "react";
+import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
@@ -12,7 +12,7 @@ interface Props {
 }
 
 function LineChart(props: Props): JSX.Element {
-    const chart = createRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>();
+    const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
 
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
