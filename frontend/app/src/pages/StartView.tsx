@@ -17,6 +17,7 @@ import {months} from "../constants";
 import {Student, studentsState} from "../state/student";
 import PageContainer from "../components/common/PageContainer";
 import Logo from "../components/common/Logo";
+import {duration} from "../utils/duration";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -80,7 +81,7 @@ interface Data {
     sessionName: string;
     date: number;
     time: number;
-    duration: number | null;
+    duration: string;
     studentName: string;
 }
 
@@ -111,26 +112,7 @@ const columns: Column[] = [
     },
     {
         id: "duration",
-        label: "Duration",
-        format: (value: number) => {
-            if (value !== 0) {
-                const hours = Math.floor(value / 3600000);
-                value -= hours * 3600000;
-                const minutes = Math.floor(value / 60000);
-                value -= minutes * 60000;
-                const seconds = Math.floor(value / 1000);
-
-                if (hours > 0) {
-                    return `${hours}h ${minutes}m ${seconds}s`;
-                } else if (minutes > 0) {
-                    return `${minutes}m ${seconds}s`;
-                } else {
-                    return `${seconds}s`;
-                }
-            } else {
-                return "undefined";
-            }
-        }
+        label: "Duration"
     },
     {
         id: "studentName",
@@ -160,7 +142,7 @@ export default function StartView(): JSX.Element {
                             sessionName: session.sessionName,
                             date: session.startTime,
                             time: session.startTime,
-                            duration: session.endTime ? session.endTime - session.startTime : 0,
+                            duration: session.endTime ? duration(session.startTime, session.endTime) : "undefined",
                             studentName: students.find((student) => student._id === session.studentId)?.name
                         } as Data;
                     })

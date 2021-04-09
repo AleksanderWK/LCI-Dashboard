@@ -3,7 +3,7 @@ import {createStyles, LinearProgress, makeStyles, Theme, Typography} from "@mate
 import {MMDVariables, Variable} from "../../../constants";
 import {useRecoilValue} from "recoil";
 import {selectedSessionState} from "../../../state/session";
-import {useInterval} from "../../../utils";
+import {useInterval} from "../../../utils/useInterval";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

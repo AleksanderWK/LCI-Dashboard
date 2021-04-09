@@ -17,6 +17,7 @@ class MMDVCollection:
     er = None  # Emotional Regulation
     ms = None  # Motion Stability
     esf = None  # Energy Spent/Fatigue
+    ese = None  # Education Specific Emotions
 
     def __init__(self):
         self.cl = -1
@@ -29,6 +30,8 @@ class MMDVCollection:
         self.er = -1
         self.ms = -1
         self.esf = -1
+        self.ese = {"boredom": False, "frustration": False,
+                    "confusion": False, "delight": False}
 
     def get_json(self):
         return json.dumps(self.__dict__)
