@@ -4,11 +4,16 @@ import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
-import {selectedSessionActiveContainersState, selectedSessionDataState} from "../../../state/session";
+import {
+    selectedSessionActiveContainersState,
+    selectedSessionDataState,
+    sessionVariableDataState
+} from "../../../state/session";
 import theme from "../../../theme";
 
 interface Props {
     variable: Variable;
+    id?: number;
 }
 
 function LineChart(props: Props): JSX.Element {
@@ -99,16 +104,22 @@ function LineChart(props: Props): JSX.Element {
     const selectedSessionData = useRecoilValue(selectedSessionDataState);
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
 
+    let allSessionsData: [number, number][] | null = null;
+    if (props.id) {
+        allSessionsData = useRecoilValue(sessionVariableDataState([props.variable, props.id]));
+    }
+
     useEffect(() => {
         if (chart.current) {
+            const data = props.id && allSessionsData ? [...allSessionsData] : [...selectedSessionData[props.variable]];
             // Update series data
-            chart.current.chart.series[0].setData([...selectedSessionData[props.variable]], false);
 
-            if (selectedSessionData[props.variable].length >= FREQUENCY * LIVE_CHART_RANGE) {
+            chart.current.chart.series[0].setData(data, false);
+            if (data.length >= FREQUENCY * LIVE_CHART_RANGE) {
                 // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
                 chart.current.chart.xAxis[0].setExtremes(
                     // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
-                    selectedSessionData[props.variable].slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
+                    data.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
                     undefined,
                     true // Redraw graph
                 );
@@ -121,7 +132,7 @@ function LineChart(props: Props): JSX.Element {
                 );
             }
         }
-    }, [selectedSessionData]);
+    }, [selectedSessionData, allSessionsData]);
 
     useEffect(() => {
         // If active containers is changed, reflow graph as container size may have changed

@@ -11,12 +11,12 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {
+    selectedAllSessionVariableState,
     selectedSessionActiveContainersState,
     selectedSessionDataLengthVariableState,
-    selectedSessionIdState
+    selectedSessionIdState,
+    sessionVariableDataState
 } from "../../../state/session";
-import PersonIcon from "@material-ui/icons/Person";
-import InfoItem from "../../common/InfoItem";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -42,12 +42,12 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
     variable: Variable;
     display: "line" | "numeric";
+    studentName?: string;
+    id?: number;
 }
 
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
-
-    const dataLength = useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
 
     const [containerOptions, setContainerOptions] = useRecoilState(selectedSessionActiveContainersState);
 
@@ -55,7 +55,11 @@ export default function Container(props: Props): JSX.Element {
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
-    const selectedSession = useRecoilValue(selectedSessionIdState);
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
+    const selectedAllSessionsVariable = useRecoilValue(selectedAllSessionVariableState);
+    const dataLength = props.id
+        ? useRecoilValue(sessionVariableDataState([props.variable, props.id])).length
+        : useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
 
     function setChartType(chartType: "line" | "numeric"): void {
         const newContainerOptions = {...containerOptions};
@@ -74,7 +78,7 @@ export default function Container(props: Props): JSX.Element {
             <>
                 <div className={classes.header}>
                     <Typography variant="h2" noWrap={true}>
-                        {MMDVariables[props.variable].name}
+                        {selectedSessionId ? MMDVariables[props.variable].name : props.studentName}
                     </Typography>
 
                     <div className={classes.menu} ref={menuAnchorElement}>
@@ -108,17 +112,28 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                {selectedSession == null && (
-                    <div style={{marginBottom: "8px"}}>
-                        <InfoItem icon={<PersonIcon style={{marginLeft: "-2px"}} />} text={"Aleksander"} />
-                    </div>
-                )}
-                {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
-                    <CalculatingIndicator variable={props.variable} />
-                ) : containerOptions[props.variable].display === "line" ? (
-                    <LineChart variable={props.variable} />
+                {selectedSessionId != null ? (
+                    <>
+                        {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
+                            <CalculatingIndicator variable={props.variable} />
+                        ) : containerOptions[props.variable].display === "line" ? (
+                            <LineChart variable={props.variable} />
+                        ) : (
+                            <Numeric variable={props.variable} />
+                        )}
+                    </>
                 ) : (
-                    <Numeric variable={props.variable} />
+                    <>
+                        {selectedAllSessionsVariable &&
+                        MMDVariables[selectedAllSessionsVariable as Variable].calculationTime &&
+                        dataLength === 0 ? (
+                            <CalculatingIndicator variable={props.variable} />
+                        ) : props.display === "line" ? (
+                            <LineChart variable={props.variable} />
+                        ) : (
+                            <Numeric variable={props.variable} />
+                        )}
+                    </>
                 )}
             </>
         </ContainerCard>
