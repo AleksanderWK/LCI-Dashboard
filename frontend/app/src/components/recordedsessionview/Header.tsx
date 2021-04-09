@@ -20,6 +20,7 @@ import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
 import {AddChartIcon, ExitIcon} from "../common/Icons";
 import {StyledTooltipBottom} from "../common/Tooltips";
+import {duration} from "../../utils/duration";
 
 export default function Header(): JSX.Element {
     const history = useHistory();
@@ -51,7 +52,7 @@ export default function Header(): JSX.Element {
                             startTime: `${("0" + new Date(sessionInfo.startTime).getHours()).slice(-2)}:${(
                                 "0" + new Date(sessionInfo.startTime).getMinutes()
                             ).slice(-2)}`,
-                            duration: calcDuration(sessionInfo.startTime, sessionInfo.endTime),
+                            duration: duration(sessionInfo.startTime, sessionInfo.endTime),
                             studentName: name
                         };
 
@@ -61,16 +62,6 @@ export default function Header(): JSX.Element {
             });
         }
     }, [recordedSessionId]);
-
-    const calcDuration = (start: number, end: number) => {
-        let distance = end - start;
-        const hours = Math.floor(distance / 3600000);
-        distance -= hours * 3600000;
-        const minutes = Math.floor(distance / 60000);
-        distance -= minutes * 60000;
-        const seconds = Math.floor(distance / 1000);
-        return `${hours}h ${minutes}m ${seconds}s`;
-    };
 
     return (
         <>
