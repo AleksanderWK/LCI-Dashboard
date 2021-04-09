@@ -1,3 +1,4 @@
+import {Layouts} from "react-grid-layout";
 import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
 import {studentState, Student} from "./student";
@@ -293,4 +294,66 @@ export const selectedSessionVariableContainerVisibleState = selectorFamily<Varia
 export const snackOpenState = atom<boolean>({
     key: "snackOpen",
     default: false
+});
+
+/**
+ * An atom family that stores the layouts for all current sessions
+ */
+
+export const dashboardLayoutsState = atomFamily<Layouts | undefined, number | null>({
+    key: "dashboardLayouts",
+    default: undefined
+});
+
+/*
+ *  A selector for getting and setting dashboard layout for the currently selected session
+ */
+export const selectedSessionDashboardLayoutsState = selector<Layouts | undefined>({
+    key: "selectedSessionDashboardLayouts",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+        return get(dashboardLayoutsState(id));
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedSessionIdState);
+        set(dashboardLayoutsState(id), newValue);
+    }
+});
+
+/**
+ * An atom family that stores the column count for each session dashboard
+ */
+
+export const dashboardColumnsState = atomFamily<number | undefined, number>({
+    key: "dashboardColumns",
+    default: () => {
+        let cols = 1;
+        if (window.innerWidth >= 1200) {
+            cols = 6;
+        } else if (window.innerWidth >= 996) {
+            cols = 4;
+        } else if (window.innerWidth >= 480) {
+            cols = 2;
+        }
+        return cols;
+    }
+});
+
+/*
+ *  A selector for getting and setting the number of dashboard columns for the currently selected session
+ */
+export const selectedSessionDashboardColumnsState = selector<number | undefined>({
+    key: "selectedSessionDashboardColumns",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+        if (id) {
+            return get(dashboardColumnsState(id));
+        }
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedSessionIdState);
+        if (id) {
+            set(dashboardColumnsState(id), newValue);
+        }
+    }
 });

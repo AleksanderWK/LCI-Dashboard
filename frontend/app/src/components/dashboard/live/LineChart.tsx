@@ -4,7 +4,12 @@ import React, {createRef, RefObject, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
-import {selectedSessionActiveContainersState, selectedSessionDataState} from "../../../state/session";
+import {
+    selectedSessionActiveContainersState,
+    selectedSessionDashboardColumnsState,
+    selectedSessionDashboardLayoutsState,
+    selectedSessionDataState
+} from "../../../state/session";
 import theme from "../../../theme";
 
 interface Props {
@@ -98,6 +103,7 @@ function LineChart(props: Props): JSX.Element {
 
     const selectedSessionData = useRecoilValue(selectedSessionDataState);
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const dashboardColumns = useRecoilValue(selectedSessionDashboardLayoutsState);
 
     useEffect(() => {
         if (chart.current) {
@@ -128,7 +134,7 @@ function LineChart(props: Props): JSX.Element {
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers]);
+    }, [activeContainers, dashboardColumns]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} className={`${"noDrag"}`} />;
 }
