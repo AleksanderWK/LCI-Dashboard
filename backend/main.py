@@ -97,7 +97,7 @@ class Main():
         self.loop = asyncio.get_event_loop()
         self.session_code = session_code
         self.ws = WebSocketClient()
-        self.ds = DeviceDatastreams(device_mode)
+        self.ds = DeviceDatastreams(device_mode, self.loop)
         self.mmdv_calc = MMDVCollectionCalculator(self.ds)
         self.setup()
 

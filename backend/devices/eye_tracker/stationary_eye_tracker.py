@@ -52,7 +52,7 @@ class StationaryEyeTracker():
             self.stationary_eye_tracker.subscribe_to(tr.EYETRACKER_GAZE_DATA,
                                                      self.gaze_data_callback, as_dictionary=True)
 
-    def unsubsribe(self):
+    def unsubscribe(self):
         if hasattr(self, "stationary_eye_tracker"):
             self.stationary_eye_tracker.unsubscribe_from(
                 tr.EYETRACKER_GAZE_DATA, self.gaze_data_callback)
