@@ -7,7 +7,6 @@ DATA_TYPES = ["acc", "bvp", "gsr", "tmp", "ibi"]
 # E4 Streaming server connection details
 SERVER_ADDRESS = "127.0.0.1"
 SERVER_PORT = 28000
-BUFFER_SIZE = 4096
 
 
 class Wristband():
@@ -30,30 +29,30 @@ class Wristband():
 
     async def setup(self):
         try:
-            self.reader, self.writer = await asyncio.open_connection('127.0.0.1', 8888)
+            self.reader, self.writer = await asyncio.open_connection(SERVER_ADDRESS, SERVER_PORT)
 
             # Get the first device ID that is connected to the streaming server
             self.writer.write(("device_list\r\n").encode())
             await self.writer.drain()
-
-            response = await self.reader.readline().decode("utf-8").split(" | ")
+            response = await self.reader.readline()
+            response = response.decode("utf-8").split(" | ")
 
             if (len(response) > 1):
                 device_id = response[1].split()[0]
 
-                self.writer.write(("device_connect " + device_id + "\r\n").encode())
+                self.writer.write(
+                    ("device_connect " + device_id + "\r\n").encode())
                 await self.writer.drain()
-
                 await self.reader.readline()
 
                 self.writer.write("pause ON\r\n".encode())
                 await self.writer.drain()
-                
                 await self.reader.readline()
 
                 # Subscribe to all data types
                 for data_type in DATA_TYPES:
-                    self.writer.write(("device_subscribe " + data_type + " ON\r\n").encode())
+                    self.writer.write(
+                        ("device_subscribe " + data_type + " ON\r\n").encode())
                     await self.writer.drain()
                     await self.reader.readline()
 
@@ -68,11 +67,11 @@ class Wristband():
     async def subscribe(self):
         if self.writer != None and self.reader != None:
             try:
+                # Start stream of data
                 self.writer.write("pause OFF\r\n".encode())
                 await self.writer.drain()
                 await self.reader.readline()
 
-                # Start stream of data
                 await self.stream()
             except:
                 print(
@@ -88,39 +87,45 @@ class Wristband():
     async def stream(self):
         while True:
             response = await self.reader.readline()
+            response = response.decode("utf-8")
+
             if "connection lost to device" in response:
                 break
 
-            samples = response.replace(",", ".").split("\n")
+            sample = response.replace(",", ".").split()
 
-            for sample in samples:
-                if len(sample) > 0:
-                    payload = sample.split()
-                    stream_type = payload[0]
+            stream_type = sample[0]
 
-                    if stream_type == "E4_Acc":
-                        self.current_acc_data.append(AccDataPoint([int(payload[2]), int(
-                            payload[3]), int(payload[4])]))
+            if stream_type == "E4_Acc":
+                self.current_acc_data.append(AccDataPoint([int(sample[2]), int(
+                    sample[3]), int(sample[4])]))
 
-                    elif stream_type == "E4_Bvp":
-                        self.current_bvp_data.append(
-                            BVPDataPoint([float(payload[2])]))
+            elif stream_type == "E4_Bvp":
+                self.current_bvp_data.append(
+                    BVPDataPoint([float(sample[2])]))
 
-                    elif stream_type == "E4_Gsr":
-                        self.current_gsr_data.append(
-                            EDADataPoint([float(payload[2])]))
+            elif stream_type == "E4_Gsr":
+                self.current_gsr_data.append(
+                    EDADataPoint([float(sample[2])]))
 
-                    elif stream_type == "E4_Temperature":
-                        self.current_tmp_data.append(
-                            TempDataPoint([float(payload[2])]))
+            elif stream_type == "E4_Temperature":
+                self.current_tmp_data.append(
+                    TempDataPoint([float(sample[2])]))
 
-                    elif stream_type == "E4_Ibi":
-                        self.current_ibi_data.append(IBIDataPoint(
-                            [float(payload[1]), float(payload[2])]))
+            elif stream_type == "E4_Ibi":
+                self.current_ibi_data.append(IBIDataPoint(
+                    [float(sample[1]), float(sample[2])]))
 
-                    elif stream_type == "E4_Hr":
-                        self.current_hr_data.append(
-                            HRDataPoint([float(payload[2])]))
+            elif stream_type == "E4_Hr":
+                self.current_hr_data.append(
+                    HRDataPoint([float(sample[2])]))
+
+    async def unsubscribe(self):
+        if self.writer != None and self.reader != None:
+            self.writer.write("device_disconnect\r\n".encode())
+            await self.writer.drain()
+            self.writer.close()
+            await self.writer.wait_closed()
 
     def get_current_acc_data(self):
         return self.current_acc_data
