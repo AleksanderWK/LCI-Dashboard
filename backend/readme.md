@@ -69,16 +69,24 @@ The following subsections will cover how to set these up correctly to be used wi
 
 ### Tobii Pro X3-120 (Stationary Eye Tracker)
 
+#### Installation
+
 1. Install the official [Eye Tracker Manager](https://www.tobiipro.com/product-listing/eye-tracker-manager/) from Tobii Pro.
 2. Run the installed program and follow the instructions on the screen. When asked, install the drivers for the correct eye tracker (Tobii Pro X3-120).
-3. When the eye tracker is up and running, make sure to calibrate it by pressing the "Calibrate" button and follow the instructions.
-4. Close the Eye Tracker Manager.
 
-### ??? (Mobile Eye Tracker)
+#### Usage
+
+1. Connect the eye tracker to the computer by USB.
+2. Make sure the eye tracker is calibrated by pressing the "Calibrate" button in the Eye Tracker Manager for the correct eye tracker and follow the instructions.
+3. Close the Eye Tracker Manager (not necessary to have this open during program execution).
+
+### Tobii Pro Glasses 2 (Mobile Eye Tracker)
 
 ...
 
 ### Empatica E4 (wristband)
+
+#### Installation
 
 1. Create an account and log in to https://www.empatica.com/connect/login.php.
 2. Go to https://www.empatica.com/connect/developer.php.
@@ -90,7 +98,11 @@ The following subsections will cover how to set these up correctly to be used wi
 8. Launch the E4 Streaming Server.
 9. Paste in the API key when prompted.
 10. Go to the settings tab and check that the [correct configuration](../documentation/e4_streaming_server_settings.png) is made.
-11. Follow the guide from [here](https://developer.empatica.com/windows-streaming-server-usage.html) to connect the wristband to the E4 Streaming Server over Bluetooth (under _Using the server_ and _Connecting an E4_).
+
+#### Usage
+
+1. Start the E4 Streaming Server.
+2. Follow the guide from [here](https://developer.empatica.com/windows-streaming-server-usage.html) to connect the wristband to the E4 Streaming Server over Bluetooth (under _Using the server_ and _Connecting an E4_). Make sure the wristband is connected to the server before starting the program. The E4 Streaming Server must be open during program execution.
 
 ### HD Camera: OpenFace (if stationary eye tracker is used)
 
