@@ -79,7 +79,7 @@ class Wristband():
                     "ERROR: Connection lost to Empatica E4 wristband / E4 Streaming Server.")
 
     async def unsubscribe(self):
-        if self.s != None:
+        if self.writer != None and self.reader != None:
             self.writer.write("device_disconnect\r\n".encode())
             await self.writer.drain()
             self.writer.close()
