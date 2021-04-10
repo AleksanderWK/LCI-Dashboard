@@ -4,7 +4,7 @@ from devices.openface.openface import OpenFaceInstance
 from devices.eye_tracker.stationary_eye_tracker import StationaryEyeTracker
 from devices.wristband.wristband import Wristband
 from datamodels.skeletal import SkeletalNodeCollection
-
+import asyncio
 
 class DeviceDatastreams(Datastreams):
 
@@ -13,9 +13,11 @@ class DeviceDatastreams(Datastreams):
     stationary_eye_tracker = None
     wristband = None
 
+    loop = None
     device_mode = "stationary"
 
-    def __init__(self, device_mode):
+    def __init__(self, device_mode, loop):
+        self.loop = loop
         self.device_mode = device_mode
         if self.device_mode == "stationary":
             self.openface = OpenFaceInstance()
@@ -25,14 +27,15 @@ class DeviceDatastreams(Datastreams):
             self.openpose = OpenPoseInstance()
             self.openpose.startProcess()
 
-        self.wristband = Wristband()
+        self.wristband = Wristband(self.loop)
 
     def start(self):
         if self.device_mode == "stationary":
             self.openface.startDataRead()
             self.stationary_eye_tracker.subscribe()
 
-        self.wristband.subscribe()
+        asyncio.run_coroutine_threadsafe(self.wristband.subscribe(), self.loop)
+        
 
     def terminate(self):
         if self.device_mode == "stationary":
@@ -42,7 +45,8 @@ class DeviceDatastreams(Datastreams):
         elif self.device_mode == "mobile":
             self.openpose.terminateProcess()
 
-        self.wristband.unsubscribe()
+        asyncio.run_coroutine_threadsafe(self.wristband.unsubscribe(), self.loop)
+        
 
     def clear_current_data(self):
         if self.device_mode == "stationary":

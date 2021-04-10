@@ -1,4 +1,4 @@
-import socket
+import asyncio
 from datamodels.wristband import AccDataPoint, BVPDataPoint, EDADataPoint, TempDataPoint, IBIDataPoint, HRDataPoint
 
 # Data types to retrieve
@@ -12,8 +12,9 @@ BUFFER_SIZE = 4096
 
 class Wristband():
 
-    # The communication socket
-    s = None
+    reader = None
+    writer = None
+    loop = None
 
     # Lists of data retrieved in this batch
     current_acc_data = []
@@ -23,98 +24,103 @@ class Wristband():
     current_ibi_data = []
     current_hr_data = []
 
-    def __init__(self):
-        try:
-            self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def __init__(self, loop):
+        self.loop = loop
+        asyncio.run_coroutine_threadsafe(self.setup(), self.loop)
 
-            self.s.connect((SERVER_ADDRESS, SERVER_PORT))
+    async def setup(self):
+        try:
+            self.reader, self.writer = await asyncio.open_connection('127.0.0.1', 8888)
 
             # Get the first device ID that is connected to the streaming server
-            self.s.send(("device_list\r\n").encode())
-            response = self.s.recv(BUFFER_SIZE).decode("utf-8").split(" | ")
+            self.writer.write(("device_list\r\n").encode())
+            await self.writer.drain()
+
+            response = await self.reader.readline().decode("utf-8").split(" | ")
 
             if (len(response) > 1):
                 device_id = response[1].split()[0]
 
-                self.s.send(("device_connect " + device_id + "\r\n").encode())
-                self.s.recv(BUFFER_SIZE)
+                self.writer.write(("device_connect " + device_id + "\r\n").encode())
+                await self.writer.drain()
 
-                self.s.send("pause ON\r\n".encode())
-                self.s.recv(BUFFER_SIZE)
+                await self.reader.readline()
+
+                self.writer.write("pause ON\r\n".encode())
+                await self.writer.drain()
+                
+                await self.reader.readline()
 
                 # Subscribe to all data types
                 for data_type in DATA_TYPES:
-                    self.s.send(
-                        ("device_subscribe " + data_type + " ON\r\n").encode())
-                    self.s.recv(BUFFER_SIZE)
+                    self.writer.write(("device_subscribe " + data_type + " ON\r\n").encode())
+                    await self.writer.drain()
+                    await self.reader.readline()
 
                 print("Connected to Empatica E4 wristband.")
             else:
                 raise Exception
         except:
             print("ERROR: Could not connect to Empatica E4 wristband.")
-            self.s = None
+            self.reader, self.writer = None, None
             return
 
-    def subscribe(self):
-        if self.s != None:
+    async def subscribe(self):
+        if self.writer != None and self.reader != None:
             try:
-                self.s.send("pause OFF\r\n".encode())
-                self.s.recv(BUFFER_SIZE)
+                self.writer.write("pause OFF\r\n".encode())
+                await self.writer.drain()
+                await self.reader.readline()
 
                 # Start stream of data
-                self.stream()
+                await self.stream()
             except:
                 print(
                     "ERROR: Connection lost to Empatica E4 wristband / E4 Streaming Server.")
 
-    def unsubscribe(self):
+    async def unsubscribe(self):
         if self.s != None:
-            self.s.send("device_disconnect\r\n".encode())
-            self.s.close()
+            self.writer.write("device_disconnect\r\n".encode())
+            await self.writer.drain()
+            self.writer.close()
+            await self.writer.wait_closed()
 
-    def stream(self):
+    async def stream(self):
         while True:
-            try:
-                response = self.s.recv(BUFFER_SIZE).decode("utf-8")
-
-                if "connection lost to device" in response:
-                    break
-
-                samples = response.replace(",", ".").split("\n")
-
-                for sample in samples:
-                    if (len(sample) > 0):
-                        payload = sample.split()
-                        stream_type = payload[0]
-
-                        if stream_type == "E4_Acc":
-                            self.current_acc_data.append(AccDataPoint([int(payload[2]), int(
-                                payload[3]), int(payload[4])]))
-
-                        elif stream_type == "E4_Bvp":
-                            self.current_bvp_data.append(
-                                BVPDataPoint([float(payload[2])]))
-
-                        elif stream_type == "E4_Gsr":
-                            self.current_gsr_data.append(
-                                EDADataPoint([float(payload[2])]))
-
-                        elif stream_type == "E4_Temperature":
-                            self.current_tmp_data.append(
-                                TempDataPoint([float(payload[2])]))
-
-                        elif stream_type == "E4_Ibi":
-                            self.current_ibi_data.append(IBIDataPoint(
-                                [float(payload[1]), float(payload[2])]))
-
-                        elif stream_type == "E4_Hr":
-                            self.current_hr_data.append(
-                                HRDataPoint([float(payload[2])]))
-
-            except socket.timeout:
-                print("ERROR: E4 Streaming Server socket timeout")
+            response = await self.reader.readline()
+            if "connection lost to device" in response:
                 break
+
+            samples = response.replace(",", ".").split("\n")
+
+            for sample in samples:
+                if len(sample) > 0:
+                    payload = sample.split()
+                    stream_type = payload[0]
+
+                    if stream_type == "E4_Acc":
+                        self.current_acc_data.append(AccDataPoint([int(payload[2]), int(
+                            payload[3]), int(payload[4])]))
+
+                    elif stream_type == "E4_Bvp":
+                        self.current_bvp_data.append(
+                            BVPDataPoint([float(payload[2])]))
+
+                    elif stream_type == "E4_Gsr":
+                        self.current_gsr_data.append(
+                            EDADataPoint([float(payload[2])]))
+
+                    elif stream_type == "E4_Temperature":
+                        self.current_tmp_data.append(
+                            TempDataPoint([float(payload[2])]))
+
+                    elif stream_type == "E4_Ibi":
+                        self.current_ibi_data.append(IBIDataPoint(
+                            [float(payload[1]), float(payload[2])]))
+
+                    elif stream_type == "E4_Hr":
+                        self.current_hr_data.append(
+                            HRDataPoint([float(payload[2])]))
 
     def get_current_acc_data(self):
         return self.current_acc_data
