@@ -17,7 +17,8 @@ function LineChart(props: Props): JSX.Element {
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
         chart: {
-            marginLeft: 40
+            marginLeft: 40,
+            animation: false
         },
         title: {
             text: undefined
@@ -76,7 +77,9 @@ function LineChart(props: Props): JSX.Element {
             type: "datetime",
             minTickInterval: 1000 * 5, // Show xAxis labels minimum every 5 second
             lineWidth: 0,
-            tickLength: 0
+            tickLength: 0,
+            min: null,
+            max: null
         },
         time: {
             timezoneOffset: new Date().getTimezoneOffset()
@@ -102,7 +105,14 @@ function LineChart(props: Props): JSX.Element {
     useEffect(() => {
         if (chart.current) {
             // Update series data
-            chart.current.chart.series[0].setData([...selectedSessionData[props.variable]], false);
+            chart.current.chart.series[0].setData(
+                [
+                    ...selectedSessionData[props.variable].slice(
+                        Math.max(selectedSessionData[props.variable].length - FREQUENCY * LIVE_CHART_RANGE, 0)
+                    )
+                ],
+                false
+            );
 
             if (selectedSessionData[props.variable].length >= FREQUENCY * LIVE_CHART_RANGE) {
                 // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
@@ -110,16 +120,12 @@ function LineChart(props: Props): JSX.Element {
                     // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
                     selectedSessionData[props.variable].slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
                     undefined,
-                    true // Redraw graph
-                );
-            } else {
-                // No extremes if data is not covering LIVE_CHART_RANGE
-                chart.current.chart.xAxis[0].setExtremes(
-                    undefined,
-                    undefined,
-                    true // Redraw graph
+                    false
                 );
             }
+
+            // Higher animation duration than update rate breaks the animation
+            chart.current.chart.redraw({duration: 400});
         }
     }, [selectedSessionData]);
 
