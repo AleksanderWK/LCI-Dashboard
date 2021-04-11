@@ -118,7 +118,6 @@ function LineChart(props: Props): JSX.Element {
     useEffect(() => {
         if (chart.current) {
             const data = props.id && allSessionsData ? [...allSessionsData] : [...selectedSessionData[props.variable]];
-            // Update series data
 
             const dataLength = data.length;
 

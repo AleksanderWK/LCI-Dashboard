@@ -4,7 +4,14 @@ import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, Variable} from "../../../constants";
-import {selectedSessionDataState, selectedSessionESEXRangeDataState} from "../../../state/session";
+import {
+    Data,
+    selectedSessionActiveContainersState,
+    selectedSessionDataState,
+    selectedSessionESEXRangeDataState,
+    sessionDataState,
+    sessionESEXRangeDataState
+} from "../../../state/session";
 import theme from "../../../theme";
 import xrange from "../../../assets/xrange";
 
@@ -12,6 +19,7 @@ xrange(Highcharts);
 
 interface Props {
     variable: Variable;
+    id?: number;
 }
 
 function XRangeChart(props: Props): JSX.Element {
@@ -20,7 +28,13 @@ function XRangeChart(props: Props): JSX.Element {
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
         chart: {
-            type: "xrange"
+            type: "xrange",
+            animation: false
+        },
+        plotOptions: {
+            series: {
+                animation: false
+            }
         },
         title: {
             text: undefined
@@ -84,20 +98,41 @@ function XRangeChart(props: Props): JSX.Element {
     const selectedSessionData = useRecoilValue(selectedSessionDataState);
     const selectedSessionESEXRangeData = useRecoilValue(selectedSessionESEXRangeDataState).data;
 
+    let sessionData: Data | null = null;
+    let sessionESEXRangeData: Highcharts.XrangePointOptionsObject[] | null = null;
+    if (props.id) {
+        sessionData = useRecoilValue(sessionDataState(props.id));
+        sessionESEXRangeData = useRecoilValue(sessionESEXRangeDataState(props.id)).data;
+    }
+
+    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+
     // Add new values to the chart
     useEffect(() => {
-        if (chart.current && selectedSessionESEXRangeData.length > 0) {
+        if (chart.current) {
+            const rawData = props.id && sessionData ? sessionData[props.variable] : selectedSessionData[props.variable];
+
+            const processedData =
+                props.id && sessionESEXRangeData ? [...sessionESEXRangeData] : [...selectedSessionESEXRangeData];
+
             chart.current.chart.xAxis[0].setExtremes(
-                selectedSessionData[props.variable].length >= FREQUENCY * LIVE_CHART_RANGE
-                    ? selectedSessionData[props.variable].slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0]
+                rawData.length >= FREQUENCY * LIVE_CHART_RANGE
+                    ? rawData.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0]
                     : undefined,
-                selectedSessionData[props.variable][selectedSessionData[props.variable].length - 1][0],
+                rawData[rawData.length - 1][0],
                 false
             );
 
-            chart.current.chart.series[0].setData([...selectedSessionESEXRangeData], true);
+            chart.current.chart.series[0].setData(processedData, true, {duration: 400});
         }
     }, [selectedSessionESEXRangeData]);
+
+    useEffect(() => {
+        // If active containers is changed, reflow graph as container size may have changed
+        if (chart.current) {
+            chart.current.chart.reflow();
+        }
+    }, [activeContainers]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }

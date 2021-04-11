@@ -215,7 +215,7 @@ export const selectedSessionVariableDataState = selectorFamily<
     }
 });
 
-interface ESEXRangeData {
+export interface ESEXRangeData {
     prevEmotionsIndex: {
         [key: string]: number;
         boredom: number;
@@ -353,7 +353,6 @@ export const selectedSessionActiveContainersState = selector<ActiveContainers>({
 /*
  *  A selectorFamily that accesses a sessions containers active state
  */
-
 export const selectedSessionVariableContainerVisibleState = selectorFamily<VariableDisplay, Variable>({
     key: "selectedSessionVariableContainer",
     get: (variable: Variable) => ({get}) => {
