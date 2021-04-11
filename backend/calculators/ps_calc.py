@@ -23,8 +23,7 @@ class PhysiologicalStressCalculator(MMDVCalculator):
         # If enough data is not yet added
         if self.data_interval.size < self.INTERVAL_SIZE:
             # print(self.data_interval.size, "/", self.INTERVAL_SIZE)
-            return self.default_ps
-        #preprocessed_data = hp.scale_data(self.data_interval)
+            return -1
         wd, m = hp.process(self.data_interval, self.BVP_FREQUENCY, calc_freq = True)
         wd, m = hp.analysis.calc_fd_measures(method = 'fft', measures = m, working_data = wd)
         lf = m["lf"]

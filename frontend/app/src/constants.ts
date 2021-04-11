@@ -81,7 +81,9 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.PhysiologicalStress]: {
         name: "Physiological Stress",
         device: Device.Wristband,
-        description: ""
+        description:
+            "Physioloigcal Stress is indicated by LF/HF, the relative strengths of the low frequency and high frequency waves of the heart pulse signal.",
+        calculationTime: 300
     },
     [Variable.EmotionalRegulation]: {
         name: "Emotional Regulation",
