@@ -18,7 +18,7 @@ class EnergySpentFatigue(MMDVCalculator):
         if self.last_total_jerk != None:
             return self.last_total_jerk
         else:
-            return 0
+            return -1
 
     def total_distance(self, last_positions, current_positions):
         result = 0
