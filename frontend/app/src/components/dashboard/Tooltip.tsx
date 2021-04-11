@@ -6,6 +6,8 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import WatchIcon from "@material-ui/icons/Watch";
 import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 import FaceIcon from "@material-ui/icons/Face";
+import {useRecoilValue} from "recoil";
+import {selectedSessionIdState} from "../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -58,6 +60,7 @@ export default function Tooltip(props: Props): JSX.Element {
     const classes = useStyles();
 
     const variableInfo = MMDVariables[props.variable];
+    const selectedSession = useRecoilValue(selectedSessionIdState);
 
     return (
         <MUITooltip
@@ -74,6 +77,7 @@ export default function Tooltip(props: Props): JSX.Element {
                 </div>
             }
             arrow={true}
+            placement={selectedSession == null ? "bottom-start" : "bottom"}
         >
             {props.children}
         </MUITooltip>

@@ -9,12 +9,9 @@ import InfoItem from "../common/InfoItem";
 import {AddChartIcon, CloseIcon, ExitIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
-import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import WatchIcon from "@material-ui/icons/Watch";
-import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
-import FaceIcon from "@material-ui/icons/Face";
-import {Icon} from "../dashboard/Tooltip";
-import {Device} from "../../constants";
+import Tooltip from "../dashboard/Tooltip";
+import {Variable} from "../../constants";
+import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -29,6 +26,12 @@ const useStyles = makeStyles((theme: Theme) =>
             height: "8px",
             borderRadius: "50%",
             backgroundColor: "#7BAF62"
+        },
+        iconButton: {
+            padding: 0
+        },
+        infoIcon: {
+            cursor: "default"
         }
     })
 );
@@ -94,8 +97,19 @@ export default function Header(): JSX.Element {
                             <InfoItem icon={<TimerIcon />} text={duration} />
                         </>
                     ) : (
-                        <div className={classes.indicatorContainer} style={{gridTemplateColumns: "16px max-content"}}>
-                            <Icon device={Device.VideoBody} color={"#535353"} />
+                        <div className={classes.indicatorContainer} style={{gridTemplateColumns: "20px max-content"}}>
+                            <Tooltip variable={Variable.CognitiveLoad}>
+                                <IconButton
+                                    aria-label="info"
+                                    disableFocusRipple={true}
+                                    disableRipple={true}
+                                    disableTouchRipple={true}
+                                    className={`${classes.iconButton} ${classes.infoIcon}`}
+                                >
+                                    <InfoOutlinedIcon color="action" />
+                                </IconButton>
+                            </Tooltip>
+
                             <Typography>{"Wristband"}</Typography>
                         </div>
                     )
