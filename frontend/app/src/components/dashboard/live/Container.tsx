@@ -54,7 +54,6 @@ export default function Container(props: Props): JSX.Element {
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
-    const selectedAllSessionsVariable = useRecoilValue(selectedAllSessionVariableState);
     const dataLength = props.id
         ? useRecoilValue(sessionVariableDataState([props.variable, props.id])).length
         : useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
@@ -80,7 +79,7 @@ export default function Container(props: Props): JSX.Element {
                     </Typography>
 
                     <div className={classes.menu} ref={menuAnchorElement}>
-                        {!props.id ? (
+                        {!props.id && (
                             <>
                                 <Tooltip variable={props.variable}>
                                     <IconButton
@@ -93,17 +92,15 @@ export default function Container(props: Props): JSX.Element {
                                         <InfoOutlinedIcon color="action" />
                                     </IconButton>
                                 </Tooltip>
+                                <IconButton
+                                    aria-label="settings"
+                                    className={classes.iconButton}
+                                    onClick={() => setMenuOpen(true)}
+                                >
+                                    <MoreVertIcon color="action" />
+                                </IconButton>
                             </>
-                        ) : (
-                            <></>
                         )}
-                        <IconButton
-                            aria-label="settings"
-                            className={classes.iconButton}
-                            onClick={() => setMenuOpen(true)}
-                        >
-                            <MoreVertIcon color="action" />
-                        </IconButton>
                     </div>
 
                     <Menu
@@ -128,9 +125,7 @@ export default function Container(props: Props): JSX.Element {
                     </>
                 ) : (
                     <>
-                        {selectedAllSessionsVariable &&
-                        MMDVariables[selectedAllSessionsVariable as Variable].calculationTime &&
-                        dataLength === 0 ? (
+                        {props.variable && MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                             <CalculatingIndicator variable={props.variable} />
                         ) : props.display === "line" ? (
                             <LineChart variable={props.variable} />

@@ -12,7 +12,11 @@ import {
     FormControlLabel,
     Radio
 } from "@material-ui/core";
-import {selectedSessionActiveContainersState, selectedSessionIdState} from "../../state/session";
+import {
+    selectedAllSessionVariableState,
+    selectedSessionActiveContainersState,
+    selectedSessionIdState
+} from "../../state/session";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {MMDVariables, Variable} from "../../constants";
 import {selectChartsPopupOpenState} from "../../state/popup";
@@ -45,11 +49,21 @@ export default function SelectCharts(): JSX.Element {
     const classes = useStyles();
     const setPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const [activeContainers, setActiveContainers] = useRecoilState(selectedSessionActiveContainersState);
+    const selectedSession = useRecoilValue(selectedSessionIdState);
+    const [selectedAllSessionVariable, setSelectedAllSessionVariable] = useRecoilState(selectedAllSessionVariableState);
 
     const handleCheck = (key: Variable) => () => {
-        const newContainers = {...activeContainers};
-        newContainers[key] = {...activeContainers[key], active: !activeContainers[key].active};
-        setActiveContainers(newContainers);
+        if (selectedSession != null) {
+            const newContainers = {...activeContainers};
+            newContainers[key] = {...activeContainers[key], active: !activeContainers[key].active};
+            setActiveContainers(newContainers);
+        } else {
+            if (key == selectedAllSessionVariable) {
+                setSelectedAllSessionVariable(null);
+            } else {
+                setSelectedAllSessionVariable(key);
+            }
+        }
     };
 
     const handleCheckAll = (value: boolean) => {
@@ -60,14 +74,13 @@ export default function SelectCharts(): JSX.Element {
         setActiveContainers(newContainers);
     };
 
-    const selectedSession = useRecoilValue(selectedSessionIdState);
-
     const checkDisabled = (variable: Variable): boolean => {
-        const l: boolean[] = [];
-        Object.values(Variable).map((variable) => {
-            l.push(activeContainers[variable].active);
-        });
-        return activeContainers[variable].active ? false : !l.every((val, i, arr) => val === arr[0]);
+        if (selectedAllSessionVariable == null) {
+            return false;
+        } else if (variable == selectedAllSessionVariable) {
+            return false;
+        }
+        return true;
     };
 
     return (
@@ -90,7 +103,7 @@ export default function SelectCharts(): JSX.Element {
                             >
                                 <ListItemIcon className={classes.checkbox}>
                                     <Radio
-                                        checked={activeContainers[variable].active}
+                                        checked={variable == selectedAllSessionVariable}
                                         tabIndex={-1}
                                         disableRipple
                                         color="primary"

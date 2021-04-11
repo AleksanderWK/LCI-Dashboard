@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {createStyles, makeStyles, Typography, IconButton, Theme} from "@material-ui/core";
 import TimerIcon from "@material-ui/icons/Timer";
 import RecordingButton from "./RecordingButton";
-import {selectedSessionIdState, selectedSessionState} from "../../state/session";
+import {selectedAllSessionVariableState, selectedSessionIdState, selectedSessionState} from "../../state/session";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
@@ -10,7 +10,7 @@ import {AddChartIcon, CloseIcon, ExitIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
 import Tooltip from "../dashboard/Tooltip";
-import {Variable} from "../../constants";
+import {MMDVariables, Variable} from "../../constants";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {duration} from "../../utils/duration";
 
@@ -43,6 +43,7 @@ export default function Header(): JSX.Element {
     const setSelectChartsPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const setQuitSessionPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
     const selectedSession = useRecoilValue(selectedSessionIdState);
+    const allSessionVariable = useRecoilValue(selectedAllSessionVariableState);
 
     // TODO: use all sessions state to get current variable
 
@@ -88,20 +89,27 @@ export default function Header(): JSX.Element {
                             <InfoItem icon={<TimerIcon />} text={dur} />
                         </>
                     ) : (
-                        <div className={classes.indicatorContainer} style={{gridTemplateColumns: "20px max-content"}}>
-                            <Tooltip variable={Variable.CognitiveLoad}>
-                                <IconButton
-                                    aria-label="info"
-                                    disableFocusRipple={true}
-                                    disableRipple={true}
-                                    disableTouchRipple={true}
-                                    className={`${classes.iconButton} ${classes.infoIcon}`}
-                                >
-                                    <InfoOutlinedIcon color="action" />
-                                </IconButton>
-                            </Tooltip>
+                        <div
+                            className={classes.indicatorContainer}
+                            style={{gridTemplateColumns: "20px max-content", gridTemplateRows: "24px"}}
+                        >
+                            {allSessionVariable && (
+                                <>
+                                    <Tooltip variable={allSessionVariable}>
+                                        <IconButton
+                                            aria-label="info"
+                                            disableFocusRipple={true}
+                                            disableRipple={true}
+                                            disableTouchRipple={true}
+                                            className={`${classes.iconButton} ${classes.infoIcon}`}
+                                        >
+                                            <InfoOutlinedIcon color="action" />
+                                        </IconButton>
+                                    </Tooltip>
 
-                            <Typography>{"Wristband"}</Typography>
+                                    <Typography>{MMDVariables[allSessionVariable].name}</Typography>
+                                </>
+                            )}
                         </div>
                     )
                 }
