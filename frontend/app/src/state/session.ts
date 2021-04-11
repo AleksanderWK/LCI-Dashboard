@@ -296,6 +296,7 @@ export const snackOpenState = atom<boolean>({
 });
 
 export interface allsessionsObject {
+    sessionId: number;
     studentName: string;
     data: [number, number][];
 }
@@ -330,9 +331,8 @@ export const allSessionsState = selector<allsessionsObject[]>({
         const selectedVariable = get(selectedAllSessionVariableState);
         sessions.forEach((session) => {
             if (selectedVariable != null) {
-                const studentName = session.student.name;
                 const data = get(sessionVariableDataState([selectedVariable, session._id]));
-                result.push({studentName: studentName, data: data});
+                result.push({sessionId: session._id, studentName: session.student.name, data: data});
             }
         });
         return result;

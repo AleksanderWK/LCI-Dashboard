@@ -4,11 +4,16 @@ import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
-import {selectedSessionActiveContainersState, selectedSessionDataState} from "../../../state/session";
+import {
+    selectedSessionActiveContainersState,
+    selectedSessionDataState,
+    sessionVariableDataState
+} from "../../../state/session";
 import theme from "../../../theme";
 
 interface Props {
     variable: Variable;
+    id?: number;
 }
 
 function LineChart(props: Props): JSX.Element {
@@ -105,13 +110,21 @@ function LineChart(props: Props): JSX.Element {
     const selectedSessionData = useRecoilValue(selectedSessionDataState);
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
 
+    let allSessionsData: [number, number][] | null = null;
+    if (props.id) {
+        allSessionsData = useRecoilValue(sessionVariableDataState([props.variable, props.id]));
+    }
+
     useEffect(() => {
         if (chart.current) {
-            const dataLength = selectedSessionData[props.variable].length;
+            const data = props.id && allSessionsData ? [...allSessionsData] : [...selectedSessionData[props.variable]];
+            // Update series data
+
+            const dataLength = data.length;
 
             // Update series data
             chart.current.chart.series[0].setData(
-                [...selectedSessionData[props.variable].slice(Math.max(dataLength - FREQUENCY * LIVE_CHART_RANGE, 0))],
+                [...data.slice(Math.max(dataLength - FREQUENCY * LIVE_CHART_RANGE, 0))],
                 false
             );
 
@@ -119,18 +132,18 @@ function LineChart(props: Props): JSX.Element {
                 // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
                 chart.current.chart.xAxis[0].setExtremes(
                     // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
-                    selectedSessionData[props.variable].slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
+                    data.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
                     undefined,
                     false
                 );
             } else if (dataLength > 0 && dataLength < FREQUENCY * LIVE_CHART_RANGE) {
-                chart.current.chart.xAxis[0].setExtremes(selectedSessionData[props.variable][0][0], undefined, false);
+                chart.current.chart.xAxis[0].setExtremes(data[0][0], undefined, false);
             }
 
             // Higher animation duration than update rate breaks the animation
             chart.current.chart.redraw({duration: 400});
         }
-    }, [selectedSessionData]);
+    }, [selectedSessionData, allSessionsData]);
 
     useEffect(() => {
         // If active containers is changed, reflow graph as container size may have changed
