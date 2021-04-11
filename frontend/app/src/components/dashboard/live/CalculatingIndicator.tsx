@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {createStyles, LinearProgress, makeStyles, Theme, Typography} from "@material-ui/core";
 import {MMDVariables, Variable} from "../../../constants";
 import {useRecoilValue} from "recoil";
-import {selectedSessionState} from "../../../state/session";
+import {selectedSessionState, sessionState} from "../../../state/session";
 import {useInterval} from "../../../utils/useInterval";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
     variable: Variable;
+    id?: number;
 }
 
 function CalculatingIndicator(props: Props): JSX.Element {
@@ -42,7 +43,7 @@ function CalculatingIndicator(props: Props): JSX.Element {
     const [intervalStarted, setIntervalStarted] = useState<boolean>(false);
     const [progress, setProgress] = useState<number>(0);
 
-    const session = useRecoilValue(selectedSessionState);
+    const session = props.id ? useRecoilValue(sessionState(props.id)) : useRecoilValue(selectedSessionState);
 
     const calculationTime = MMDVariables[props.variable].calculationTime;
 

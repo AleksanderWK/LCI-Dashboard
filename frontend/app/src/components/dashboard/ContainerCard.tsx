@@ -30,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
         content: {
             display: "grid",
             gridTemplateColumns: "1fr",
-            gridTemplateRows: "auto auto 1fr",
+            gridTemplateRows: "auto 1fr",
             position: "relative",
             height: "100%",
             width: "100%",

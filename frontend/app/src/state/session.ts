@@ -1,4 +1,4 @@
-import {atom, atomFamily, selector, selectorFamily, useRecoilValue} from "recoil";
+import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
 import {studentState, Student} from "./student";
 

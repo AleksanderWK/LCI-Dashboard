@@ -11,7 +11,6 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {
-    selectedAllSessionVariableState,
     selectedSessionActiveContainersState,
     selectedSessionDataLengthVariableState,
     sessionVariableDataState
@@ -126,11 +125,11 @@ export default function Container(props: Props): JSX.Element {
                 ) : (
                     <>
                         {props.variable && MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
-                            <CalculatingIndicator variable={props.variable} />
+                            <CalculatingIndicator variable={props.variable} id={props.id} />
                         ) : props.display === "line" ? (
-                            <LineChart variable={props.variable} />
+                            <LineChart variable={props.variable} id={props.id} />
                         ) : (
-                            <Numeric variable={props.variable} />
+                            <Numeric variable={props.variable} id={props.id} />
                         )}
                     </>
                 )}
