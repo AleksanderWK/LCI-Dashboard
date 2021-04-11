@@ -1,7 +1,12 @@
 import {createStyles, makeStyles, Typography, Theme} from "@material-ui/core";
 import {useRecoilValue} from "recoil";
 import {Variable} from "../../../constants";
-import {selectedSessionActiveContainersState} from "../../../state/session";
+import {
+    allSessionsState,
+    selectedAllSessionVariableState,
+    selectedSessionActiveContainersState,
+    selectedSessionIdState
+} from "../../../state/session";
 import Container from "./Container";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -38,27 +43,54 @@ function Dashboard(): JSX.Element {
     const classes = useStyles();
 
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
+    const allSessions = useRecoilValue(allSessionsState);
+    const selectedAllSessionsVariable = useRecoilValue(selectedAllSessionVariableState);
 
     return (
         <>
-            {Object.values(Variable).every((variable) => activeContainers[variable].active === false) ? (
-                <div className={classes.feedback}>
-                    <Typography>No charts selected</Typography>
-                </div>
+            {selectedSessionId != null ? (
+                <>
+                    {Object.values(Variable).every((variable) => activeContainers[variable].active === false) ? (
+                        <div className={classes.feedback}>
+                            <Typography>No variables selected</Typography>
+                        </div>
+                    ) : (
+                        <div className={classes.dashboard}>
+                            {Object.values(Variable)
+                                .filter((variable) => activeContainers[variable].active)
+                                .map((variable) => {
+                                    return (
+                                        <Container
+                                            key={variable}
+                                            variable={variable}
+                                            display={activeContainers[variable].display}
+                                        />
+                                    );
+                                })}
+                        </div>
+                    )}
+                </>
             ) : (
-                <div className={classes.dashboard}>
-                    {Object.values(Variable)
-                        .filter((variable) => activeContainers[variable].active)
-                        .map((variable) => {
+                <>
+                    {selectedAllSessionsVariable == null ? (
+                        <div className={classes.feedback}>
+                            <Typography>No variable selected</Typography>
+                        </div>
+                    ) : (
+                        allSessions.map((allSessionsObject) => {
                             return (
                                 <Container
-                                    key={variable}
-                                    variable={variable}
-                                    display={activeContainers[variable].display}
+                                    key={allSessionsObject.sessionId}
+                                    variable={(selectedAllSessionVariableState as unknown) as Variable}
+                                    display={"line"}
+                                    studentName={allSessionsObject.studentName}
+                                    id={allSessionsObject.sessionId}
                                 />
                             );
-                        })}
-                </div>
+                        })
+                    )}
+                </>
             )}
         </>
     );

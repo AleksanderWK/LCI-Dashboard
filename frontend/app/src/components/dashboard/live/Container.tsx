@@ -10,8 +10,13 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {selectedSessionActiveContainersState, selectedSessionDataLengthVariableState} from "../../../state/session";
 import XRangeChart from "./XRangeChart";
+import {
+    selectedAllSessionVariableState,
+    selectedSessionActiveContainersState,
+    selectedSessionDataLengthVariableState,
+    sessionVariableDataState
+} from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,18 +42,24 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
     variable: Variable;
     display: "line" | "numeric";
+    studentName?: string;
+    id?: number;
 }
 
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
-
-    const dataLength = useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
 
     const [containerOptions, setContainerOptions] = useRecoilState(selectedSessionActiveContainersState);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
+
+    const selectedAllSessionsVariable = useRecoilValue(selectedAllSessionVariableState);
+
+    const dataLength = props.id
+        ? useRecoilValue(sessionVariableDataState([props.variable, props.id])).length
+        : useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
 
     function setChartType(chartType: "line" | "numeric"): void {
         const newContainerOptions = {...containerOptions};
@@ -67,21 +78,27 @@ export default function Container(props: Props): JSX.Element {
             <>
                 <div className={classes.header}>
                     <Typography variant="h2" noWrap={true}>
-                        {MMDVariables[props.variable].name}
+                        {!props.id ? MMDVariables[props.variable].name : props.studentName}
                     </Typography>
 
                     <div className={classes.menu} ref={menuAnchorElement}>
-                        <Tooltip variable={props.variable}>
-                            <IconButton
-                                aria-label="info"
-                                disableFocusRipple={true}
-                                disableRipple={true}
-                                disableTouchRipple={true}
-                                className={`${classes.iconButton} ${classes.infoIcon}`}
-                            >
-                                <InfoOutlinedIcon color="action" />
-                            </IconButton>
-                        </Tooltip>
+                        {!props.id ? (
+                            <>
+                                <Tooltip variable={props.variable}>
+                                    <IconButton
+                                        aria-label="info"
+                                        disableFocusRipple={true}
+                                        disableRipple={true}
+                                        disableTouchRipple={true}
+                                        className={`${classes.iconButton} ${classes.infoIcon}`}
+                                    >
+                                        <InfoOutlinedIcon color="action" />
+                                    </IconButton>
+                                </Tooltip>
+                            </>
+                        ) : (
+                            <></>
+                        )}
                         <IconButton
                             aria-label="settings"
                             className={classes.iconButton}
@@ -101,15 +118,34 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
-                    <CalculatingIndicator variable={props.variable} />
-                ) : containerOptions[props.variable].display === "line" &&
-                  props.variable != Variable.EducationalSpecificEmotions ? (
-                    <LineChart variable={props.variable} />
-                ) : containerOptions[props.variable].display === "line" ? (
-                    <XRangeChart variable={props.variable} />
+
+                {props.id == undefined ? (
+                    <>
+                        {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
+                            <CalculatingIndicator variable={props.variable} />
+                        ) : containerOptions[props.variable].display === "line" &&
+                          props.variable != Variable.EducationalSpecificEmotions ? (
+                            <LineChart variable={props.variable} />
+                        ) : containerOptions[props.variable].display === "line" ? (
+                            <XRangeChart variable={props.variable} />
+                        ) : (
+                            <Numeric variable={props.variable} />
+                        )}
+                    </>
                 ) : (
-                    <Numeric variable={props.variable} />
+                    <>
+                        {selectedAllSessionsVariable &&
+                        MMDVariables[selectedAllSessionsVariable as Variable].calculationTime &&
+                        dataLength === 0 ? (
+                            <CalculatingIndicator variable={props.variable} />
+                        ) : props.display === "line" && props.variable != Variable.EducationalSpecificEmotions ? (
+                            <LineChart variable={props.variable} />
+                        ) : props.display === "line" ? (
+                            <XRangeChart variable={props.variable} />
+                        ) : (
+                            <Numeric variable={props.variable} />
+                        )}
+                    </>
                 )}
             </>
         </ContainerCard>

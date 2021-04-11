@@ -38,5 +38,5 @@ class Datastreams:
     def get_current_skeleton_data(self):
         pass
 
-    def get_curent_au_data(self):
+    def get_current_au_data(self):
         pass

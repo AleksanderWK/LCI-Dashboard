@@ -3,30 +3,46 @@ import numpy as np
 from calculators.mmdvcalc import MMDVCalculator
 import pandas as pd
 
+
 class EngagementCalculator(MMDVCalculator):
-    dataList = []
+
+    EDA_FREQUENCY = 4  # in Hz (i.e. times per second)
+    TIME_INTERVAL = 4  # in seconds
+
+    data_interval = []
+
+    prev_eng = None
 
     def __init__(self):
         pass
 
-    def check_length(self, data):
-        if len(data) == 16:
-            return True
-        return False
-
     def calculate_dataset(self, data):
-        for i in data:
-            self.dataList.append(i.value)
+        if len(data) == 0:
+            return -1
 
-        if len(self.dataList) >= 16:
-            cleanEDA = nk.eda_clean(self.dataList[:16])
+        self.updateInterval(data)
+
+        if (len(self.data_interval) >= self.EDA_FREQUENCY * self.TIME_INTERVAL):
+            cleanEDA = nk.eda_clean(self.data_interval[:16])
             phasicEDA = nk.eda_phasic(cleanEDA, sampling_rate=8)
             tonicEDA = sorted(phasicEDA.get("EDA_Tonic").values)
+
             area = np.trapz(y=tonicEDA, dx=0.125)
-            for i in range(len(self.dataList.copy())):
-                if len(self.dataList) == 16:
-                    break
-                self.dataList.pop(0)
-            return area
+
+            if (area > 0):
+                self.prev_eng = area
+                return area
+            elif (area < 0 and self.prev_eng != None):
+                return self.prev_eng
 
         return -1
+
+    def updateInterval(self, data):
+        # Add the new data to the data interval
+        self.data_interval.extend(map(lambda x: x.value, data))
+
+        # If the interval is too big, remove the first elements so it becomes the size it should be
+        interval_size = self.EDA_FREQUENCY * self.TIME_INTERVAL
+        if len(self.data_interval) > interval_size:
+            self.data_interval = self.data_interval[len(
+                self.data_interval) - interval_size:]

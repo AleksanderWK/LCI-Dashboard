@@ -90,28 +90,28 @@ class Main():
         self.mmdv_calc = MMDVCollectionCalculator(self.ds)
         self.setup()
 
-    def init_session_with_devices(self, session_code):
+    def init_session_with_devices(self, session_code, device_mode):
         """
         Initializes a session using the connected devices
         """
         self.loop = asyncio.get_event_loop()
         self.session_code = session_code
         self.ws = WebSocketClient()
-        self.ds = DeviceDatastreams()
+        self.ds = DeviceDatastreams(device_mode, self.loop)
         self.mmdv_calc = MMDVCollectionCalculator(self.ds)
         self.setup()
 
 
 @click.command(help="Connect to a dashbord with a session code, retrieve data from either devices or a dataset, calculate variables and send the results to the dashboard in real-time.")
-@click.option('--devices', is_flag=True, help="Retrieve data from devices.")
+@click.option('--devices', 'device_mode', default=None, help="Retrieve data from devices.")
 @click.option('--dataset', 'dataset_id', type=click.IntRange(1, 15), help="Retrieve data from a dataset (1-15).")
 @click.argument("session_code")
-def main(devices, dataset_id, session_code):
+def main(device_mode, dataset_id, session_code):
     main = Main()
 
-    if devices:
+    if device_mode:
         print("Retrieving data from devices.")
-        main.init_session_with_devices(session_code)
+        main.init_session_with_devices(session_code, device_mode)
     else:
         if dataset_id == None:
             dataset = "S001"

@@ -2,7 +2,11 @@ import React from "react";
 import {createStyles, makeStyles, Theme, Typography} from "@material-ui/core";
 import {useRecoilValue} from "recoil";
 import {emotionsColorMapper, Variable} from "../../../constants";
-import {EducationalSpecificEmotions, selectedSessionLastValueState} from "../../../state/session";
+import {
+    selectedSessionLastValueState,
+    sessionVariableDataState,
+    EducationalSpecificEmotions
+} from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -92,13 +96,15 @@ function EmotionsDisplay(props: {emotions: EducationalSpecificEmotions}): JSX.El
 
 interface Props {
     variable: Variable;
+    id?: number;
 }
 
 function Numeric(props: Props): JSX.Element {
     const classes = useStyles();
 
-    // Get the latest variable data point for the selected user
-    const dataPoint = useRecoilValue(selectedSessionLastValueState(props.variable));
+    const dataPoint = !props.id
+        ? useRecoilValue(selectedSessionLastValueState(props.variable))
+        : useRecoilValue(sessionVariableDataState([props.variable, props.id])).slice(-1)[0];
 
     return (
         <div className={classes.numericWrapper}>

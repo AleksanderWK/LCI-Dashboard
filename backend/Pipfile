@@ -13,6 +13,7 @@ python-baseconv = "*"
 neurokit2 = "*"
 pywavelets = "*"
 numpy = "*"
+heartpy = "*"
 tobii-research = "*"
 click = "*"
 

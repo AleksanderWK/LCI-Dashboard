@@ -69,20 +69,22 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Physiological Arousal",
         device: Device.Wristband,
         description:
-            "Physiological Arousal is how strong the current emotions are. This is calculated by taking the average EDA in the current time interval, which is currently 8 seconds.",
+            "Physiological Arousal is how strong the current emotions are. It is calculated by the average EDA in a time interval of 8 seconds.",
         calculationTime: 8
     },
     [Variable.Engagement]: {
         name: "Engagement",
         device: Device.Wristband,
         description:
-            "Area under the graph of 16 tonic EDA values. Although the empatica measures at 4Hz, the sampling rate is set to 8 because neurokit does not allow sampling rates under 7.",
-        calculationTime: 8
+            "Engagement is a measure of involvement and enthusiasm for the activity. It is calculated by the area under the graph of tonic EDA, in a time interval of 4 seconds.",
+        calculationTime: 4
     },
     [Variable.PhysiologicalStress]: {
         name: "Physiological Stress",
         device: Device.Wristband,
-        description: ""
+        description:
+            "Physioloigcal Stress is indicated by LF/HF, the relative strengths of the low frequency and high frequency waves of the heart pulse signal.",
+        calculationTime: 300
     },
     [Variable.EmotionalRegulation]: {
         name: "Emotional Regulation",
@@ -99,7 +101,7 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         device: Device.VideoBody,
         description:
             "The amount of energy spent by the student, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position skeletal body.",
-        calculationTime: 4
+        calculationTime: 3
     },
     [Variable.EducationalSpecificEmotions]: {
         name: "Educational-specific Emotions",
