@@ -28,7 +28,7 @@ it("renders without crashing", () => {
 it("tooltip displays variable info", async () => {
     render(
         <RecoilRoot>
-            <Container id={1} variable={Variable.CognitiveLoad} display="line" />
+            <Container variable={Variable.CognitiveLoad} display="line" />
         </RecoilRoot>
     );
     userEvent.hover(screen.getByLabelText("info"));

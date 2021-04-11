@@ -76,11 +76,11 @@ export default function Container(props: Props): JSX.Element {
             <>
                 <div className={classes.header}>
                     <Typography variant="h2" noWrap={true}>
-                        {props.id ? MMDVariables[props.variable].name : props.studentName}
+                        {!props.id ? MMDVariables[props.variable].name : props.studentName}
                     </Typography>
 
                     <div className={classes.menu} ref={menuAnchorElement}>
-                        {props.id ? (
+                        {!props.id ? (
                             <>
                                 <Tooltip variable={props.variable}>
                                     <IconButton
@@ -116,7 +116,7 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                {props.id != undefined ? (
+                {props.id == undefined ? (
                     <>
                         {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                             <CalculatingIndicator variable={props.variable} />

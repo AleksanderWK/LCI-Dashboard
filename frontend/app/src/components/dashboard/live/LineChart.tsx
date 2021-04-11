@@ -22,7 +22,8 @@ function LineChart(props: Props): JSX.Element {
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
         chart: {
-            marginLeft: 40
+            marginLeft: 40,
+            animation: false
         },
         title: {
             text: undefined
@@ -42,10 +43,15 @@ function LineChart(props: Props): JSX.Element {
                         const {series, x, y} = this;
 
                         // Show only the label for the latest data point
-                        return x === series.data[series.data.length - 1].x &&
+                        if (
+                            y &&
+                            x &&
+                            x === series.data[series.data.length - 1].x &&
                             y === series.data[series.data.length - 1].y
-                            ? y?.toFixed()
-                            : null;
+                        ) {
+                            return y > 0 && y < 1 ? y.toFixed(1) : y.toFixed();
+                        }
+                        return null;
                     }
                 },
                 enableMouseTracking: true
@@ -114,23 +120,28 @@ function LineChart(props: Props): JSX.Element {
             const data = props.id && allSessionsData ? [...allSessionsData] : [...selectedSessionData[props.variable]];
             // Update series data
 
-            chart.current.chart.series[0].setData(data, false);
-            if (data.length >= FREQUENCY * LIVE_CHART_RANGE) {
+            const dataLength = data.length;
+
+            // Update series data
+            chart.current.chart.series[0].setData(
+                [...data.slice(Math.max(dataLength - FREQUENCY * LIVE_CHART_RANGE, 0))],
+                false
+            );
+
+            if (dataLength >= FREQUENCY * LIVE_CHART_RANGE) {
                 // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
                 chart.current.chart.xAxis[0].setExtremes(
                     // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
                     data.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
                     undefined,
-                    true // Redraw graph
+                    false
                 );
-            } else {
-                // No extremes if data is not covering LIVE_CHART_RANGE
-                chart.current.chart.xAxis[0].setExtremes(
-                    undefined,
-                    undefined,
-                    true // Redraw graph
-                );
+            } else if (dataLength > 0 && dataLength < FREQUENCY * LIVE_CHART_RANGE) {
+                chart.current.chart.xAxis[0].setExtremes(data[0][0], undefined, false);
             }
+
+            // Higher animation duration than update rate breaks the animation
+            chart.current.chart.redraw({duration: 400});
         }
     }, [selectedSessionData, allSessionsData]);
 
