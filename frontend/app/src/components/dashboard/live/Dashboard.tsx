@@ -78,17 +78,19 @@ function Dashboard(): JSX.Element {
                             <Typography>No variable selected</Typography>
                         </div>
                     ) : (
-                        allSessions.map((allSessionsObject) => {
-                            return (
-                                <Container
-                                    key={allSessionsObject.sessionId}
-                                    variable={(selectedAllSessionVariableState as unknown) as Variable}
-                                    display={"line"}
-                                    studentName={allSessionsObject.studentName}
-                                    id={allSessionsObject.sessionId}
-                                />
-                            );
-                        })
+                        <div className={classes.dashboard}>
+                            {allSessions.map((allSessionsObject) => {
+                                return (
+                                    <Container
+                                        key={allSessionsObject.sessionId}
+                                        variable={(selectedAllSessionsVariable as unknown) as Variable}
+                                        display={"line"}
+                                        studentName={allSessionsObject.studentName}
+                                        id={allSessionsObject.sessionId}
+                                    />
+                                );
+                            })}
+                        </div>
                     )}
                 </>
             )}
