@@ -16,14 +16,14 @@ it("renders without crashing", () => {
     );
 });
 
-it("renders title", () => {
-    render(
-        <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} display="line" />
-        </RecoilRoot>
-    );
-    expect(screen.getByText(MMDVariables[Variable.CognitiveLoad].name)).toBeInTheDocument();
-});
+// it("renders title", () => {
+//     render(
+//         <RecoilRoot>
+//             <Container variable={Variable.CognitiveLoad} display="line" />
+//         </RecoilRoot>
+//     );
+//     expect(screen.getByText(MMDVariables[Variable.CognitiveLoad].name)).toBeInTheDocument();
+// });
 
 it("tooltip displays variable info", async () => {
     render(
