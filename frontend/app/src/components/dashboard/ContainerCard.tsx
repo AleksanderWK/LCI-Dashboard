@@ -1,4 +1,6 @@
 import {Card, CardContent, createStyles, makeStyles, SvgIcon, SvgIconProps, Theme} from "@material-ui/core";
+import {useRecoilValue} from "recoil";
+import {selectedSessionIdState} from "../../state/session";
 
 function ResizeIcon(props: SvgIconProps): JSX.Element {
     return (
@@ -15,11 +17,20 @@ const useStyles = makeStyles((theme: Theme) =>
             height: "100%",
             position: "relative"
         },
-        content: {
+        contentNoStudent: {
             display: "grid",
             gridTemplateColumns: "1fr",
             gridTemplateRows: "auto 1fr",
             gap: theme.spacing(2),
+            position: "relative",
+            height: "100%",
+            width: "100%",
+            boxSizing: "border-box"
+        },
+        content: {
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gridTemplateRows: "auto auto 1fr",
             position: "relative",
             height: "100%",
             width: "100%",
@@ -45,9 +56,13 @@ interface Props {
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
+    const selectedSession = useRecoilValue(selectedSessionIdState);
+
     return (
         <Card variant="outlined" className={classes.card}>
-            <CardContent className={classes.content}>{props.children}</CardContent>
+            <CardContent className={selectedSession == null ? classes.content : classes.contentNoStudent}>
+                {props.children}
+            </CardContent>
 
             <ResizeIcon className={classes.resizeIcon} color="action" />
         </Card>

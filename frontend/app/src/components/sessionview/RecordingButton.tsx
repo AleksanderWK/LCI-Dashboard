@@ -5,7 +5,8 @@ import StopIcon from "@material-ui/icons/Stop";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {selectedSessionRecordingState, snackOpenState} from "../../state/session";
 import {createStyles, makeStyles, Theme} from "@material-ui/core";
-import {useInterval} from "../../utils";
+import {useInterval} from "../../utils/useInterval";
+import {duration} from "../../utils/duration";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -21,34 +22,23 @@ export default function RecordingButton(): JSX.Element {
     const classes = useStyles();
 
     const [recording, setRecording] = useRecoilState(selectedSessionRecordingState);
-    const [duration, setDuration] = useState<string>("0:00:00");
+    const [dur, setDuration] = useState<string>("0:00:00");
     const setSnackOpen = useSetRecoilState(snackOpenState);
 
     useEffect(() => {
-        if (recording.status) {
-            calculateDuration();
+        if (recording.status && recording.startTime) {
+            setDuration(duration(recording.startTime.getTime(), undefined, 1));
         }
     }, [recording]);
 
     useInterval(
         () => {
-            calculateDuration();
+            if (recording.startTime) {
+                setDuration(duration(recording.startTime.getTime(), undefined, 1));
+            }
         },
         recording.status ? 1000 : null
     );
-
-    function calculateDuration() {
-        if (recording.startTime) {
-            const d = new Date().getTime();
-            let distance = d - recording.startTime.getTime();
-            const hours = Math.floor(distance / 3600000);
-            distance -= hours * 3600000;
-            const minutes = Math.floor(distance / 60000);
-            distance -= minutes * 60000;
-            const seconds = Math.floor(distance / 1000);
-            setDuration(`${hours}:${("0" + minutes).slice(-2)}:${("0" + seconds).slice(-2)}`);
-        }
-    }
 
     function handleStartRecordingClick(): void {
         const startTime = new Date();
@@ -98,7 +88,7 @@ export default function RecordingButton(): JSX.Element {
                     handleStopRecordingClick();
                 }}
             >
-                Stop recording ({duration})
+                Stop recording ({dur})
             </Button>
         );
     }
