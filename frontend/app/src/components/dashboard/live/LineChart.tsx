@@ -38,10 +38,15 @@ function LineChart(props: Props): JSX.Element {
                         const {series, x, y} = this;
 
                         // Show only the label for the latest data point
-                        return x === series.data[series.data.length - 1].x &&
+                        if (
+                            y &&
+                            x &&
+                            x === series.data[series.data.length - 1].x &&
                             y === series.data[series.data.length - 1].y
-                            ? y?.toFixed()
-                            : null;
+                        ) {
+                            return y > 0 && y < 1 ? y.toFixed(1) : y.toFixed();
+                        }
+                        return null;
                     }
                 },
                 enableMouseTracking: true
@@ -77,9 +82,7 @@ function LineChart(props: Props): JSX.Element {
             type: "datetime",
             minTickInterval: 1000 * 5, // Show xAxis labels minimum every 5 second
             lineWidth: 0,
-            tickLength: 0,
-            min: null,
-            max: null
+            tickLength: 0
         },
         time: {
             timezoneOffset: new Date().getTimezoneOffset()
@@ -104,17 +107,15 @@ function LineChart(props: Props): JSX.Element {
 
     useEffect(() => {
         if (chart.current) {
+            const dataLength = selectedSessionData[props.variable].length;
+
             // Update series data
             chart.current.chart.series[0].setData(
-                [
-                    ...selectedSessionData[props.variable].slice(
-                        Math.max(selectedSessionData[props.variable].length - FREQUENCY * LIVE_CHART_RANGE, 0)
-                    )
-                ],
+                [...selectedSessionData[props.variable].slice(Math.max(dataLength - FREQUENCY * LIVE_CHART_RANGE, 0))],
                 false
             );
 
-            if (selectedSessionData[props.variable].length >= FREQUENCY * LIVE_CHART_RANGE) {
+            if (dataLength >= FREQUENCY * LIVE_CHART_RANGE) {
                 // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
                 chart.current.chart.xAxis[0].setExtremes(
                     // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
@@ -122,6 +123,8 @@ function LineChart(props: Props): JSX.Element {
                     undefined,
                     false
                 );
+            } else if (dataLength > 0 && dataLength < FREQUENCY * LIVE_CHART_RANGE) {
+                chart.current.chart.xAxis[0].setExtremes(selectedSessionData[props.variable][0][0], undefined, false);
             }
 
             // Higher animation duration than update rate breaks the animation
