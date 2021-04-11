@@ -14,7 +14,6 @@ import {
     selectedAllSessionVariableState,
     selectedSessionActiveContainersState,
     selectedSessionDataLengthVariableState,
-    selectedSessionIdState,
     sessionVariableDataState
 } from "../../../state/session";
 
@@ -55,7 +54,6 @@ export default function Container(props: Props): JSX.Element {
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
-    const selectedSessionId = useRecoilValue(selectedSessionIdState);
     const selectedAllSessionsVariable = useRecoilValue(selectedAllSessionVariableState);
     const dataLength = props.id
         ? useRecoilValue(sessionVariableDataState([props.variable, props.id])).length
@@ -78,21 +76,27 @@ export default function Container(props: Props): JSX.Element {
             <>
                 <div className={classes.header}>
                     <Typography variant="h2" noWrap={true}>
-                        {selectedSessionId ? MMDVariables[props.variable].name : props.studentName}
+                        {props.id ? MMDVariables[props.variable].name : props.studentName}
                     </Typography>
 
                     <div className={classes.menu} ref={menuAnchorElement}>
-                        <Tooltip variable={props.variable}>
-                            <IconButton
-                                aria-label="info"
-                                disableFocusRipple={true}
-                                disableRipple={true}
-                                disableTouchRipple={true}
-                                className={`${classes.iconButton} ${classes.infoIcon}`}
-                            >
-                                <InfoOutlinedIcon color="action" />
-                            </IconButton>
-                        </Tooltip>
+                        {props.id ? (
+                            <>
+                                <Tooltip variable={props.variable}>
+                                    <IconButton
+                                        aria-label="info"
+                                        disableFocusRipple={true}
+                                        disableRipple={true}
+                                        disableTouchRipple={true}
+                                        className={`${classes.iconButton} ${classes.infoIcon}`}
+                                    >
+                                        <InfoOutlinedIcon color="action" />
+                                    </IconButton>
+                                </Tooltip>
+                            </>
+                        ) : (
+                            <></>
+                        )}
                         <IconButton
                             aria-label="settings"
                             className={classes.iconButton}
@@ -112,7 +116,7 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                {selectedSessionId != null ? (
+                {props.id != undefined ? (
                     <>
                         {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                             <CalculatingIndicator variable={props.variable} />
