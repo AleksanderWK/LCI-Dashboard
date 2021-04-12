@@ -12,6 +12,7 @@ import {
 } from "../../state/session";
 import {useHistory} from "react-router-dom";
 import {ipcSend} from "../../ipc";
+import {sessionCodesState} from "../../state/buffer";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -61,15 +62,22 @@ export default function QuitSesson(): JSX.Element {
                 timestamp: new Date().getTime()
             });
 
-            removeSession(selectedSession._id);
+            removeSession(selectedSession._id, selectedSession.sessionCode);
         }
     };
 
-    const removeSession = useRecoilCallback(({set}) => (sessionId: number) => {
+    const removeSession = useRecoilCallback(({set}) => (sessionId: number, sessionCode: string) => {
         // Remove this sessionId from the sessionIdsState
         set(sessionIdsState, (prevValue) => {
             const newValue: number[] = [...prevValue];
             newValue.splice(newValue.indexOf(sessionId), 1);
+            return newValue;
+        });
+
+        // Remove this session code from the sessionCodesState
+        set(sessionCodesState, (prevValue) => {
+            const newValue: string[] = [...prevValue];
+            newValue.splice(newValue.indexOf(sessionCode), 1);
             return newValue;
         });
 

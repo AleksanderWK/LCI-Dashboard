@@ -4,10 +4,14 @@ import CreateSessionView from "./pages/CreateSessionView";
 import {useEffect} from "react";
 import {ipcOn, ipcSend} from "./ipc";
 import {Data, sessionDataState, sessionRecordingState, sessionsState, SessionWithStudent} from "./state/session";
-import {useRecoilCallback} from "recoil";
+import {useRecoilCallback, useRecoilValue} from "recoil";
 import {Variable} from "./constants";
 import StartView from "./pages/StartView";
 import RecordedSessionView from "./pages/RecordedSessionView";
+import {useInterval} from "./utils/useInterval";
+import {bufferState, sessionCodesState} from "./state/buffer";
+
+const BUFFERSIZE = 4;
 
 export interface DataPoints {
     [key: string]: number;
@@ -30,14 +34,14 @@ export interface DataPayload {
 }
 
 function App(): JSX.Element {
-    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (data: DataPayload) => {
+    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (data: DataPoints, sessionCode: string) => {
         const now: number = new Date().getTime();
 
         // Find the Session with the same sessionCode as this data has
         const session: SessionWithStudent | undefined = snapshot
             .getLoadable(sessionsState)
             .getValue()
-            .find((session) => session.sessionCode == data.sessionCode);
+            .find((session) => session.sessionCode == sessionCode);
 
         // If we have found the session, set the data in the session state
         if (session != undefined) {
@@ -51,7 +55,7 @@ function App(): JSX.Element {
                         [
                             ...values,
                             // Add data point for variable only if it is calculated
-                            ...(+data.dataPoints[variable] !== -1 ? [[now, +data.dataPoints[variable].toFixed(2)]] : [])
+                            ...(+data[variable] !== -1 ? [[now, +data[variable].toFixed(2)]] : [])
                         ]
                     ])
                 ) as unknown) as Data;
@@ -62,7 +66,7 @@ function App(): JSX.Element {
             if (sessionRecording.status) {
                 ipcSend("pushDataPointToSession", {
                     timestamp: now,
-                    data: data.dataPoints,
+                    data: data,
                     sessionId: sessionId,
                     recordingId: sessionRecording.recordingId
                 });
@@ -70,13 +74,66 @@ function App(): JSX.Element {
         }
     });
 
+    const updateBuffer = useRecoilCallback(({snapshot, set}) => (sessionCode: string, data: DataPoints) => {
+        const sessionCodes = snapshot.getLoadable(sessionCodesState).getValue();
+
+        if (!sessionCodes.includes(sessionCode)) {
+            set(sessionCodesState, (prev) => [...prev, sessionCode]);
+        }
+
+        const buffer = snapshot.getLoadable(bufferState(sessionCode)).getValue();
+
+        console.log(buffer);
+
+        if (buffer.active) {
+            set(bufferState(sessionCode), (prevBuffer) => {
+                return {
+                    ...prevBuffer,
+                    data: [...prevBuffer.data, data]
+                };
+            });
+        } else {
+            set(bufferState(sessionCode), (prevBuffer) => {
+                return {
+                    active: prevBuffer.data.length >= BUFFERSIZE,
+                    data: [...prevBuffer.data, data]
+                };
+            });
+        }
+    });
+
     useEffect(() => {
         ipcOn("newData", (event: any, data: DataPayload) => {
-            addDataPointToState(data);
+            updateBuffer(data.sessionCode, data.dataPoints);
         });
 
         ipcSend("startServer", true);
     }, []);
+
+    const popFromBuffer = useRecoilCallback(({snapshot, set}) => (sessionCode: string) => {
+        const buffer = snapshot.getLoadable(bufferState(sessionCode)).getValue();
+
+        if (buffer.active) {
+            const dataPoints = buffer.data[0];
+
+            set(bufferState(sessionCode), (prevBuffer) => {
+                return {
+                    ...prevBuffer,
+                    data: [...prevBuffer.data.slice(1)]
+                };
+            });
+
+            addDataPointToState(dataPoints, sessionCode);
+        }
+    });
+
+    const sessionCodes = useRecoilValue(sessionCodesState);
+
+    useInterval(() => {
+        sessionCodes.forEach((sessionCode) => {
+            popFromBuffer(sessionCode);
+        });
+    }, 500);
 
     return (
         <BrowserRouter>

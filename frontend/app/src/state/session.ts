@@ -242,7 +242,7 @@ export const sessionActiveContainersState = atomFamily<ActiveContainers, number 
     key: "sessionActiveContainers",
     default: {
         [Variable.CognitiveLoad]: {active: false, display: "line"},
-        [Variable.PerceivedDifficulty]: {active: false, display: "line"},
+        [Variable.PerceivedDifficulty]: {active: true, display: "line"},
         [Variable.Familiarity]: {active: false, display: "line"},
         [Variable.InformationProcessingIndex]: {active: false, display: "line"},
         [Variable.PhysiologicalArousal]: {active: false, display: "line"},
