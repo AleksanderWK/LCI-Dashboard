@@ -17,20 +17,11 @@ const useStyles = makeStyles((theme: Theme) =>
             height: "100%",
             position: "relative"
         },
-        contentNoStudent: {
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gridTemplateRows: "auto 1fr",
-            gap: theme.spacing(2),
-            position: "relative",
-            height: "100%",
-            width: "100%",
-            boxSizing: "border-box"
-        },
         content: {
             display: "grid",
             gridTemplateColumns: "1fr",
             gridTemplateRows: "auto 1fr",
+            gap: theme.spacing(2),
             position: "relative",
             height: "100%",
             width: "100%",
@@ -60,9 +51,7 @@ export default function Container(props: Props): JSX.Element {
 
     return (
         <Card variant="outlined" className={classes.card}>
-            <CardContent className={selectedSession == null ? classes.content : classes.contentNoStudent}>
-                {props.children}
-            </CardContent>
+            <CardContent className={classes.content}>{props.children}</CardContent>
 
             <ResizeIcon className={classes.resizeIcon} color="action" />
         </Card>
