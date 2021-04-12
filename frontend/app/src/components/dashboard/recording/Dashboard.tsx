@@ -1,6 +1,9 @@
 import {Variable} from "../../../constants";
-import {createStyles, makeStyles} from "@material-ui/core";
+import {createStyles, makeStyles, Typography} from "@material-ui/core";
 import Container from "./Container";
+import React from "react";
+import {useRecoilValue} from "recoil";
+import {selectedRecordingActiveContainersState} from "../../../state/recordedSession";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -22,11 +25,18 @@ const useStyles = makeStyles(() =>
 function Dashboard(): JSX.Element {
     const classes = useStyles();
 
+    const activeContainers = useRecoilValue(selectedRecordingActiveContainersState);
+
     return (
         <div className={classes.dashboard}>
-            {Object.values(Variable).map((variable) => {
-                return <Container key={variable} variable={variable} />;
-            })}
+            {Object.values(Variable).every((variable) => activeContainers[variable] === false) && (
+                <Typography>No charts added</Typography>
+            )}
+            {Object.values(Variable)
+                .filter((variable) => activeContainers[variable])
+                .map((variable) => {
+                    return <Container key={variable} variable={variable} />;
+                })}
         </div>
     );
 }

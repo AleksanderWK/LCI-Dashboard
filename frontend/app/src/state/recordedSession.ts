@@ -1,6 +1,5 @@
-import {atom, selector} from "recoil";
+import {atom, atomFamily, selector} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
-import {Session} from "./session";
 
 /*
  * An atom that stores the id of a session that has been recorded and selected
@@ -87,4 +86,49 @@ export const recordingInterval = selector<TimeInterval | undefined>({
 export const currentRecordingInterval = atom<TimeInterval | undefined>({
     key: "currentRecordingInterval",
     default: recordingInterval
+});
+
+/*
+ * State for recorded sessions active containers / select charts
+ */
+
+export interface RecordingActiveContainers {
+    [Variable.CognitiveLoad]: boolean;
+    [Variable.PerceivedDifficulty]: boolean;
+    [Variable.Familiarity]: boolean;
+    [Variable.InformationProcessingIndex]: boolean;
+    [Variable.PhysiologicalArousal]: boolean;
+    [Variable.Engagement]: boolean;
+    [Variable.PhysiologicalStress]: boolean;
+    [Variable.EmotionalRegulation]: boolean;
+    [Variable.MotionStability]: boolean;
+    [Variable.EnergySpentFatigue]: boolean;
+}
+
+export const recordingActiveContainersState = atomFamily<RecordingActiveContainers, number | null>({
+    key: "recordingActiveContainers",
+    default: {
+        [Variable.CognitiveLoad]: true,
+        [Variable.PerceivedDifficulty]: true,
+        [Variable.Familiarity]: true,
+        [Variable.InformationProcessingIndex]: true,
+        [Variable.PhysiologicalArousal]: true,
+        [Variable.Engagement]: true,
+        [Variable.PhysiologicalStress]: true,
+        [Variable.EmotionalRegulation]: true,
+        [Variable.MotionStability]: true,
+        [Variable.EnergySpentFatigue]: true
+    }
+});
+
+export const selectedRecordingActiveContainersState = selector<RecordingActiveContainers>({
+    key: "selectedRecordingActiveContainers",
+    get: ({get}) => {
+        const id = get(selectedRecordedSessionIdState);
+        return get(recordingActiveContainersState(id));
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedRecordedSessionIdState);
+        set(recordingActiveContainersState(id), newValue);
+    }
 });
