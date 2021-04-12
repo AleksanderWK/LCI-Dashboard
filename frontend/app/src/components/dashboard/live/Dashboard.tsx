@@ -64,13 +64,12 @@ function Dashboard(): JSX.Element {
     const selectedSessionId = useRecoilValue(selectedSessionIdState);
     const allSessions = useRecoilValue(allSessionsState);
     const selectedAllSessionsVariable = useRecoilValue(selectedAllSessionVariableState);
-    let totalW = 0;
 
+    let totalW = 0;
     const decideX = (): number => {
         if (columns) {
             const temp = totalW;
             totalW += 2;
-            console.log(totalW);
             return temp % columns;
         }
         return 0;
@@ -82,126 +81,88 @@ function Dashboard(): JSX.Element {
 
     return (
         <>
-            {selectedSessionId != null ? (
-                <>
-                    {Object.values(Variable).every((variable) => activeContainers[variable].active === false) ? (
-                        <div className={classes.feedback}>
-                            <Typography>No views selected</Typography>
-                        </div>
-                    ) : (
-                        <div className={classes.dashboard}>
-                            <ResponsiveGridLayout
-                                style={{position: "relative"}}
-                                breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                                cols={{lg: 6, md: 4, sm: 2, xs: 2, xxs: 1}}
-                                rowHeight={240}
-                                draggableCancel=".noDrag"
-                                layouts={layouts}
-                                isBounded
-                                resizeHandle={
-                                    <ResizeIcon className={`${classes.resizeIcon} ${"noDrag"}`} color="action" />
-                                }
-                                onBreakpointChange={(b, cols) => {
-                                    setColumns(cols);
-                                }}
-                                onLayoutChange={(layout, allLayouts) => {
-                                    if (!layoutsEqual(allLayouts, layouts)) {
-                                        setLayouts(allLayouts);
-                                    }
-                                }}
-                                onResizeStop={(layout, oldItem, newItem) => {
-                                    totalW -= oldItem.w;
-                                    totalW += newItem.w;
-                                }}
-                            >
-                                {Object.values(Variable)
-                                    .filter((variable) => activeContainers[variable].active)
-                                    .map((variable) => {
-                                        return (
-                                            <div
-                                                key={variable}
-                                                data-grid={{
-                                                    i: variable,
-                                                    x: decideX(),
-                                                    y: Infinity,
-                                                    w: 2,
-                                                    h: 1,
-                                                    minH: 1,
-                                                    minW: activeContainers[variable].display === "numeric" ? 1 : 2
-                                                }}
-                                            >
-                                                <Container
-                                                    key={variable}
-                                                    variable={variable}
-                                                    display={activeContainers[variable].display}
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                            </ResponsiveGridLayout>
-                        </div>
-                    )}
-                </>
+            {Object.values(Variable).every((variable) => activeContainers[variable].active === false) ||
+            (selectedAllSessionsVariable == null && selectedSessionId == null) ? (
+                <div className={classes.feedback}>
+                    <Typography>No variables selected</Typography>
+                </div>
             ) : (
-                <>
-                    {selectedAllSessionsVariable == null ? (
-                        <div className={classes.feedback}>
-                            <Typography>No variable selected</Typography>
-                        </div>
-                    ) : (
-                        <div className={classes.dashboard}>
-                            <ResponsiveGridLayout
-                                style={{position: "relative"}}
-                                breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                                cols={{lg: 6, md: 4, sm: 2, xs: 2, xxs: 1}}
-                                rowHeight={240}
-                                draggableCancel=".noDrag"
-                                layouts={layouts}
-                                isBounded
-                                resizeHandle={
-                                    <ResizeIcon className={`${classes.resizeIcon} ${"noDrag"}`} color="action" />
-                                }
-                                onBreakpointChange={(b, cols) => {
-                                    setColumns(cols);
-                                }}
-                                onLayoutChange={(layout, allLayouts) => {
-                                    if (!layoutsEqual(allLayouts, layouts)) {
-                                        setLayouts(allLayouts);
-                                    }
-                                }}
-                                onResizeStop={(layout, oldItem, newItem) => {
-                                    totalW -= oldItem.w;
-                                    totalW += newItem.w;
-                                }}
-                            >
-                                {allSessions.map((allSessionsObject) => {
-                                    return (
-                                        <div
-                                            key={allSessionsObject.sessionId}
-                                            data-grid={{
-                                                i: selectedAllSessionsVariable,
-                                                x: decideX(),
-                                                y: Infinity,
-                                                w: 2,
-                                                h: 1,
-                                                minH: 1,
-                                                minW: 2
-                                            }}
-                                        >
-                                            <Container
-                                                key={allSessionsObject.sessionId}
-                                                variable={(selectedAllSessionsVariable as unknown) as Variable}
-                                                display={"line"}
-                                                studentName={allSessionsObject.studentName}
-                                                id={allSessionsObject.sessionId}
-                                            />
-                                        </div>
-                                    );
-                                })}
-                            </ResponsiveGridLayout>
-                        </div>
-                    )}
-                </>
+                <div className={classes.dashboard}>
+                    <ResponsiveGridLayout
+                        style={{position: "relative"}}
+                        breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+                        cols={{lg: 6, md: 4, sm: 2, xs: 2, xxs: 1}}
+                        rowHeight={240}
+                        draggableCancel=".noDrag"
+                        layouts={layouts}
+                        isBounded
+                        resizeHandle={<ResizeIcon className={`${classes.resizeIcon} ${"noDrag"}`} color="action" />}
+                        onBreakpointChange={(b, cols) => {
+                            setColumns(cols);
+                        }}
+                        onLayoutChange={(layout, allLayouts) => {
+                            if (!layoutsEqual(allLayouts, layouts)) {
+                                setLayouts(allLayouts);
+                            }
+                        }}
+                        onResizeStop={(layout, oldItem, newItem) => {
+                            window.resizeTo(window.innerWidth + 1, window.innerHeight);
+                            window.resizeTo(window.innerWidth - 1, window.innerHeight);
+                            totalW -= oldItem.w;
+                            totalW += newItem.w;
+                        }}
+                    >
+                        {selectedSessionId != null
+                            ? Object.values(Variable)
+                                  .filter((variable) => activeContainers[variable].active)
+                                  .map((variable) => {
+                                      return (
+                                          <div
+                                              key={variable}
+                                              data-grid={{
+                                                  i: variable,
+                                                  x: decideX(),
+                                                  y: Infinity,
+                                                  w: 2,
+                                                  h: 1,
+                                                  minH: 1,
+                                                  minW: activeContainers[variable].display === "numeric" ? 1 : 2
+                                              }}
+                                          >
+                                              <Container
+                                                  key={variable}
+                                                  variable={variable}
+                                                  display={activeContainers[variable].display}
+                                              />
+                                          </div>
+                                      );
+                                  })
+                            : allSessions.map((allSessionsObject) => {
+                                  return (
+                                      <div
+                                          key={allSessionsObject.sessionId}
+                                          data-grid={{
+                                              i: selectedAllSessionsVariable,
+                                              x: decideX(),
+                                              y: Infinity,
+                                              w: 2,
+                                              h: 1,
+                                              minH: 1,
+                                              minW: 2
+                                          }}
+                                      >
+                                          <Container
+                                              key={allSessionsObject.sessionId}
+                                              variable={(selectedAllSessionsVariable as unknown) as Variable}
+                                              display={"line"}
+                                              studentName={allSessionsObject.studentName}
+                                              id={allSessionsObject.sessionId}
+                                          />
+                                      </div>
+                                  );
+                              })}
+                    </ResponsiveGridLayout>
+                </div>
             )}
         </>
     );

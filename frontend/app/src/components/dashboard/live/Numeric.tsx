@@ -35,7 +35,7 @@ function Numeric(props: Props): JSX.Element {
     const classes = useStyles();
     const dataPoint = !props.id
         ? useRecoilValue(selectedSessionLastValueState(props.variable))
-        : useRecoilValue(sessionVariableDataState([props.variable, props.id])).slice(-1)[0];
+        : useRecoilValue(sessionVariableDataState([props.variable, props.id])).slice(-1)[0][1];
 
     return (
         <div className={`${"noDrag"} ${classes.numericWrapper}`}>

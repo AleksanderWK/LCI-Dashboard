@@ -111,6 +111,7 @@ function LineChart(props: Props): JSX.Element {
 
     const selectedSessionData = useRecoilValue(selectedSessionDataState);
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const dashboardLayout = useRecoilValue(selectedSessionDashboardLayoutsState);
     const dashboardColumns = useRecoilValue(selectedSessionDashboardLayoutsState);
 
     let allSessionsData: [number, number][] | null = null;
@@ -153,7 +154,7 @@ function LineChart(props: Props): JSX.Element {
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers, dashboardColumns]);
+    }, [activeContainers, dashboardLayout]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} className={`${"noDrag"}`} />;
 }
