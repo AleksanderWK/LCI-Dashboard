@@ -9,9 +9,13 @@ verify_ssl = true
 pandas = "*"
 websockets = "*"
 websocket-client = "*"
-autobahn = {extras = ["asyncio"],version = "*"}
 python-baseconv = "*"
 neurokit2 = "*"
 pywavelets = "*"
 numpy = "*"
+heartpy = "*"
+tobii-research = "*"
+click = "*"
 
+[requires]
+python_version = "3.6"

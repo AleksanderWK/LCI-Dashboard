@@ -1,5 +1,5 @@
 import {Layouts} from "react-grid-layout";
-import {atom, atomFamily, selector, selectorFamily} from "recoil";
+import {atom, atomFamily, selector, selectorFamily, useRecoilValue} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
 import {studentState, Student} from "./student";
 
@@ -355,5 +355,49 @@ export const selectedSessionDashboardColumnsState = selector<number | undefined>
         if (id) {
             set(dashboardColumnsState(id), newValue);
         }
+    }
+});
+
+export interface allsessionsObject {
+    sessionId: number;
+    studentName: string;
+    data: [number, number][];
+}
+
+/*
+ *  A selectorFamily that returns the data for a given variable and session id
+ */
+export const sessionVariableDataState = selectorFamily<[number, number][], [Variable, number]>({
+    key: "sessionVariableData",
+    get: (Parameters: [Variable, number]) => ({get}) => {
+        return get(sessionDataState(Parameters[1]))[Parameters[0]];
+    }
+});
+
+/*
+ *  An atom that stores which variable is selected for the all sessions view
+ */
+export const selectedAllSessionVariableState = atom<Variable | null>({
+    key: "selectedAllSessionVariable",
+    default: null
+});
+
+/*
+ *  A selector that returns array of objects that each contain student name and session data for
+ *  the currently selected variable.
+ */
+export const allSessionsState = selector<allsessionsObject[]>({
+    key: "allSessions",
+    get: ({get}) => {
+        const result: allsessionsObject[] = [];
+        const sessions = get(sessionsState);
+        const selectedVariable = get(selectedAllSessionVariableState);
+        sessions.forEach((session) => {
+            if (selectedVariable != null) {
+                const data = get(sessionVariableDataState([selectedVariable, session._id]));
+                result.push({sessionId: session._id, studentName: session.student.name, data: data});
+            }
+        });
+        return result;
     }
 });

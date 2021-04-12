@@ -1,3 +1,6 @@
 /__pycache__
 /calculators/__pycache__
 /datamodels/__pycache__
+/devices/openface/bin
+/devices/openface/processed
+/devices/openpose/bin
