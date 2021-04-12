@@ -1,12 +1,13 @@
 import React from "react";
 import {createStyles, makeStyles, Theme, Typography, Button, CardActions} from "@material-ui/core";
-import {useRecoilCallback, useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilCallback, useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
 import {quitSessionPopupOpenState} from "../../state/popup";
 import {
     selectedSessionIdState,
     selectedSessionRecordingState,
     selectedSessionState,
     sessionIdsState,
+    sessionRecordingState,
     sessionsState
 } from "../../state/session";
 import {useHistory} from "react-router-dom";
@@ -45,6 +46,10 @@ export default function QuitSesson(): JSX.Element {
     const selectedSession = useRecoilValue(selectedSessionState);
     const sessions = useRecoilValue(sessionsState);
 
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
+    const allSessions = useRecoilValue(sessionIdsState);
+    const resetSessionIds = useResetRecoilState(sessionIdsState);
+
     // Stops recording, closes popup, sets session end time, terminates session and goes to the startview
     const quitSession = () => {
         setRecording({status: false, startTime: null, recordingId: null});
@@ -79,19 +84,57 @@ export default function QuitSesson(): JSX.Element {
         ipcSend("terminateSession", sessions.find((session) => session._id == sessionId)?.sessionCode);
     });
 
+    const quitAllSessions = () => {
+        resetAllSessionRecordings();
+        allSessions.forEach((id) => {
+            ipcSend("updateSessionEndTime", {
+                _id: id,
+                timestamp: new Date().getTime()
+            });
+        });
+        removeAllSessions();
+        setPopupOpen(false);
+
+        // Navigate to the start view
+        history.push("/");
+    };
+
+    const resetAllSessionRecordings = useRecoilCallback(({reset}) => () => {
+        allSessions.forEach((id) => reset(sessionRecordingState(id)));
+    });
+
+    const removeAllSessions = () => {
+        // For each session id send a terminate message to the backend with that id's session code
+        allSessions.forEach((id) => {
+            ipcSend("terminateSession", sessions.find((session) => session._id == id)?.sessionCode);
+        });
+
+        // Set the list of session ids back to default (an empty list)
+        resetSessionIds();
+    };
+
     return (
         <div className={classes.grid}>
-            <Typography variant="h1">Quit Session</Typography>
+            <Typography variant="h1">
+                Quit {selectedSessionId == null && "All"} Session{selectedSessionId == null && "s"}
+            </Typography>
             <div>
                 <Typography>
-                    Are you sure you want to quit <i>{selectedSession?.sessionName}</i> with{" "}
-                    <i>{selectedSession?.student.name}</i>?
+                    {selectedSessionId == null
+                        ? "Are you sure you want to quit all the sessions?"
+                        : `Are you sure you want to quit ${selectedSession?.sessionName} with ${selectedSession?.student.name}?`}
                 </Typography>
 
                 {recording.status && (
                     <>
                         <br />
                         <Typography>This will also stop the ongoing recording.</Typography>
+                    </>
+                )}
+                {selectedSessionId == null && (
+                    <>
+                        <br />
+                        <Typography>This will also stop all the ongoing recordings.</Typography>
                     </>
                 )}
             </div>
@@ -105,8 +148,13 @@ export default function QuitSesson(): JSX.Element {
                     Cancel
                 </Button>
 
-                <Button variant="contained" color="primary" onClick={quitSession} className={classes.btn}>
-                    Quit session
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={selectedSessionId == null ? quitAllSessions : quitSession}
+                    className={classes.btn}
+                >
+                    Quit session{selectedSessionId == null && "s"}
                 </Button>
             </CardActions>
         </div>

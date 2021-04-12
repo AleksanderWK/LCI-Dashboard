@@ -115,17 +115,19 @@ function XRangeChart(props: Props): JSX.Element {
             const processedData =
                 props.id && sessionESEXRangeData ? [...sessionESEXRangeData] : [...selectedSessionESEXRangeData];
 
-            chart.current.chart.xAxis[0].setExtremes(
-                rawData.length >= FREQUENCY * LIVE_CHART_RANGE
-                    ? rawData.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0]
-                    : undefined,
-                rawData[rawData.length - 1][0],
-                false
-            );
+            if (rawData.length > 0) {
+                chart.current.chart.xAxis[0].setExtremes(
+                    rawData.length >= FREQUENCY * LIVE_CHART_RANGE
+                        ? rawData.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0]
+                        : undefined,
+                    rawData[rawData.length - 1][0],
+                    false
+                );
+            }
 
             chart.current.chart.series[0].setData(processedData, true, {duration: 400});
         }
-    }, [selectedSessionESEXRangeData]);
+    }, [selectedSessionESEXRangeData, sessionESEXRangeData]);
 
     useEffect(() => {
         // If active containers is changed, reflow graph as container size may have changed

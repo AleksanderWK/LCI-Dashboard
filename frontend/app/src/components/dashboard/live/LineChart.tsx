@@ -2,7 +2,7 @@ import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
-import {useRecoilValue} from "recoil";
+import {constSelector, useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
 import {
     selectedSessionActiveContainersState,
@@ -110,14 +110,13 @@ function LineChart(props: Props): JSX.Element {
     const selectedSessionData = useRecoilValue(selectedSessionDataState);
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
 
-    let allSessionsData: [number, number][] | null = null;
-    if (props.id) {
-        allSessionsData = useRecoilValue(sessionVariableDataState([props.variable, props.id])) as [number, number][];
-    }
+    const sessionData = useRecoilValue(
+        props.id ? sessionVariableDataState([props.variable, props.id]) : constSelector(null)
+    );
 
     useEffect(() => {
         if (chart.current) {
-            const data = props.id && allSessionsData ? [...allSessionsData] : [...selectedSessionData[props.variable]];
+            const data = props.id && sessionData ? [...sessionData] : [...selectedSessionData[props.variable]];
 
             const dataLength = data.length;
 
@@ -142,7 +141,7 @@ function LineChart(props: Props): JSX.Element {
             // Higher animation duration than update rate breaks the animation
             chart.current.chart.redraw({duration: 400});
         }
-    }, [selectedSessionData, allSessionsData]);
+    }, [selectedSessionData, sessionData]);
 
     useEffect(() => {
         // If active containers is changed, reflow graph as container size may have changed

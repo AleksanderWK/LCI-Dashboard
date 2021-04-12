@@ -6,6 +6,8 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import WatchIcon from "@material-ui/icons/Watch";
 import AccessibilityNewIcon from "@material-ui/icons/AccessibilityNew";
 import FaceIcon from "@material-ui/icons/Face";
+import {useRecoilValue} from "recoil";
+import {selectedSessionIdState} from "../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -18,8 +20,8 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: theme.spacing(1)
         },
         icon: {
-            width: "16px",
-            height: "16px",
+            width: "20px",
+            height: "20px",
             verticalAlign: "text-bottom",
             marginRight: theme.spacing(1)
         },
@@ -31,20 +33,21 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface IconProps {
     device: Device;
+    color?: string;
 }
 
-function Icon(props: IconProps): JSX.Element {
+export function Icon(props: IconProps): JSX.Element {
     const classes = useStyles();
 
     switch (props.device) {
         case Device.EyeTracker:
-            return <VisibilityOutlinedIcon className={classes.icon} />;
+            return <VisibilityOutlinedIcon className={classes.icon} style={{color: props.color}} />;
         case Device.Wristband:
-            return <WatchIcon className={classes.icon} />;
+            return <WatchIcon className={classes.icon} style={{color: props.color}} />;
         case Device.VideoBody:
-            return <AccessibilityNewIcon className={classes.icon} />;
+            return <AccessibilityNewIcon className={classes.icon} style={{color: props.color}} />;
         default:
-            return <FaceIcon className={classes.icon} />;
+            return <FaceIcon className={classes.icon} style={{color: props.color}} />;
     }
 }
 
@@ -57,6 +60,7 @@ export default function Tooltip(props: Props): JSX.Element {
     const classes = useStyles();
 
     const variableInfo = MMDVariables[props.variable];
+    const selectedSession = useRecoilValue(selectedSessionIdState);
 
     return (
         <MUITooltip
@@ -73,6 +77,7 @@ export default function Tooltip(props: Props): JSX.Element {
                 </div>
             }
             arrow={true}
+            placement={selectedSession == null ? "bottom-start" : "bottom"}
         >
             {props.children}
         </MUITooltip>
