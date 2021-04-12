@@ -1,3 +1,4 @@
+import * as Highcharts from "highcharts";
 import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
 import {studentState, Student} from "./student";
@@ -142,6 +143,14 @@ export const sessionsState = selector<SessionWithStudent[]>({
     }
 });
 
+export interface EducationalSpecificEmotions {
+    [key: string]: boolean;
+    boredom: boolean;
+    frustration: boolean;
+    confusion: boolean;
+    delight: boolean;
+}
+
 export interface Data {
     [Variable.CognitiveLoad]: [number, number][];
     [Variable.PerceivedDifficulty]: [number, number][];
@@ -153,6 +162,7 @@ export interface Data {
     [Variable.EmotionalRegulation]: [number, number][];
     [Variable.MotionStability]: [number, number][];
     [Variable.EnergySpentFatigue]: [number, number][];
+    [Variable.EducationalSpecificEmotions]: [number, EducationalSpecificEmotions][];
 }
 
 /*
@@ -170,7 +180,8 @@ export const sessionDataState = atomFamily<Data, number | null>({
         [Variable.PhysiologicalStress]: [],
         [Variable.EmotionalRegulation]: [],
         [Variable.MotionStability]: [],
-        [Variable.EnergySpentFatigue]: []
+        [Variable.EnergySpentFatigue]: [],
+        [Variable.EducationalSpecificEmotions]: []
     }
 });
 
@@ -194,6 +205,58 @@ export const selectedSessionDataState = selector<Data>({
 /*
  *  A selectorFamily that returns the data for a given variable from the selected session's data
  */
+export const selectedSessionVariableDataState = selectorFamily<
+    [number, number | EducationalSpecificEmotions][],
+    Variable
+>({
+    key: "selectedSessionVariableData",
+    get: (variable: Variable) => ({get}) => {
+        return get(selectedSessionDataState)[variable];
+    }
+});
+
+export interface ESEXRangeData {
+    prevEmotionsIndex: {
+        [key: string]: number;
+        boredom: number;
+        frustration: number;
+        confusion: number;
+        delight: number;
+    };
+    data: Highcharts.XrangePointOptionsObject[];
+}
+
+/*
+ *  An atomFamily that stores ESE data in the correct format for X-range charts, for each session
+ */
+export const sessionESEXRangeDataState = atomFamily<ESEXRangeData, number | null>({
+    key: "sessionESEXRangeData",
+    default: {
+        prevEmotionsIndex: {
+            boredom: 0,
+            frustration: 0,
+            confusion: 0,
+            delight: 0
+        },
+        data: []
+    }
+});
+
+/*
+ *  A selector that returns the ESE data for the selected session
+ */
+export const selectedSessionESEXRangeDataState = selector<ESEXRangeData>({
+    key: "selectedSessionESEXRangeData",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+
+        return get(sessionESEXRangeDataState(id));
+    }
+});
+
+/*
+ *  A selectorFamily that returns the data length for a given variable from the selected session's data
+ */
 export const selectedSessionDataLengthVariableState = selectorFamily<number, Variable>({
     key: "selectedSessionDataLengthVariable",
     get: (variable: Variable) => ({get}) => {
@@ -204,13 +267,29 @@ export const selectedSessionDataLengthVariableState = selectorFamily<number, Var
 /*
  *  A selectorFamily that returns the last value for a given variable from the selected session's data
  */
-export const selectedSessionLastValueState = selectorFamily<number | null, Variable>({
+export const selectedSessionLastValueState = selectorFamily<number | EducationalSpecificEmotions | null, Variable>({
     key: "selectedSessionLastValue",
     get: (variable: Variable) => ({get}) => {
         const data = get(selectedSessionDataState)[variable];
 
         if (data.length > 0) {
             return data.slice(-1)[0][1];
+        } else {
+            return null;
+        }
+    }
+});
+
+export const selectedSessionLastPointState = selectorFamily<
+    [number, EducationalSpecificEmotions | number] | null,
+    Variable
+>({
+    key: "selectedSessionLastPoint",
+    get: (variable: Variable) => ({get}) => {
+        const data = get(selectedSessionDataState)[variable];
+
+        if (data.length > 0) {
+            return data.slice(-1)[0];
         } else {
             return null;
         }
@@ -233,6 +312,7 @@ export interface ActiveContainers {
     [Variable.EmotionalRegulation]: VariableDisplay;
     [Variable.MotionStability]: VariableDisplay;
     [Variable.EnergySpentFatigue]: VariableDisplay;
+    [Variable.EducationalSpecificEmotions]: VariableDisplay;
 }
 
 /*
@@ -250,7 +330,8 @@ export const sessionActiveContainersState = atomFamily<ActiveContainers, number 
         [Variable.PhysiologicalStress]: {active: false, display: "line"},
         [Variable.EmotionalRegulation]: {active: false, display: "line"},
         [Variable.MotionStability]: {active: false, display: "line"},
-        [Variable.EnergySpentFatigue]: {active: false, display: "line"}
+        [Variable.EnergySpentFatigue]: {active: false, display: "line"},
+        [Variable.EducationalSpecificEmotions]: {active: false, display: "line"}
     }
 });
 
@@ -272,7 +353,6 @@ export const selectedSessionActiveContainersState = selector<ActiveContainers>({
 /*
  *  A selectorFamily that accesses a sessions containers active state
  */
-
 export const selectedSessionVariableContainerVisibleState = selectorFamily<VariableDisplay, Variable>({
     key: "selectedSessionVariableContainer",
     get: (variable: Variable) => ({get}) => {
@@ -298,13 +378,16 @@ export const snackOpenState = atom<boolean>({
 export interface allsessionsObject {
     sessionId: number;
     studentName: string;
-    data: [number, number][];
+    data: [number, number | EducationalSpecificEmotions][];
 }
 
 /*
  *  A selectorFamily that returns the data for a given variable and session id
  */
-export const sessionVariableDataState = selectorFamily<[number, number][], [Variable, number]>({
+export const sessionVariableDataState = selectorFamily<
+    [number, number | EducationalSpecificEmotions][],
+    [Variable, number]
+>({
     key: "sessionVariableData",
     get: (Parameters: [Variable, number]) => ({get}) => {
         return get(sessionDataState(Parameters[1]))[Parameters[0]];

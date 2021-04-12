@@ -10,6 +10,8 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue} from "recoil";
+import XRangeChart from "./XRangeChart";
+
 import {
     selectedSessionActiveContainersState,
     selectedSessionDataLengthVariableState,
@@ -112,12 +114,16 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
+
                 {props.id == undefined ? (
                     <>
                         {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                             <CalculatingIndicator variable={props.variable} />
-                        ) : containerOptions[props.variable].display === "line" ? (
+                        ) : containerOptions[props.variable].display === "line" &&
+                          props.variable != Variable.EducationalSpecificEmotions ? (
                             <LineChart variable={props.variable} />
+                        ) : containerOptions[props.variable].display === "line" ? (
+                            <XRangeChart variable={props.variable} />
                         ) : (
                             <Numeric variable={props.variable} />
                         )}
@@ -126,8 +132,10 @@ export default function Container(props: Props): JSX.Element {
                     <>
                         {props.variable && MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                             <CalculatingIndicator variable={props.variable} id={props.id} />
-                        ) : props.display === "line" ? (
+                        ) : props.display === "line" && props.variable != Variable.EducationalSpecificEmotions ? (
                             <LineChart variable={props.variable} id={props.id} />
+                        ) : props.display === "line" ? (
+                            <XRangeChart variable={props.variable} id={props.id} />
                         ) : (
                             <Numeric variable={props.variable} id={props.id} />
                         )}
