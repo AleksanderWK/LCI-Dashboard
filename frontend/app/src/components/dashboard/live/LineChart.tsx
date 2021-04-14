@@ -1,6 +1,6 @@
 import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import React, {RefObject, useRef, useState} from "react";
+import React, {createRef, RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {constSelector, useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
@@ -17,7 +17,7 @@ interface Props {
 }
 
 function LineChart(props: Props): JSX.Element {
-    const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
+    const chart = createRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>();
 
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
@@ -139,7 +139,7 @@ function LineChart(props: Props): JSX.Element {
             }
 
             // Higher animation duration than update rate breaks the animation
-            chart.current.chart.redraw({duration: 400});
+            chart.current.chart.redraw({duration: 500});
         }
     }, [selectedSessionData, sessionData]);
 

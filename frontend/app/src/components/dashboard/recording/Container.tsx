@@ -7,6 +7,7 @@ import Tooltip from "../Tooltip";
 import Menu from "./Menu";
 import LineChart from "./LineChart";
 import ContainerCard from "../ContainerCard";
+import XRangeChart from "./XRangeChart";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -76,8 +77,11 @@ export default function Container(props: Props): JSX.Element {
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-
-                <LineChart variable={props.variable} />
+                {props.variable == Variable.EducationalSpecificEmotions ? (
+                    <XRangeChart variable={props.variable} />
+                ) : (
+                    <LineChart variable={props.variable} />
+                )}
             </>
         </ContainerCard>
     );

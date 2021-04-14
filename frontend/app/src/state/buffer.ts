@@ -1,5 +1,5 @@
 import {atom, atomFamily} from "recoil";
-import {DataPoints} from "../App";
+import {DataPoints} from "../pages/SessionView";
 
 export const sessionCodesState = atom<string[]>({
     key: "sessionCodes",
