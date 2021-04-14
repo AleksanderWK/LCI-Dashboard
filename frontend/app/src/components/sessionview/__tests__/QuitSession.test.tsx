@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {render, screen} from "@testing-library/react";
+import {render, screen, waitFor} from "@testing-library/react";
 import QuitSession from "../QuitSession";
 import {RecoilRoot} from "recoil";
 import {quitSessionPopupOpenState} from "../../../state/popup";
@@ -71,6 +71,8 @@ it("Displays session name and student name correctly", () => {
             <QuitSession />
         </RecoilRoot>
     );
-    expect(screen.getByText("Educational Game")).toBeInTheDocument();
-    expect(screen.getByText(/Aleksander/i)).toBeInTheDocument();
+    waitFor(() => {
+        expect(screen.getByText("Educational Game")).toBeInTheDocument();
+        expect(screen.getByText(/Aleksander/i)).toBeInTheDocument();
+    });
 });
