@@ -219,7 +219,6 @@ export const selectedSessionLastValueState = selectorFamily<number | null, Varia
 });
 
 export interface VariableDisplay {
-    active: boolean;
     display: "line" | "numeric";
 }
 
@@ -238,7 +237,7 @@ export interface ActiveContainers {
 
 /*
  *   An atomFamily that stores the active containers for each session
- */
+ 
 export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
     key: "sessionActiveContainers",
     default: {
@@ -254,11 +253,21 @@ export const sessionActiveContainersState = atomFamily<ActiveContainers, number 
         [Variable.EnergySpentFatigue]: {active: false, display: "line"}
     }
 });
+*/
 
-/*
- *  A selector for getting and setting display object for all containers in a session
- */
-export const selectedSessionActiveContainersState = selector<ActiveContainers>({
+export type View = "chart" | "numeric";
+
+export const containerState = atomFamily<View, [number | null, Variable]>({
+    key: "container",
+    default: "chart"
+});
+
+export const sessionActiveContainersState = atomFamily<Variable[], number | null>({
+    key: "sessionActiveContainers",
+    default: []
+});
+
+export const selectedSessionActiveContainersState = selector<Variable[]>({
     key: "selectedSessionActiveContainers",
     get: ({get}) => {
         const id = get(selectedSessionIdState);
@@ -271,9 +280,24 @@ export const selectedSessionActiveContainersState = selector<ActiveContainers>({
 });
 
 /*
+ *  A selector for getting and setting display object for all containers in a session
+ 
+export const selectedSessionActiveContainersState = selector<ActiveContainers>({
+    key: "selectedSessionActiveContainers",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+        return get(sessionActiveContainersState(id));
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedSessionIdState);
+        set(sessionActiveContainersState(id), newValue);
+    }
+});
+*/
+/*
  *  A selectorFamily that accesses a sessions containers active state
  */
-
+/*
 export const selectedSessionVariableContainerVisibleState = selectorFamily<VariableDisplay, Variable>({
     key: "selectedSessionVariableContainer",
     get: (variable: Variable) => ({get}) => {
@@ -290,7 +314,7 @@ export const selectedSessionVariableContainerVisibleState = selectorFamily<Varia
         });
     }
 });
-
+*/
 export const snackOpenState = atom<boolean>({
     key: "snackOpen",
     default: false

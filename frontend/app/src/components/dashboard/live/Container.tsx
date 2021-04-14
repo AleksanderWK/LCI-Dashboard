@@ -9,12 +9,13 @@ import {makeStyles, Theme, createStyles, IconButton, Typography} from "@material
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
-import {useRecoilState, useRecoilValue} from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {
-    selectedAllSessionVariableState,
+    containerState,
     selectedSessionActiveContainersState,
     selectedSessionDataLengthVariableState,
-    sessionVariableDataState
+    selectedSessionIdState,
+    View
 } from "../../../state/session";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -34,106 +35,82 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         infoIcon: {
             cursor: "default"
-        },
-        drag: {}
+        }
     })
 );
 
 interface Props {
     variable: Variable;
-    display: "line" | "numeric";
-    studentName?: string;
-    id?: number;
 }
 
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
-    const [containerOptions, setContainerOptions] = useRecoilState(selectedSessionActiveContainersState);
+    const dataLength = useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
+
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
+    const [container, setContainer] = useRecoilState(containerState([selectedSessionId, props.variable]));
+    const setActiveContainers = useSetRecoilState(selectedSessionActiveContainersState);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
-    const dataLength = props.id
-        ? useRecoilValue(sessionVariableDataState([props.variable, props.id])).length
-        : useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
-
-    function setChartType(chartType: "line" | "numeric"): void {
-        const newContainerOptions = {...containerOptions};
-        newContainerOptions[props.variable] = {...containerOptions[props.variable], display: chartType};
-        setContainerOptions(newContainerOptions);
+    function setView(view: View): void {
+        setContainer(view);
     }
 
     function removeView(): void {
-        const newContainerOptions = {...containerOptions};
-        newContainerOptions[props.variable] = {...containerOptions[props.variable], active: false};
-        setContainerOptions(newContainerOptions);
+        setActiveContainers((prevState) => {
+            return prevState.splice(prevState.indexOf(props.variable), 1);
+        });
     }
 
     return (
         <ContainerCard>
             <>
                 <div className={classes.header}>
-                    <Typography variant="h2" noWrap={true} style={{userSelect: "none"}}>
-                        {!props.id ? MMDVariables[props.variable].name : props.studentName}
+                    <Typography variant="h2" noWrap={true}>
+                        {MMDVariables[props.variable].name}
                     </Typography>
 
-                    <div className={`${classes.menu} ${"noDrag"}`} ref={menuAnchorElement}>
-                        {!props.id && (
-                            <>
-                                <Tooltip variable={props.variable}>
-                                    <IconButton
-                                        aria-label="info"
-                                        disableFocusRipple={true}
-                                        disableRipple={true}
-                                        disableTouchRipple={true}
-                                        className={`${classes.iconButton} ${classes.infoIcon}`}
-                                    >
-                                        <InfoOutlinedIcon color="action" />
-                                    </IconButton>
-                                </Tooltip>
-                                <IconButton
-                                    aria-label="settings"
-                                    className={classes.iconButton}
-                                    onClick={() => setMenuOpen(true)}
-                                >
-                                    <MoreVertIcon color="action" />
-                                </IconButton>
-                            </>
-                        )}
+                    <div className={classes.menu} ref={menuAnchorElement}>
+                        <Tooltip variable={props.variable}>
+                            <IconButton
+                                aria-label="info"
+                                disableFocusRipple={true}
+                                disableRipple={true}
+                                disableTouchRipple={true}
+                                className={`${classes.iconButton} ${classes.infoIcon}`}
+                            >
+                                <InfoOutlinedIcon color="action" />
+                            </IconButton>
+                        </Tooltip>
+                        <IconButton
+                            aria-label="settings"
+                            className={classes.iconButton}
+                            onClick={() => setMenuOpen(true)}
+                        >
+                            <MoreVertIcon color="action" />
+                        </IconButton>
                     </div>
 
                     <Menu
                         open={menuOpen}
                         anchorEl={menuAnchorElement.current}
-                        isDetailedView={containerOptions[props.variable].display === "line"}
-                        onShowMore={() => setChartType("line")}
-                        onShowLess={() => setChartType("numeric")}
+                        isDetailedView={container === "chart"}
+                        onShowMore={() => setView("chart")}
+                        onShowLess={() => setView("numeric")}
                         onRemoveView={() => removeView()}
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                {props.id == undefined ? (
-                    <>
-                        {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
-                            <CalculatingIndicator variable={props.variable} />
-                        ) : containerOptions[props.variable].display === "line" ? (
-                            <LineChart variable={props.variable} />
-                        ) : (
-                            <Numeric variable={props.variable} />
-                        )}
-                    </>
+                {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
+                    <CalculatingIndicator variable={props.variable} />
+                ) : container === "chart" ? (
+                    <LineChart variable={props.variable} />
                 ) : (
-                    <>
-                        {props.variable && MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
-                            <CalculatingIndicator variable={props.variable} />
-                        ) : props.display === "line" ? (
-                            <LineChart variable={props.variable} />
-                        ) : (
-                            <Numeric variable={props.variable} />
-                        )}
-                    </>
+                    <Numeric variable={props.variable} />
                 )}
             </>
         </ContainerCard>
