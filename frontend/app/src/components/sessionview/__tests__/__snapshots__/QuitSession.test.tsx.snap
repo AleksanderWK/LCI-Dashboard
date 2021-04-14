@@ -9,18 +9,22 @@ exports[`QuitSession matches snapshot 1`] = `
       <h1
         class="MuiTypography-root MuiTypography-h1"
       >
-        Quit Session
+        Quit 
+        All
+         Session
+        s
       </h1>
       <div>
         <p
           class="MuiTypography-root MuiTypography-body1"
         >
-          Are you sure you want to quit 
-          <i />
-           with
-           
-          <i />
-          ?
+          Are you sure you want to quit all the sessions?
+        </p>
+        <br />
+        <p
+          class="MuiTypography-root MuiTypography-body1"
+        >
+          This will also stop all the ongoing recordings.
         </p>
       </div>
       <div
@@ -49,6 +53,7 @@ exports[`QuitSession matches snapshot 1`] = `
             class="MuiButton-label"
           >
             Quit session
+            s
           </span>
           <span
             class="MuiTouchRipple-root"
