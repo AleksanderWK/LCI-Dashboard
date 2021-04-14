@@ -71,7 +71,12 @@ class CognitiveLoadCalculator(MMDVCalculator):
 
                 # Calculate LHIPA
                 if (len(d) > 0):
-                    lhipa = self.lhipa(d, signal_duration)
+                    lhipa = 0
+
+                    try:
+                        lhipa = self.lhipa(d, signal_duration)
+                    except:
+                        pass
 
                     if (lhipa != 0):
                         # LHIPA is expected to decrease with increased cognitive load (therefore taking the reverse)
