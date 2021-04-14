@@ -18,21 +18,24 @@ class OpenPoseInstance:
 
     def __init__(self):
         self.clearOutputDirectory()
-    
+
     def clearOutputDirectory(self):
-        shutil.rmtree("./devices/openpose/bin/" + self.out_dir)
+        try:
+            shutil.rmtree("./devices/openpose/bin/" + self.out_dir)
+        except:
+            pass
 
     def startProcess(self):
         try:
             self.process = Popen("bin\OpenPoseDemo.exe" +
-                                " --net_resolution -1x80" +
-                                " --tracking 1" +
-                                " --number_people_max 1" +
-                                " --process_real_time" +
-                                " --write_json " + self.out_dir +
-                                " --keypoint_scale 4",
-                                cwd= os.getcwd() + "\devices\openpose\\bin",
-                                shell=True)
+                                 " --net_resolution -1x80" +
+                                 " --tracking 1" +
+                                 " --number_people_max 1" +
+                                 " --process_real_time" +
+                                 " --write_json " + self.out_dir +
+                                 " --keypoint_scale 4",
+                                 cwd=os.getcwd() + "\devices\openpose\\bin",
+                                 shell=True)
         except FileNotFoundError:
             self.process = None
             print(
@@ -46,7 +49,7 @@ class OpenPoseInstance:
         try:
             while True:
                 self.file = open(
-                    "./devices/openpose/bin/" + self.out_dir + self.getCurrentFileName(), 
+                    "./devices/openpose/bin/" + self.out_dir + self.getCurrentFileName(),
                 )
                 data = json.load(self.file)
                 keypoints = data["people"][0]["pose_keypoints_2d"]
@@ -56,7 +59,6 @@ class OpenPoseInstance:
                 self.file.close()
         except (FileNotFoundError, json.decoder.JSONDecodeError):
             pass
-    
 
     def getCurrentFileName(self):
         """
@@ -65,7 +67,6 @@ class OpenPoseInstance:
             etc.
         """
         return str(self.current_frame).zfill(12) + "_keypoints.json"
-
 
     def keypointsToDataRows(self, keypoints):
         dataRows = []
