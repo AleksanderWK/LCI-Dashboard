@@ -17,6 +17,14 @@ Install all dependencies needed:
 pipenv install
 ```
 
+## Run The Tests
+
+Run the following command while being in the backend-root folder:
+
+```
+pipenv run pytest
+```
+
 ## Run the Program
 
 Start the virtual environment:
@@ -146,12 +154,4 @@ Run the following command from `backend/devices/openpose/bin/models`:
 
 ```
 getBaseModels.bat
-```
-
-## Run The Tests
-
-Run the following command while being in the backend-root folder:
-
-```
-pipenv run pytest
 ```
