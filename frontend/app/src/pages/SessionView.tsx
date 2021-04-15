@@ -14,7 +14,7 @@ import QuitSession from "../components/sessionview/QuitSession";
 import SelectCharts from "../components/sessionview/SelectCharts";
 import {emotionsColorMapper, emotionsIndexMapper, FREQUENCY, Variable} from "../constants";
 import {ipcOn, ipcSend} from "../ipc";
-import {bufferState, sessionCodesState} from "../state/buffer";
+import {callbackFunctionsState} from "../state/chart";
 import {createSessionValuesState} from "../state/createSession";
 import {
     addStudentPopupOpenState,
@@ -32,9 +32,6 @@ import {
     SessionWithStudent,
     snackOpenState
 } from "../state/session";
-import {useInterval} from "../utils/useInterval";
-
-const BUFFERSIZE = 4;
 
 export interface DataPoints {
     [key: string]: number | EducationalSpecificEmotions;
@@ -65,85 +62,58 @@ export default function SessionView(): JSX.Element {
 
     const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
 
-    const sessionCodes = useRecoilValue(sessionCodesState);
-
     const snackOpen = useRecoilValue(snackOpenState);
 
-    const addDataPointToState = useRecoilCallback(({snapshot, set}) => (data: DataPoints, sessionCode: string) => {
-        const now: number = new Date().getTime();
+    // Adds the incoming data point to state
+    const addDataPointToState = useRecoilCallback(
+        ({snapshot, set}) => ({dataPoints, sessionCode, timestamp}: DataPayload) => {
+            const now = Math.round(timestamp);
 
-        // Find the Session with the same sessionCode as this data has
-        const session: SessionWithStudent | undefined = snapshot
-            .getLoadable(sessionsState)
-            .getValue()
-            .find((session) => session.sessionCode == sessionCode);
+            // Find the Session with the same sessionCode as this data has
+            const session: SessionWithStudent | undefined = snapshot
+                .getLoadable(sessionsState)
+                .getValue()
+                .find((session) => session.sessionCode == sessionCode);
 
-        // If we have found the session, set the data in the session state
-        if (session != undefined) {
-            const sessionId: number = session._id;
+            // If we have found the session, set the data in the session state
+            if (session != undefined) {
+                const sessionId: number = session._id;
 
-            // Set the data in session state
-            set(sessionDataState(sessionId), (prevVal) => {
-                return (Object.fromEntries(
-                    Object.entries(prevVal).map(([variable, values]) => [
-                        variable,
-                        [
-                            ...values,
-                            ...(variable == Variable.EducationalSpecificEmotions
-                                ? [[now, data[variable] as EducationalSpecificEmotions]]
-                                : []),
-                            ...(variable != Variable.EducationalSpecificEmotions && +data[variable] != -1
-                                ? [[now, +((data[variable] as unknown) as number)]]
-                                : [])
-                        ]
-                    ])
-                ) as unknown) as Data;
-            });
-
-            // Convert raw ESE data to correct format for X-range chart and store it for session
-            computeESEXRangeData(now, data[Variable.EducationalSpecificEmotions], sessionId);
-
-            // If this session is recording push the data to the database
-            const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
-            if (sessionRecording.status) {
-                ipcSend("pushDataPointToSession", {
-                    timestamp: now,
-                    data: data,
-                    sessionId: sessionId,
-                    recordingId: sessionRecording.recordingId
+                // Set the data in session state
+                set(sessionDataState(sessionId), (prevVal) => {
+                    return (Object.fromEntries(
+                        Object.entries(prevVal).map(([variable, values]) => [
+                            variable,
+                            [
+                                ...values,
+                                ...(variable == Variable.EducationalSpecificEmotions
+                                    ? [[now, dataPoints[variable] as EducationalSpecificEmotions]]
+                                    : []),
+                                ...(variable != Variable.EducationalSpecificEmotions && +dataPoints[variable] != -1
+                                    ? [[now, +((dataPoints[variable] as unknown) as number)]]
+                                    : [])
+                            ]
+                        ])
+                    ) as unknown) as Data;
                 });
+
+                computeESEXRangeData(now, dataPoints[Variable.EducationalSpecificEmotions], sessionId);
+
+                // If this session is recording push the data to the database
+                const sessionRecording = snapshot.getLoadable(sessionRecordingState(sessionId)).getValue();
+                if (sessionRecording.status) {
+                    ipcSend("pushDataPointToSession", {
+                        timestamp: now,
+                        data: dataPoints,
+                        sessionId: sessionId,
+                        recordingId: sessionRecording.recordingId
+                    });
+                }
             }
         }
-    });
+    );
 
-    const updateBuffer = useRecoilCallback(({snapshot, set}) => (sessionCode: string, data: DataPoints) => {
-        const sessionCodes = snapshot.getLoadable(sessionCodesState).getValue();
-
-        if (!sessionCodes.includes(sessionCode)) {
-            set(sessionCodesState, (prev) => [...prev, sessionCode]);
-        }
-
-        const buffer = snapshot.getLoadable(bufferState(sessionCode)).getValue();
-
-        console.log(buffer);
-
-        if (buffer.active) {
-            set(bufferState(sessionCode), (prevBuffer) => {
-                return {
-                    ...prevBuffer,
-                    data: [...prevBuffer.data, data]
-                };
-            });
-        } else {
-            set(bufferState(sessionCode), (prevBuffer) => {
-                return {
-                    active: prevBuffer.data.length >= BUFFERSIZE,
-                    data: [...prevBuffer.data, data]
-                };
-            });
-        }
-    });
-
+    // Convert raw ESE data to correct format for X-range chart and store it for session
     const computeESEXRangeData = useRecoilCallback(
         ({set}) => (timestamp: number, emotions: EducationalSpecificEmotions, sessionId: number) => {
             set(sessionESEXRangeDataState(sessionId), (prev) => {
@@ -178,33 +148,27 @@ export default function SessionView(): JSX.Element {
         }
     );
 
-    const popFromBuffer = useRecoilCallback(({snapshot, set}) => (sessionCode: string) => {
-        const buffer = snapshot.getLoadable(bufferState(sessionCode)).getValue();
-
-        if (buffer.active) {
-            const dataPoints = buffer.data[0];
-
-            set(bufferState(sessionCode), (prevBuffer) => {
-                return {
-                    ...prevBuffer,
-                    data: [...prevBuffer.data.slice(1)]
-                };
-            });
-
-            addDataPointToState(dataPoints, sessionCode);
-        }
-    });
-
-    useInterval(() => {
-        sessionCodes.forEach((sessionCode) => {
-            popFromBuffer(sessionCode);
+    // Calls every chart callback function (i.e., every update function for every active chart)
+    const updateCharts = useRecoilCallback(({snapshot}) => (): void => {
+        Object.values(snapshot.getLoadable(callbackFunctionsState).getValue()).forEach((callback) => {
+            callback();
         });
-    }, 500);
+    });
 
     useEffect(() => {
         ipcOn("newData", (event: any, data: DataPayload) => {
-            updateBuffer(data.sessionCode, data.dataPoints);
+            addDataPointToState(data);
         });
+
+        // Update all charts every 0.5s
+        const updateInterval = setInterval(() => {
+            updateCharts();
+        }, 500);
+
+        return () => {
+            // Stop chart update interval when leaving session view
+            clearInterval(updateInterval);
+        };
     }, []);
 
     return (
