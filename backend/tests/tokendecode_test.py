@@ -6,4 +6,4 @@ def test_codes():
         for code in lines:
             ip, random = decodeToken(code.strip())
             assert ip == "192.168.38.101"
-            print(code.strip(), ip, ip == "192.168.38.101")
+            #print(code.strip(), ip, ip == "192.168.38.101")
