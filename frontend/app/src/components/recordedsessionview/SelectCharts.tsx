@@ -83,7 +83,6 @@ export default function SelectCharts(): JSX.Element {
                 {Object.values(Variable).some((variable) => activeContainers[variable] === false) ? (
                     <Button
                         className={classes.btn}
-                        data-testid="btn-select-all"
                         onClick={() => {
                             handleCheckAll(true);
                         }}
@@ -100,7 +99,6 @@ export default function SelectCharts(): JSX.Element {
                 ) : (
                     <Button
                         className={classes.btn}
-                        data-testid="btn-remove-all"
                         onClick={() => {
                             handleCheckAll(false);
                         }}
