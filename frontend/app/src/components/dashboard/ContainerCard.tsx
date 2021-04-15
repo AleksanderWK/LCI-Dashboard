@@ -5,7 +5,8 @@ const useStyles = makeStyles((theme: Theme) =>
         card: {
             width: "100%",
             height: "100%",
-            position: "relative"
+            position: "relative",
+            boxSizing: "border-box"
         },
         content: {
             display: "grid",
@@ -16,8 +17,8 @@ const useStyles = makeStyles((theme: Theme) =>
             height: "100%",
             width: "100%",
             boxSizing: "border-box",
-            "$:hover": {
-                cursor: "default"
+            "&:last-child": {
+                paddingBottom: 16
             }
         },
         resizeIcon: {

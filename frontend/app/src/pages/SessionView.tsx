@@ -1,27 +1,14 @@
-import {Snackbar} from "@material-ui/core";
-import {Alert} from "@material-ui/lab";
 import React, {useEffect} from "react";
-import {useRecoilCallback, useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
+import {useRecoilCallback} from "recoil";
 import PageContainer from "../components/common/PageContainer";
-import Popup from "../components/common/Popup";
-import PopupContainer from "../components/common/PopupContainer";
-import AddStudent from "../components/createsessionview/AddStudent";
-import CreateSession from "../components/createsessionview/CreateSession";
 import Dashboard from "../components/dashboard/live/Dashboard";
 import Header from "../components/sessionview/Header";
 import Menu from "../components/sessionview/Menu/Menu";
-import QuitSession from "../components/sessionview/QuitSession";
-import SelectCharts from "../components/sessionview/SelectCharts";
+import Popups from "../components/sessionview/Popups";
+import Snackbars from "../components/sessionview/Snackbars";
 import {emotionsColorMapper, emotionsIndexMapper, FREQUENCY, Variable} from "../constants";
 import {ipcOn, ipcSend} from "../ipc";
 import {callbackFunctionsState} from "../state/chart";
-import {createSessionValuesState} from "../state/createSession";
-import {
-    addStudentPopupOpenState,
-    createSessionPopupOpenState,
-    quitSessionPopupOpenState,
-    selectChartsPopupOpenState
-} from "../state/popup";
 import {
     Data,
     EducationalSpecificEmotions,
@@ -29,8 +16,7 @@ import {
     sessionESEXRangeDataState,
     sessionRecordingState,
     sessionsState,
-    SessionWithStudent,
-    snackOpenState
+    SessionWithStudent
 } from "../state/session";
 
 export interface DataPoints {
@@ -55,15 +41,6 @@ export interface DataPayload {
 }
 
 export default function SessionView(): JSX.Element {
-    const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
-    const [createSessionPopupOpen, setCreateSessionPopupOpen] = useRecoilState(createSessionPopupOpenState);
-    const [selectChartsPopupOpen, setSelectChartsPopupOpen] = useRecoilState(selectChartsPopupOpenState);
-    const [quitSessionPopupOpen, setQuitSessionPopupOpen] = useRecoilState(quitSessionPopupOpenState);
-
-    const resetCreateSessionValues = useResetRecoilState(createSessionValuesState);
-
-    const snackOpen = useRecoilValue(snackOpenState);
-
     // Adds the incoming data point to state
     const addDataPointToState = useRecoilCallback(
         ({snapshot, set}) => ({dataPoints, sessionCode, timestamp}: DataPayload) => {
@@ -180,48 +157,9 @@ export default function SessionView(): JSX.Element {
                 </>
             </PageContainer>
 
-            <PopupContainer
-                open={createSessionPopupOpen || addStudentPopupOpen || selectChartsPopupOpen || quitSessionPopupOpen}
-                onClose={(e) => {
-                    if (addStudentPopupOpen) {
-                        e.preventDefault();
-                        setAddStudentPopupOpen(false);
-                    } else if (createSessionPopupOpen) {
-                        setCreateSessionPopupOpen(false);
-                        setTimeout(() => {
-                            resetCreateSessionValues();
-                        }, 100);
-                    } else if (selectChartsPopupOpen) {
-                        setSelectChartsPopupOpen(false);
-                    } else if (quitSessionPopupOpen) {
-                        setQuitSessionPopupOpen(false);
-                    }
-                }}
-            >
-                <>
-                    {quitSessionPopupOpen ? (
-                        <Popup>
-                            <QuitSession />
-                        </Popup>
-                    ) : selectChartsPopupOpen ? (
-                        <Popup>
-                            <SelectCharts />
-                        </Popup>
-                    ) : addStudentPopupOpen ? (
-                        <Popup>
-                            <AddStudent />
-                        </Popup>
-                    ) : createSessionPopupOpen ? (
-                        <Popup>
-                            <CreateSession />
-                        </Popup>
-                    ) : null}
-                </>
-            </PopupContainer>
+            <Popups />
 
-            <Snackbar open={snackOpen} anchorOrigin={{vertical: "bottom", horizontal: "right"}} style={{zIndex: 2}}>
-                <Alert severity="success">Recording has been saved</Alert>
-            </Snackbar>
+            <Snackbars />
         </>
     );
 }

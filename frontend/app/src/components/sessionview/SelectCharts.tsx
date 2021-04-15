@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: "flex",
             width: "100%"
         },
-        listItemText: {},
         checkbox: {
             color: theme.palette.primary.main
         }
@@ -53,7 +52,7 @@ export default function SelectCharts(): JSX.Element {
 
     return (
         <div className={classes.grid}>
-            <Typography variant="h1">Select Variable Charts</Typography>
+            <Typography variant="h1">Select Variables</Typography>
             <List style={{maxHeight: "400px", overflowY: "auto"}}>
                 {Object.values(Variable).map((variable, index) => {
                     const name = MMDVariables[variable].name;
@@ -71,12 +70,7 @@ export default function SelectCharts(): JSX.Element {
                                     inputProps={{"aria-labelledby": labelId}}
                                 />
                             </ListItemIcon>
-                            <ListItemText
-                                disableTypography
-                                id={labelId}
-                                primary={name}
-                                className={classes.listItemText}
-                            />
+                            <ListItemText disableTypography id={labelId} primary={name} />
                         </ListItem>
                     );
                 })}

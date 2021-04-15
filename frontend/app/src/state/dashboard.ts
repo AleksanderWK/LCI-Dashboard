@@ -2,8 +2,8 @@
  *  State for dashboard (containers and layout)
  */
 
-import {Layouts} from "react-grid-layout";
-import {atomFamily, selector} from "recoil";
+import {Layout, Layouts} from "react-grid-layout";
+import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {Variable} from "../constants";
 import {selectedSessionIdState} from "./session";
 
@@ -41,61 +41,42 @@ export const selectedSessionActiveContainersState = selector<Variable[]>({
 });
 
 /*
- * An atomFamily that stores the layouts for all current sessions
+ *  An atom that stores the current breakpoint
  */
-export const dashboardLayoutsState = atomFamily<Layouts | undefined, number | null>({
-    key: "dashboardLayouts",
-    default: undefined
+export const breakpointState = atom<string>({
+    key: "breakpoint",
+    default: "lg"
 });
 
 /*
- *  A selector for getting and setting dashboard layout for the currently selected session
+ *  An atomFamily that stores the layout for each breakpoint for each session
  */
-export const selectedSessionDashboardLayoutsState = selector<Layouts | undefined>({
-    key: "selectedSessionDashboardLayouts",
+export const layoutsState = atomFamily<Layouts, number | null>({
+    key: "layouts",
+    default: {}
+});
+
+/*
+ *  A selector for getting and setting the layouts for the selected session
+ */
+export const selectedSessionLayoutsState = selector<Layouts>({
+    key: "selectedSessionLayouts",
     get: ({get}) => {
         const id = get(selectedSessionIdState);
-        return get(dashboardLayoutsState(id));
+        return get(layoutsState(id));
     },
     set: ({get, set}, newValue) => {
         const id = get(selectedSessionIdState);
-        set(dashboardLayoutsState(id), newValue);
-    }
-});
-
-/**
- * An atom family that stores the column count for each session dashboard
- */
-export const dashboardColumnsState = atomFamily<number | undefined, number>({
-    key: "dashboardColumns",
-    default: () => {
-        let cols = 1;
-        if (window.innerWidth >= 1200) {
-            cols = 6;
-        } else if (window.innerWidth >= 996) {
-            cols = 4;
-        } else if (window.innerWidth >= 480) {
-            cols = 2;
-        }
-        return cols;
+        set(layoutsState(id), newValue);
     }
 });
 
 /*
- *  A selector for getting and setting the number of dashboard columns for the currently selected session
+ *  A selectorFamily to get the layout item for a specific variable, for the selected session and current breakpoint
  */
-export const selectedSessionDashboardColumnsState = selector<number | undefined>({
-    key: "selectedSessionDashboardColumns",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        if (id) {
-            return get(dashboardColumnsState(id));
-        }
-    },
-    set: ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        if (id) {
-            set(dashboardColumnsState(id), newValue);
-        }
+export const selectedSessionLayoutItemState = selectorFamily<Layout | undefined, Variable>({
+    key: "selectedSessionLayoutItem",
+    get: (variable) => ({get}) => {
+        return get(selectedSessionLayoutsState)[get(breakpointState)]?.find((layout) => layout.i == variable);
     }
 });

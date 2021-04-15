@@ -4,8 +4,12 @@ import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilCallback, useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
-import {selectedSessionActiveContainersState, selectedSessionDashboardLayoutsState} from "../../../state/dashboard";
-import {selectedSessionDataState, sessionVariableDataState} from "../../../state/session";
+import {
+    breakpointState,
+    selectedSessionActiveContainersState,
+    selectedSessionLayoutsState
+} from "../../../state/dashboard";
+import {selectedSessionDataState, selectedSessionIdState, sessionVariableDataState} from "../../../state/session";
 import theme from "../../../theme";
 import {useChartCallbacks} from "../../../utils/useChartCallbacks";
 
@@ -114,7 +118,7 @@ function LineChart(props: Props): JSX.Element {
         }
     });
 
-    const updateChart = useRecoilCallback(({snapshot}) => (animationDuration: number) => {
+    const updateChart = useRecoilCallback(({snapshot}) => (animationDuration?: number) => {
         if (chart.current) {
             const data = props.id
                 ? [...snapshot.getLoadable(sessionVariableDataState([props.variable, props.id])).getValue()]
@@ -140,14 +144,14 @@ function LineChart(props: Props): JSX.Element {
                 chart.current.chart.xAxis[0].setExtremes(data[0][0], undefined, false);
             }
 
-            chart.current.chart.redraw({duration: animationDuration});
+            chart.current.chart.redraw(animationDuration ? {duration: animationDuration} : false);
         }
     });
 
     useEffect(() => {
         if (chartId) {
             // Update chart on component mount
-            updateChart(0);
+            updateChart();
 
             return () => {
                 // Remove update callback function on unmount
@@ -158,17 +162,26 @@ function LineChart(props: Props): JSX.Element {
         }
     }, [chartId]);
 
-    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
-    const dashboardLayout = useRecoilValue(selectedSessionDashboardLayoutsState);
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
 
     useEffect(() => {
-        // If active containers is changed, reflow graph as container size may have changed
+        // Update chart when session changes
+        // (containers with same variable across sessions are not rerendered, due to performance)
+        updateChart();
+    }, [selectedSessionId]);
+
+    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const layouts = useRecoilValue(selectedSessionLayoutsState);
+    const breakpoint = useRecoilValue(breakpointState);
+
+    useEffect(() => {
+        // If active containers/layouts/breakpoint is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers, dashboardLayout]);
+    }, [activeContainers, layouts, breakpoint]);
 
-    return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} className={`${"noDrag"}`} />;
+    return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }
 
 export default React.memo(LineChart);
