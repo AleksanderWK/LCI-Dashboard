@@ -1,7 +1,11 @@
-import {Layouts} from "react-grid-layout";
-import {atom, atomFamily, selector, selectorFamily, useRecoilValue} from "recoil";
+/*
+ *  State for all live sessions (information and data)
+ */
+
+import * as Highcharts from "highcharts";
+import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
-import {studentState, Student} from "./student";
+import {Student, studentState} from "./student";
 
 /*
  *  An atom that stores which session is selected
@@ -143,6 +147,14 @@ export const sessionsState = selector<SessionWithStudent[]>({
     }
 });
 
+export interface EducationalSpecificEmotions {
+    [key: string]: boolean;
+    boredom: boolean;
+    frustration: boolean;
+    confusion: boolean;
+    delight: boolean;
+}
+
 export interface Data {
     [Variable.CognitiveLoad]: [number, number][];
     [Variable.PerceivedDifficulty]: [number, number][];
@@ -154,6 +166,7 @@ export interface Data {
     [Variable.EmotionalRegulation]: [number, number][];
     [Variable.MotionStability]: [number, number][];
     [Variable.EnergySpentFatigue]: [number, number][];
+    [Variable.EducationalSpecificEmotions]: [number, EducationalSpecificEmotions][];
 }
 
 /*
@@ -171,7 +184,8 @@ export const sessionDataState = atomFamily<Data, number | null>({
         [Variable.PhysiologicalStress]: [],
         [Variable.EmotionalRegulation]: [],
         [Variable.MotionStability]: [],
-        [Variable.EnergySpentFatigue]: []
+        [Variable.EnergySpentFatigue]: [],
+        [Variable.EducationalSpecificEmotions]: []
     }
 });
 
@@ -195,6 +209,58 @@ export const selectedSessionDataState = selector<Data>({
 /*
  *  A selectorFamily that returns the data for a given variable from the selected session's data
  */
+export const selectedSessionVariableDataState = selectorFamily<
+    [number, number | EducationalSpecificEmotions][],
+    Variable
+>({
+    key: "selectedSessionVariableData",
+    get: (variable: Variable) => ({get}) => {
+        return get(selectedSessionDataState)[variable];
+    }
+});
+
+export interface ESEXRangeData {
+    prevEmotionsIndex: {
+        [key: string]: number;
+        boredom: number;
+        frustration: number;
+        confusion: number;
+        delight: number;
+    };
+    data: Highcharts.XrangePointOptionsObject[];
+}
+
+/*
+ *  An atomFamily that stores ESE data in the correct format for X-range charts, for each session
+ */
+export const sessionESEXRangeDataState = atomFamily<ESEXRangeData, number | null>({
+    key: "sessionESEXRangeData",
+    default: {
+        prevEmotionsIndex: {
+            boredom: 0,
+            frustration: 0,
+            confusion: 0,
+            delight: 0
+        },
+        data: []
+    }
+});
+
+/*
+ *  A selector that returns the ESE data for the selected session
+ */
+export const selectedSessionESEXRangeDataState = selector<ESEXRangeData>({
+    key: "selectedSessionESEXRangeData",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+
+        return get(sessionESEXRangeDataState(id));
+    }
+});
+
+/*
+ *  A selectorFamily that returns the data length for a given variable from the selected session's data
+ */
 export const selectedSessionDataLengthVariableState = selectorFamily<number, Variable>({
     key: "selectedSessionDataLengthVariable",
     get: (variable: Variable) => ({get}) => {
@@ -205,7 +271,7 @@ export const selectedSessionDataLengthVariableState = selectorFamily<number, Var
 /*
  *  A selectorFamily that returns the last value for a given variable from the selected session's data
  */
-export const selectedSessionLastValueState = selectorFamily<number | null, Variable>({
+export const selectedSessionLastValueState = selectorFamily<number | EducationalSpecificEmotions | null, Variable>({
     key: "selectedSessionLastValue",
     get: (variable: Variable) => ({get}) => {
         const data = get(selectedSessionDataState)[variable];
@@ -218,210 +284,36 @@ export const selectedSessionLastValueState = selectorFamily<number | null, Varia
     }
 });
 
-export interface VariableDisplay {
-    display: "line" | "numeric";
-}
-
-export interface ActiveContainers {
-    [Variable.CognitiveLoad]: VariableDisplay;
-    [Variable.PerceivedDifficulty]: VariableDisplay;
-    [Variable.Familiarity]: VariableDisplay;
-    [Variable.InformationProcessingIndex]: VariableDisplay;
-    [Variable.PhysiologicalArousal]: VariableDisplay;
-    [Variable.Engagement]: VariableDisplay;
-    [Variable.PhysiologicalStress]: VariableDisplay;
-    [Variable.EmotionalRegulation]: VariableDisplay;
-    [Variable.MotionStability]: VariableDisplay;
-    [Variable.EnergySpentFatigue]: VariableDisplay;
-}
-
-/*
- *   An atomFamily that stores the active containers for each session
- 
-export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
-    key: "sessionActiveContainers",
-    default: {
-        [Variable.CognitiveLoad]: {active: false, display: "line"},
-        [Variable.PerceivedDifficulty]: {active: false, display: "line"},
-        [Variable.Familiarity]: {active: false, display: "line"},
-        [Variable.InformationProcessingIndex]: {active: false, display: "line"},
-        [Variable.PhysiologicalArousal]: {active: false, display: "line"},
-        [Variable.Engagement]: {active: false, display: "line"},
-        [Variable.PhysiologicalStress]: {active: false, display: "line"},
-        [Variable.EmotionalRegulation]: {active: false, display: "line"},
-        [Variable.MotionStability]: {active: false, display: "line"},
-        [Variable.EnergySpentFatigue]: {active: false, display: "line"}
-    }
-});
-*/
-
-export type View = "chart" | "numeric";
-
-export const containerState = atomFamily<View, [number | null, Variable]>({
-    key: "container",
-    default: "chart"
-});
-
-export const sessionActiveContainersState = atomFamily<Variable[], number | null>({
-    key: "sessionActiveContainers",
-    default: []
-});
-
-export const selectedSessionActiveContainersState = selector<Variable[]>({
-    key: "selectedSessionActiveContainers",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        return get(sessionActiveContainersState(id));
-    },
-    set: ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), newValue);
-    }
-});
-
-/*
- *  A selector for getting and setting display object for all containers in a session
- 
-export const selectedSessionActiveContainersState = selector<ActiveContainers>({
-    key: "selectedSessionActiveContainers",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        return get(sessionActiveContainersState(id));
-    },
-    set: ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), newValue);
-    }
-});
-*/
-/*
- *  A selectorFamily that accesses a sessions containers active state
- */
-/*
-export const selectedSessionVariableContainerVisibleState = selectorFamily<VariableDisplay, Variable>({
-    key: "selectedSessionVariableContainer",
+export const selectedSessionLastPointState = selectorFamily<
+    [number, EducationalSpecificEmotions | number] | null,
+    Variable
+>({
+    key: "selectedSessionLastPoint",
     get: (variable: Variable) => ({get}) => {
-        const id = get(selectedSessionIdState);
-        return get(sessionActiveContainersState(id))[variable];
-    },
-    set: (variable: Variable) => ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), (activeContainerPrevState) => {
-            return {
-                ...activeContainerPrevState,
-                [variable]: newValue
-            };
-        });
-    }
-});
-*/
-export const snackOpenState = atom<boolean>({
-    key: "snackOpen",
-    default: false
-});
+        const data = get(selectedSessionDataState)[variable];
 
-/**
- * An atom family that stores the layouts for all current sessions
- */
-
-export const dashboardLayoutsState = atomFamily<Layouts | undefined, number | null>({
-    key: "dashboardLayouts",
-    default: undefined
-});
-
-/*
- *  A selector for getting and setting dashboard layout for the currently selected session
- */
-export const selectedSessionDashboardLayoutsState = selector<Layouts | undefined>({
-    key: "selectedSessionDashboardLayouts",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        return get(dashboardLayoutsState(id));
-    },
-    set: ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(dashboardLayoutsState(id), newValue);
-    }
-});
-
-/**
- * An atom family that stores the column count for each session dashboard
- */
-
-export const dashboardColumnsState = atomFamily<number | undefined, number>({
-    key: "dashboardColumns",
-    default: () => {
-        let cols = 1;
-        if (window.innerWidth >= 1200) {
-            cols = 6;
-        } else if (window.innerWidth >= 996) {
-            cols = 4;
-        } else if (window.innerWidth >= 480) {
-            cols = 2;
-        }
-        return cols;
-    }
-});
-
-/*
- *  A selector for getting and setting the number of dashboard columns for the currently selected session
- */
-export const selectedSessionDashboardColumnsState = selector<number | undefined>({
-    key: "selectedSessionDashboardColumns",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        if (id) {
-            return get(dashboardColumnsState(id));
-        }
-    },
-    set: ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        if (id) {
-            set(dashboardColumnsState(id), newValue);
+        if (data.length > 0) {
+            return data.slice(-1)[0];
+        } else {
+            return null;
         }
     }
 });
-
-export interface allsessionsObject {
-    sessionId: number;
-    studentName: string;
-    data: [number, number][];
-}
 
 /*
  *  A selectorFamily that returns the data for a given variable and session id
  */
-export const sessionVariableDataState = selectorFamily<[number, number][], [Variable, number]>({
+export const sessionVariableDataState = selectorFamily<
+    [number, number | EducationalSpecificEmotions][],
+    [Variable, number]
+>({
     key: "sessionVariableData",
     get: (Parameters: [Variable, number]) => ({get}) => {
         return get(sessionDataState(Parameters[1]))[Parameters[0]];
     }
 });
 
-/*
- *  An atom that stores which variable is selected for the all sessions view
- */
-export const selectedAllSessionVariableState = atom<Variable | null>({
-    key: "selectedAllSessionVariable",
-    default: null
-});
-
-/*
- *  A selector that returns array of objects that each contain student name and session data for
- *  the currently selected variable.
- */
-export const allSessionsState = selector<allsessionsObject[]>({
-    key: "allSessions",
-    get: ({get}) => {
-        const result: allsessionsObject[] = [];
-        const sessions = get(sessionsState);
-        const selectedVariable = get(selectedAllSessionVariableState);
-        sessions.forEach((session) => {
-            if (selectedVariable != null) {
-                const data = get(sessionVariableDataState([selectedVariable, session._id]));
-                result.push({sessionId: session._id, studentName: session.student.name, data: data});
-            }
-        });
-        return result;
-    }
+export const snackOpenState = atom<boolean>({
+    key: "snackOpen",
+    default: false
 });

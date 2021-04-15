@@ -10,13 +10,9 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {
-    containerState,
-    selectedSessionActiveContainersState,
-    selectedSessionDataLengthVariableState,
-    selectedSessionIdState,
-    View
-} from "../../../state/session";
+import {selectedSessionDataLengthVariableState, selectedSessionIdState} from "../../../state/session";
+import XRangeChart from "./XRangeChart";
+import {containerState, selectedSessionActiveContainersState, View} from "../../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -60,9 +56,11 @@ export default function Container(props: Props): JSX.Element {
         setContainer(view);
     }
 
-    function removeView(): void {
+    function removeContainer(): void {
         setActiveContainers((prevState) => {
-            return prevState.splice(prevState.indexOf(props.variable), 1);
+            const newState = [...prevState];
+            newState.splice(newState.indexOf(props.variable), 1);
+            return newState;
         });
     }
 
@@ -101,14 +99,16 @@ export default function Container(props: Props): JSX.Element {
                         isDetailedView={container === "chart"}
                         onShowMore={() => setView("chart")}
                         onShowLess={() => setView("numeric")}
-                        onRemoveView={() => removeView()}
+                        onRemoveView={() => removeContainer()}
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
                 {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                     <CalculatingIndicator variable={props.variable} />
-                ) : container === "chart" ? (
+                ) : container === "chart" && props.variable != Variable.EducationalSpecificEmotions ? (
                     <LineChart variable={props.variable} />
+                ) : container === "chart" ? (
+                    <XRangeChart variable={props.variable} />
                 ) : (
                     <Numeric variable={props.variable} />
                 )}

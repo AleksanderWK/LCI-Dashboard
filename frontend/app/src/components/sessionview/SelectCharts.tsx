@@ -1,10 +1,10 @@
 import React from "react";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {Button, List, ListItem, ListItemIcon, ListItemText, Checkbox, Typography} from "@material-ui/core";
-import {selectedSessionActiveContainersState} from "../../state/session";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {MMDVariables, Variable} from "../../constants";
 import {selectChartsPopupOpenState} from "../../state/popup";
+import {selectedSessionActiveContainersState} from "../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

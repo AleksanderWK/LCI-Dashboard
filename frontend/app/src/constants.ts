@@ -14,7 +14,8 @@ export enum Variable {
     PhysiologicalStress = "ps",
     EmotionalRegulation = "er",
     MotionStability = "ms",
-    EnergySpentFatigue = "esf"
+    EnergySpentFatigue = "esf",
+    EducationalSpecificEmotions = "ese"
 }
 
 export enum Device {
@@ -99,9 +100,28 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Energy Spent/Fatigue",
         device: Device.VideoBody,
         description:
-            "The amount of energy spent, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position of the skeletal body.",
+            "The amount of energy spent by the student, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position skeletal body.",
         calculationTime: 3
+    },
+    [Variable.EducationalSpecificEmotions]: {
+        name: "Educational-specific Emotions",
+        device: Device.VideoFace,
+        description: "Emotions that the student is experiencing in an educational setting."
     }
+};
+
+export const emotionsColorMapper: {[key: string]: string} = {
+    boredom: "#F15025",
+    frustration: "#191919",
+    confusion: "#FFE45E",
+    delight: "#6782B7"
+};
+
+export const emotionsIndexMapper: {[key: string]: number} = {
+    boredom: 0,
+    frustration: 1,
+    confusion: 2,
+    delight: 3
 };
 
 export const months = [

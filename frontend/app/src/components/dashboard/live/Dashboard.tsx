@@ -1,18 +1,13 @@
 import {createStyles, makeStyles, Typography, Theme, SvgIcon, SvgIconProps} from "@material-ui/core";
 import {useRecoilState, useRecoilValue} from "recoil";
-import {Variable} from "../../../constants";
-import {
-    selectedSessionActiveContainersState,
-    selectedSessionDashboardColumnsState,
-    selectedSessionDashboardLayoutsState,
-    allSessionsState,
-    selectedAllSessionVariableState,
-    selectedSessionIdState
-} from "../../../state/session";
 import Container from "./Container";
 import {Layouts, Responsive, WidthProvider} from "react-grid-layout";
 import {useState} from "react";
-import {ViewColumnSharp} from "@material-ui/icons";
+import {
+    selectedSessionActiveContainersState,
+    selectedSessionDashboardColumnsState,
+    selectedSessionDashboardLayoutsState
+} from "../../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
