@@ -8,7 +8,6 @@ def test_calculate():
         row = test_data[i]
         point = EyeTrackingDataPoint(row)
         value = calculator.calculate_dataset([point])
-        print(value)
 
 
 results_calculate = [
