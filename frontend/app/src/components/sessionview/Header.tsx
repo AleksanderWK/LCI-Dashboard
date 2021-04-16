@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {createStyles, makeStyles, Typography, IconButton, Theme} from "@material-ui/core";
 import TimerIcon from "@material-ui/icons/Timer";
 import RecordingButton from "./RecordingButton";
-import {selectedAllSessionVariableState, selectedSessionIdState, selectedSessionState} from "../../state/session";
+import {selectedSessionIdState, selectedSessionState} from "../../state/session";
 import {useRecoilValue, useSetRecoilState} from "recoil";
 import HeaderWrapper from "../common/HeaderWrapper";
 import InfoItem from "../common/InfoItem";
@@ -10,9 +10,10 @@ import {AddChartIcon, CloseIcon, ExitIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
 import Tooltip from "../dashboard/Tooltip";
-import {MMDVariables, Variable} from "../../constants";
+import {MMDVariables} from "../../constants";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {duration} from "../../utils/duration";
+import {selectedAllSessionVariableState} from "../../state/allSessions";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

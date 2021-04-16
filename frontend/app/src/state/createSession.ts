@@ -1,3 +1,7 @@
+/*
+ *  State for creating a session
+ */
+
 import {atom} from "recoil";
 
 export interface CreateSessionValues {

@@ -27,7 +27,12 @@ it("renders without crashing", () => {
                             ps: [0.55, 0.22, 0.33],
                             er: [0.55, 0.22, 0.33],
                             ms: [0.55, 0.22, 0.33],
-                            esf: [0.55, 0.22, 0.33]
+                            esf: [0.55, 0.22, 0.33],
+                            ese: [
+                                {boredom: false, frustration: false, confusion: true, delight: false},
+                                {boredom: false, frustration: false, confusion: true, delight: false},
+                                {boredom: false, frustration: false, confusion: true, delight: false}
+                            ]
                         }
                     }
                 });

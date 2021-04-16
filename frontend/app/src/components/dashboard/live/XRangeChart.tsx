@@ -3,22 +3,27 @@ import HighchartsReact from "highcharts-react-official";
 import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilCallback, useRecoilValue} from "recoil";
-import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
+import {FREQUENCY, LIVE_CHART_RANGE, Variable} from "../../../constants";
 import {
-    breakpointState,
-    selectedSessionActiveContainersState,
-    selectedSessionLayoutsState
-} from "../../../state/dashboard";
-import {selectedSessionDataState, selectedSessionIdState, sessionVariableDataState} from "../../../state/session";
+    selectedSessionDataState,
+    selectedSessionESEXRangeDataState,
+    selectedSessionIdState,
+    sessionDataState,
+    sessionESEXRangeDataState
+} from "../../../state/session";
 import theme from "../../../theme";
+import xrange from "../../../assets/xrange";
 import {useChartCallbacks} from "../../../utils/useChartCallbacks";
+import {selectedSessionActiveContainersState, selectedSessionLayoutsState} from "../../../state/dashboard";
+
+xrange(Highcharts);
 
 interface Props {
     variable: Variable;
     id?: number;
 }
 
-function LineChart(props: Props): JSX.Element {
+function XRangeChart(props: Props): JSX.Element {
     const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
 
     const [chartId, insertCallback, removeCallback] = useChartCallbacks();
@@ -26,7 +31,7 @@ function LineChart(props: Props): JSX.Element {
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
         chart: {
-            marginLeft: 40,
+            type: "xrange",
             animation: false,
             events: {
                 load: () => {
@@ -36,46 +41,22 @@ function LineChart(props: Props): JSX.Element {
                 }
             }
         },
-        title: {
-            text: undefined
-        },
         plotOptions: {
             series: {
                 animation: false
-            },
-            line: {
-                marker: {
-                    enabled: false
-                },
-                lineWidth: 3,
-                dataLabels: {
-                    enabled: true,
-                    formatter: function () {
-                        const {series, x, y} = this;
-
-                        // Show only the label for the latest data point
-                        if (
-                            y &&
-                            x &&
-                            x === series.data[series.data.length - 1].x &&
-                            y === series.data[series.data.length - 1].y
-                        ) {
-                            return y > 0 && y < 1 ? y.toFixed(1) : y.toFixed();
-                        }
-                        return null;
-                    }
-                },
-                enableMouseTracking: true
             }
+        },
+        title: {
+            text: undefined
         },
         series: [
             {
-                type: "line",
-                name: MMDVariables[props.variable].name,
-                color: theme.palette.secondary.main,
+                type: "xrange",
+                name: "Emotion",
+                pointWidth: 18,
                 states: {
                     hover: {
-                        lineWidthPlus: 0
+                        enabled: false
                     }
                 }
             }
@@ -87,12 +68,14 @@ function LineChart(props: Props): JSX.Element {
             enabled: false
         },
         yAxis: {
-            min: 0,
-            max: MMDVariables[props.variable].maxValue,
+            categories: ["Bored", "Frustrated", "Confused", "Delighted"],
+            reversed: true,
             title: {
                 text: undefined
             },
-            gridLineWidth: 0
+            gridLineWidth: 0,
+            min: 0,
+            max: 3
         },
         xAxis: {
             type: "datetime",
@@ -105,6 +88,7 @@ function LineChart(props: Props): JSX.Element {
         },
         tooltip: {
             dateTimeLabelFormats: {
+                second: "%H:%M:%S",
                 millisecond: "%H:%M:%S"
             },
             valueDecimals: 2,
@@ -120,28 +104,24 @@ function LineChart(props: Props): JSX.Element {
 
     const updateChart = useRecoilCallback(({snapshot}) => (animationDuration?: number) => {
         if (chart.current) {
-            const data = props.id
-                ? [...snapshot.getLoadable(sessionVariableDataState([props.variable, props.id])).getValue()]
+            const rawData = props.id
+                ? [...snapshot.getLoadable(sessionDataState(props.id)).getValue()[props.variable]]
                 : [...snapshot.getLoadable(selectedSessionDataState).getValue()[props.variable]];
 
-            const dataLength = data.length;
+            const processedData = props.id
+                ? [...snapshot.getLoadable(sessionESEXRangeDataState(props.id)).getValue().data]
+                : [...snapshot.getLoadable(selectedSessionESEXRangeDataState).getValue().data];
 
-            // Update series data
-            chart.current.chart.series[0].setData(
-                [...data.slice(Math.max(dataLength - FREQUENCY * LIVE_CHART_RANGE, 0))],
-                false
-            );
+            chart.current.chart.series[0].setData(processedData, false);
 
-            if (dataLength >= FREQUENCY * LIVE_CHART_RANGE) {
-                // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
+            if (rawData.length > 0) {
                 chart.current.chart.xAxis[0].setExtremes(
-                    // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
-                    data.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
-                    undefined,
+                    rawData.length >= FREQUENCY * LIVE_CHART_RANGE
+                        ? rawData.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0]
+                        : undefined,
+                    rawData[rawData.length - 1][0],
                     false
                 );
-            } else if (dataLength > 0 && dataLength < FREQUENCY * LIVE_CHART_RANGE) {
-                chart.current.chart.xAxis[0].setExtremes(data[0][0], undefined, false);
             }
 
             chart.current.chart.redraw(animationDuration ? {duration: animationDuration} : false);
@@ -172,16 +152,15 @@ function LineChart(props: Props): JSX.Element {
 
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
     const layouts = useRecoilValue(selectedSessionLayoutsState);
-    const breakpoint = useRecoilValue(breakpointState);
 
     useEffect(() => {
-        // If active containers/layouts/breakpoint is changed, reflow graph as container size may have changed
+        // If active containers/layouts is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers, layouts, breakpoint]);
+    }, [activeContainers, layouts]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }
 
-export default React.memo(LineChart);
+export default React.memo(XRangeChart);

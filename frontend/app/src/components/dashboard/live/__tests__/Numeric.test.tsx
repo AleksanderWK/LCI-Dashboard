@@ -49,7 +49,8 @@ it("shows correct value", () => {
                     [Variable.PhysiologicalStress]: [],
                     [Variable.EmotionalRegulation]: [],
                     [Variable.MotionStability]: [],
-                    [Variable.EnergySpentFatigue]: []
+                    [Variable.EnergySpentFatigue]: [],
+                    [Variable.EducationalSpecificEmotions]: []
                 })
             }
         >

@@ -1,31 +1,15 @@
-import {createStyles, makeStyles, Typography, Theme} from "@material-ui/core";
+import {createStyles, makeStyles, Typography} from "@material-ui/core";
 import {useRecoilValue} from "recoil";
-import {Variable} from "../../../constants";
-import {
-    allSessionsState,
-    selectedAllSessionVariableState,
-    selectedSessionActiveContainersState,
-    selectedSessionIdState
-} from "../../../state/session";
-import Container from "./Container";
+import {selectedSessionActiveContainersState} from "../../../state/dashboard";
+import Grid from "./Grid";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
         dashboard: {
-            gridColumnStart: 2,
-            gridColumnEnd: 3,
-            gridRowStart: 2,
-            gridRowEnd: 3,
             position: "relative",
             width: "100%",
             padding: "30px 0",
-            boxSizing: "border-box",
-
-            // Temporary grid
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-            gridAutoRows: "200px",
-            gap: 40
+            boxSizing: "border-box"
         },
         feedback: {
             position: "relative",
@@ -42,59 +26,16 @@ const useStyles = makeStyles((theme: Theme) =>
 function Dashboard(): JSX.Element {
     const classes = useStyles();
 
-    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
-    const selectedSessionId = useRecoilValue(selectedSessionIdState);
-    const allSessions = useRecoilValue(allSessionsState);
-    const selectedAllSessionsVariable = useRecoilValue(selectedAllSessionVariableState);
+    const selectedSessionActiveContainers = useRecoilValue(selectedSessionActiveContainersState);
 
-    return (
-        <>
-            {selectedSessionId != null ? (
-                <>
-                    {Object.values(Variable).every((variable) => activeContainers[variable].active === false) ? (
-                        <div className={classes.feedback}>
-                            <Typography>No variables selected</Typography>
-                        </div>
-                    ) : (
-                        <div className={classes.dashboard}>
-                            {Object.values(Variable)
-                                .filter((variable) => activeContainers[variable].active)
-                                .map((variable) => {
-                                    return (
-                                        <Container
-                                            key={variable}
-                                            variable={variable}
-                                            display={activeContainers[variable].display}
-                                        />
-                                    );
-                                })}
-                        </div>
-                    )}
-                </>
-            ) : (
-                <>
-                    {selectedAllSessionsVariable == null ? (
-                        <div className={classes.feedback}>
-                            <Typography>No variable selected</Typography>
-                        </div>
-                    ) : (
-                        <div className={classes.dashboard}>
-                            {allSessions.map((allSessionsObject) => {
-                                return (
-                                    <Container
-                                        key={allSessionsObject.sessionId}
-                                        variable={(selectedAllSessionsVariable as unknown) as Variable}
-                                        display={"line"}
-                                        studentName={allSessionsObject.studentName}
-                                        id={allSessionsObject.sessionId}
-                                    />
-                                );
-                            })}
-                        </div>
-                    )}
-                </>
-            )}
-        </>
+    return selectedSessionActiveContainers.length == 0 ? (
+        <div className={classes.feedback}>
+            <Typography>No variables selected</Typography>
+        </div>
+    ) : (
+        <div className={classes.dashboard}>
+            <Grid />
+        </div>
     );
 }
 
