@@ -5,19 +5,28 @@ import ctypes
 from datamodels.eye_tracking import EyeTrackingDataPoint
 import warnings
 
-# Get screen resolution
-user32 = ctypes.windll.user32
-screen_size = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
-# A gaze point is added to the fixation if it's distance
+# A gaze point is added to the fixation if its distance
 # to the previous gaze point is below DISTANCE_THRESHOLD.
 # Active Display Coordinate System (ADCS) is used, going from
 # (0,0) in top left corner to (1,1) in bottom right corner.
+
+# ASSUMPTION: Screen size is 14" with 16:9 aspect ratio (width: 322 mm)
+
+# ASSUMPTION: Fixation happens within a radius of 26 mm to the previous point.
+# This assumption can be made because the subject sits at the same distance from
+# the screen no matter how big the screen is.
+
+# DISTANCE_THRESHOLD = 26 mm / (screen width in millimeters)
+# For 14" 16:9 screen: 26 mm / 322 mm = 0.08
 DISTANCE_THRESHOLD = 0.08
 
 # A fixation is kept if it contains at least GAZE_POINT_THRESHOLD number of
 # gaze points (filters small wrongly classified fixations during saccades)
 GAZE_POINT_THRESHOLD = 5
+
+# Screen resolution is just to scale up the values calculated for fx and fy, and should not be changed
+SCREEN_RESOLUTION = 1920, 1080
 
 
 class StationaryEyeTracker():
@@ -162,7 +171,7 @@ class StationaryEyeTracker():
         return left_d, right_d
 
     def map_to_screen_resolution(self, x, y):
-        return round(x * screen_size[0]), round(y * screen_size[1])
+        return round(x * SCREEN_RESOLUTION[0]), round(y * SCREEN_RESOLUTION[1])
 
     def get_current_data(self):
         return self.current_fixations
