@@ -4,11 +4,7 @@ import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilCallback, useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
-import {
-    breakpointState,
-    selectedSessionActiveContainersState,
-    selectedSessionLayoutsState
-} from "../../../state/dashboard";
+import {selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../../state/dashboard";
 import {selectedSessionDataState, selectedSessionIdState, sessionVariableDataState} from "../../../state/session";
 import theme from "../../../theme";
 import {useChartCallbacks} from "../../../utils/useChartCallbacks";
@@ -171,15 +167,14 @@ function LineChart(props: Props): JSX.Element {
     }, [selectedSessionId]);
 
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
-    const layouts = useRecoilValue(selectedSessionLayoutsState);
-    const breakpoint = useRecoilValue(breakpointState);
+    const layout = useRecoilValue(selectedSessionLayoutState);
 
     useEffect(() => {
-        // If active containers/layouts/breakpoint is changed, reflow graph as container size may have changed
+        // If active containers/layout is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers, layouts, breakpoint]);
+    }, [activeContainers, layout]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }

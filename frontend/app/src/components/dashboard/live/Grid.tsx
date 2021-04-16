@@ -1,14 +1,15 @@
-import {createStyles, makeStyles, SvgIcon, SvgIconProps} from "@material-ui/core";
+import {createStyles, makeStyles} from "@material-ui/core";
 import React, {useMemo} from "react";
-import {Layout, Responsive, WidthProvider} from "react-grid-layout";
-import {useRecoilCallback, useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import GridLayout, {Layout, WidthProvider} from "react-grid-layout";
+import {useRecoilCallback, useRecoilState, useRecoilValue} from "recoil";
 import {Variable} from "../../../constants";
 import {
-    breakpointState,
     selectedSessionActiveContainersState,
     selectedSessionLayoutItemState,
-    selectedSessionLayoutsState
+    selectedSessionLayoutState
 } from "../../../state/dashboard";
+import packer from "../../../utils/packer";
+import {ResizeIcon} from "../../common/Icons";
 import Container from "./Container";
 
 const useStyles = makeStyles(() =>
@@ -41,68 +42,54 @@ const useStyles = makeStyles(() =>
     })
 );
 
-function ResizeIcon(props: SvgIconProps): JSX.Element {
-    return (
-        <SvgIcon {...props}>
-            <path d="M24 24H19.2V19.2H24V24ZM24 14.4H19.2V9.6H24V14.4ZM14.4 24H9.6V19.2H14.4V24ZM14.4 14.4H9.6V9.6H14.4V14.4ZM4.8 24H0V19.2H4.8V24ZM24 4.8H19.2V0H24V4.8Z" />
-        </SvgIcon>
-    );
-}
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
+const StaticGridLayout = WidthProvider(GridLayout);
 
 export default function Grid(): JSX.Element {
     const classes = useStyles();
 
-    const setBreakpoint = useSetRecoilState(breakpointState);
-
     const selectedSessionActiveContainers = useRecoilValue(selectedSessionActiveContainersState);
 
-    const [selectedSessionLayouts, setSelectedSessionLayouts] = useRecoilState(selectedSessionLayoutsState);
+    const [selectedSessionLayout, setSelectedSessionLayout] = useRecoilState(selectedSessionLayoutState);
 
-    const getLayout = useRecoilCallback(({snapshot}) => (variable: Variable): Layout | undefined => {
+    const getLayoutItem = useRecoilCallback(({snapshot}) => (variable: Variable): Layout | undefined => {
         return snapshot.getLoadable(selectedSessionLayoutItemState(variable)).getValue();
     });
 
-    const containers = useMemo(
-        () =>
-            selectedSessionActiveContainers.map((variable) => {
-                const layout = getLayout(variable);
-
-                return (
-                    <div
-                        key={variable}
-                        data-grid={layout ? layout : {i: variable, x: 0, y: Infinity, w: 4, h: 3, minW: 2, minH: 3}}
-                    >
-                        <Container variable={variable} />
-                    </div>
-                );
-            }),
-        [selectedSessionActiveContainers.length]
-    );
+    const containers = useMemo(() => {
+        const layout: Layout[] = [];
+        return selectedSessionActiveContainers.map((variable) => {
+            const existingItem = getLayoutItem(variable);
+            const item = existingItem
+                ? existingItem
+                : {i: variable, w: 4, h: 3, minW: 2, minH: 3, ...packer(4, 3, layout, 12)};
+            layout.push(item);
+            return (
+                <div key={variable} data-grid={item}>
+                    <Container variable={variable} />
+                </div>
+            );
+        });
+    }, [selectedSessionActiveContainers]);
 
     return (
-        <ResponsiveGridLayout
-            style={{position: "relative"}}
-            breakpoints={{lg: 1200, md: 768, sm: 0}}
-            onBreakpointChange={(breakpoint) => {
-                setBreakpoint(breakpoint);
-            }}
-            cols={{lg: 12, md: 8, sm: 6}}
+        <StaticGridLayout
+            cols={12}
             rowHeight={60}
             containerPadding={[0, 0]}
             margin={[10, 10]}
             draggableCancel=".noDrag"
             isBounded
-            resizeHandle={<ResizeIcon className={`${classes.resizeIcon} ${"noDrag"}`} color="action" />}
-            layouts={selectedSessionLayouts}
-            onLayoutChange={(_, layouts) => {
-                if (JSON.stringify(layouts) !== JSON.stringify(selectedSessionLayouts)) {
-                    setSelectedSessionLayouts(layouts);
+            resizeHandle={<ResizeIcon className={`${classes.resizeIcon} noDrag`} color="action" />}
+            layout={selectedSessionLayout}
+            onLayoutChange={(layout) => {
+                console.log(layout);
+
+                if (JSON.stringify(layout) !== JSON.stringify(selectedSessionLayout)) {
+                    setSelectedSessionLayout(layout);
                 }
             }}
         >
             {containers}
-        </ResponsiveGridLayout>
+        </StaticGridLayout>
     );
 }

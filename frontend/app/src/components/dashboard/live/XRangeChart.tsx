@@ -14,7 +14,7 @@ import {
 import theme from "../../../theme";
 import xrange from "../../../assets/xrange";
 import {useChartCallbacks} from "../../../utils/useChartCallbacks";
-import {selectedSessionActiveContainersState, selectedSessionLayoutsState} from "../../../state/dashboard";
+import {selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../../state/dashboard";
 
 xrange(Highcharts);
 
@@ -151,14 +151,14 @@ function XRangeChart(props: Props): JSX.Element {
     }, [selectedSessionId]);
 
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
-    const layouts = useRecoilValue(selectedSessionLayoutsState);
+    const layout = useRecoilValue(selectedSessionLayoutState);
 
     useEffect(() => {
         // If active containers/layouts is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers, layouts]);
+    }, [activeContainers, layout]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }

@@ -2,8 +2,8 @@
  *  State for dashboard (containers and layout)
  */
 
-import {Layout, Layouts} from "react-grid-layout";
-import {atom, atomFamily, selector, selectorFamily} from "recoil";
+import {Layout} from "react-grid-layout";
+import {atomFamily, selector, selectorFamily} from "recoil";
 import {Variable} from "../constants";
 import {selectedSessionIdState} from "./session";
 
@@ -41,42 +41,34 @@ export const selectedSessionActiveContainersState = selector<Variable[]>({
 });
 
 /*
- *  An atom that stores the current breakpoint
+ *  An atomFamily that stores the layout for each session
  */
-export const breakpointState = atom<string>({
-    key: "breakpoint",
-    default: "lg"
+export const layoutState = atomFamily<Layout[], number | null>({
+    key: "layout",
+    default: []
 });
 
 /*
- *  An atomFamily that stores the layout for each breakpoint for each session
+ *  A selector for getting and setting the layout for the selected session
  */
-export const layoutsState = atomFamily<Layouts, number | null>({
-    key: "layouts",
-    default: {}
-});
-
-/*
- *  A selector for getting and setting the layouts for the selected session
- */
-export const selectedSessionLayoutsState = selector<Layouts>({
-    key: "selectedSessionLayouts",
+export const selectedSessionLayoutState = selector<Layout[]>({
+    key: "selectedSessionLayout",
     get: ({get}) => {
         const id = get(selectedSessionIdState);
-        return get(layoutsState(id));
+        return get(layoutState(id));
     },
     set: ({get, set}, newValue) => {
         const id = get(selectedSessionIdState);
-        set(layoutsState(id), newValue);
+        set(layoutState(id), newValue);
     }
 });
 
 /*
- *  A selectorFamily to get the layout item for a specific variable, for the selected session and current breakpoint
+ *  A selectorFamily to get the layout item for a specific variable, for the selected session
  */
 export const selectedSessionLayoutItemState = selectorFamily<Layout | undefined, Variable>({
     key: "selectedSessionLayoutItem",
     get: (variable) => ({get}) => {
-        return get(selectedSessionLayoutsState)[get(breakpointState)]?.find((layout) => layout.i == variable);
+        return get(selectedSessionLayoutState).find((layout) => layout.i == variable);
     }
 });

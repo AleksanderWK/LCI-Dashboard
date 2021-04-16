@@ -12,7 +12,12 @@ import CalculatingIndicator from "./CalculatingIndicator";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import {selectedSessionDataLengthVariableState, selectedSessionIdState} from "../../../state/session";
 import XRangeChart from "./XRangeChart";
-import {containerState, selectedSessionActiveContainersState, View} from "../../../state/dashboard";
+import {
+    containerState,
+    selectedSessionActiveContainersState,
+    selectedSessionLayoutState,
+    View
+} from "../../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -47,6 +52,7 @@ export default function Container(props: Props): JSX.Element {
     const selectedSessionId = useRecoilValue(selectedSessionIdState);
     const [container, setContainer] = useRecoilState(containerState([selectedSessionId, props.variable]));
     const setActiveContainers = useSetRecoilState(selectedSessionActiveContainersState);
+    const setSelectedSessionLayout = useSetRecoilState(selectedSessionLayoutState);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
@@ -59,8 +65,13 @@ export default function Container(props: Props): JSX.Element {
     function removeContainer(): void {
         setActiveContainers((prevState) => {
             const newState = [...prevState];
-            newState.splice(newState.indexOf(props.variable), 1);
-            return newState;
+            return newState.filter((item) => item != props.variable);
+        });
+
+        // Remove from layout
+        setSelectedSessionLayout((prevValue) => {
+            const layout = [...prevValue];
+            return layout.filter((item) => item.i != props.variable);
         });
     }
 
@@ -72,7 +83,7 @@ export default function Container(props: Props): JSX.Element {
                         {MMDVariables[props.variable].name}
                     </Typography>
 
-                    <div className={classes.menu} ref={menuAnchorElement}>
+                    <div className={`${classes.menu} noDrag`} ref={menuAnchorElement}>
                         <Tooltip variable={props.variable}>
                             <IconButton
                                 aria-label="info"

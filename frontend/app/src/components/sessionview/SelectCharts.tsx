@@ -4,7 +4,7 @@ import {Button, List, ListItem, ListItemIcon, ListItemText, Checkbox, Typography
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {MMDVariables, Variable} from "../../constants";
 import {selectChartsPopupOpenState} from "../../state/popup";
-import {selectedSessionActiveContainersState} from "../../state/dashboard";
+import {selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,21 +33,41 @@ export default function SelectCharts(): JSX.Element {
     const classes = useStyles();
     const setPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const [activeContainers, setActiveContainers] = useRecoilState(selectedSessionActiveContainersState);
+    const setSelectedSessionLayout = useSetRecoilState(selectedSessionLayoutState);
 
     const handleCheck = (variable: Variable) => () => {
+        let remove = false;
+
         setActiveContainers((prevState) => {
             const list = [...prevState];
+
+            // If variable is active, remove it
             if (list.includes(variable)) {
-                list.splice(list.indexOf(variable), 1);
-                return list;
+                remove = true;
+                return list.filter((item) => item != variable);
             }
+
+            // If variable is not active, add it
             list.push(variable);
             return list;
         });
+
+        if (remove) {
+            // Remove from layout
+            setSelectedSessionLayout((prevValue) => {
+                const layout = [...prevValue];
+                return layout.filter((item) => item.i != variable);
+            });
+        }
     };
 
     const handleCheckAll = (checkAll: boolean) => {
         setActiveContainers(checkAll ? Object.values(Variable) : []);
+
+        if (!checkAll) {
+            // Remove all layout items
+            setSelectedSessionLayout([]);
+        }
     };
 
     return (
