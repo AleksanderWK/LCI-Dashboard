@@ -1,10 +1,10 @@
 import React from "react";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {Button, List, ListItem, ListItemIcon, ListItemText, Checkbox, Typography} from "@material-ui/core";
-import {selectedRecordingActiveContainersState} from "../../state/recordedSession";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {MMDVariables, Variable} from "../../constants";
 import {selectChartsPopupOpenState} from "../../state/popup";
+import {selectedRecordingActiveContainersState} from "../../state/recordedSession";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: "flex",
             width: "100%"
         },
-        listItemText: {},
         checkbox: {
             color: theme.palette.primary.main
         }
@@ -35,24 +34,26 @@ export default function SelectCharts(): JSX.Element {
     const setPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const [activeContainers, setActiveContainers] = useRecoilState(selectedRecordingActiveContainersState);
 
-    const handleCheck = (key: Variable) => () => {
-        const newContainers = {...activeContainers};
-        newContainers[key] = !activeContainers[key];
-        setActiveContainers(newContainers);
+    const handleCheck = (variable: Variable) => () => {
+        setActiveContainers((prevState) => {
+            const list = [...prevState];
+            if (list.includes(variable)) {
+                list.splice(list.indexOf(variable), 1);
+                return list;
+            }
+            list.push(variable);
+            return list;
+        });
     };
 
-    const handleCheckAll = (value: boolean) => {
-        const newContainers = {...activeContainers};
-        Object.values(Variable).forEach((variable) => {
-            newContainers[variable] = value;
-        });
-        setActiveContainers(newContainers);
+    const handleCheckAll = (checkAll: boolean) => {
+        setActiveContainers(checkAll ? Object.values(Variable) : []);
     };
 
     return (
         <div className={classes.grid}>
-            <Typography variant="h1">Select Variable Charts</Typography>
-            <List>
+            <Typography variant="h1">Select Variables</Typography>
+            <List style={{maxHeight: "400px", overflowY: "auto"}}>
                 {Object.values(Variable).map((variable, index) => {
                     const name = MMDVariables[variable].name;
                     const labelId = `checkbox-list-label-${name}`;
@@ -61,7 +62,7 @@ export default function SelectCharts(): JSX.Element {
                             <ListItemIcon className={classes.checkbox}>
                                 <Checkbox
                                     edge="start"
-                                    checked={activeContainers[variable]}
+                                    checked={activeContainers.includes(variable)}
                                     tabIndex={-1}
                                     disableRipple
                                     color="primary"
@@ -69,18 +70,13 @@ export default function SelectCharts(): JSX.Element {
                                     inputProps={{"aria-labelledby": labelId}}
                                 />
                             </ListItemIcon>
-                            <ListItemText
-                                disableTypography
-                                id={labelId}
-                                primary={name}
-                                className={classes.listItemText}
-                            />
+                            <ListItemText disableTypography id={labelId} primary={name} />
                         </ListItem>
                     );
                 })}
             </List>
             <div className={classes.btnGroup}>
-                {Object.values(Variable).some((variable) => activeContainers[variable] === false) ? (
+                {Object.values(Variable).length != activeContainers.length ? (
                     <Button
                         className={classes.btn}
                         onClick={() => {

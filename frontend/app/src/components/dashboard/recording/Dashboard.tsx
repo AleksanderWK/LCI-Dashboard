@@ -18,6 +18,15 @@ const useStyles = makeStyles(() =>
             gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
             gridAutoRows: "200px",
             gap: 40
+        },
+        feedback: {
+            position: "relative",
+            margin: "30px 0",
+            width: "100%",
+            height: "calc(100% - 86px - 30px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
         }
     })
 );
@@ -25,18 +34,17 @@ const useStyles = makeStyles(() =>
 function Dashboard(): JSX.Element {
     const classes = useStyles();
 
-    const activeContainers = useRecoilValue(selectedRecordingActiveContainersState);
+    const selectedRecordingActiveContainers = useRecoilValue(selectedRecordingActiveContainersState);
 
-    return (
+    return selectedRecordingActiveContainers.length == 0 ? (
+        <div className={classes.feedback}>
+            <Typography>No variables selected</Typography>
+        </div>
+    ) : (
         <div className={classes.dashboard}>
-            {Object.values(Variable).every((variable) => activeContainers[variable] === false) && (
-                <Typography>No charts added</Typography>
-            )}
-            {Object.values(Variable)
-                .filter((variable) => activeContainers[variable])
-                .map((variable) => {
-                    return <Container key={variable} variable={variable} />;
-                })}
+            {selectedRecordingActiveContainers.map((variable) => {
+                return <Container key={variable} variable={variable} />;
+            })}
         </div>
     );
 }

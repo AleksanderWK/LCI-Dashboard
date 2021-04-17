@@ -147,39 +147,17 @@ export const currentRecordingInterval = atom<TimeInterval | undefined>({
 });
 
 /*
- * State for recorded sessions active containers / select charts
+ *   An atomFamily that stores a list of all active containers/variables for each recording
  */
-
-export interface RecordingActiveContainers {
-    [Variable.CognitiveLoad]: boolean;
-    [Variable.PerceivedDifficulty]: boolean;
-    [Variable.Familiarity]: boolean;
-    [Variable.InformationProcessingIndex]: boolean;
-    [Variable.PhysiologicalArousal]: boolean;
-    [Variable.Engagement]: boolean;
-    [Variable.PhysiologicalStress]: boolean;
-    [Variable.EmotionalRegulation]: boolean;
-    [Variable.MotionStability]: boolean;
-    [Variable.EnergySpentFatigue]: boolean;
-}
-
-export const recordingActiveContainersState = atomFamily<RecordingActiveContainers, number | null>({
+export const recordingActiveContainersState = atomFamily<Variable[], number | null>({
     key: "recordingActiveContainers",
-    default: {
-        [Variable.CognitiveLoad]: true,
-        [Variable.PerceivedDifficulty]: true,
-        [Variable.Familiarity]: true,
-        [Variable.InformationProcessingIndex]: true,
-        [Variable.PhysiologicalArousal]: true,
-        [Variable.Engagement]: true,
-        [Variable.PhysiologicalStress]: true,
-        [Variable.EmotionalRegulation]: true,
-        [Variable.MotionStability]: true,
-        [Variable.EnergySpentFatigue]: true
-    }
+    default: []
 });
 
-export const selectedRecordingActiveContainersState = selector<RecordingActiveContainers>({
+/*
+ *   A selector that returns/updates the selected recorded session's active containers (variables)
+ */
+export const selectedRecordingActiveContainersState = selector<Variable[]>({
     key: "selectedRecordingActiveContainers",
     get: ({get}) => {
         const id = get(selectedRecordedSessionIdState);
