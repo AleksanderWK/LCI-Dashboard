@@ -9,7 +9,7 @@ import InfoItem from "../common/InfoItem";
 import {AddChartIcon, CloseIcon, ExitIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
-import Tooltip from "../dashboard/Tooltip";
+import Tooltip from "../common/Tooltip";
 import {MMDVariables} from "../../constants";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {duration} from "../../utils/duration";
@@ -46,8 +46,6 @@ export default function Header(): JSX.Element {
     const selectedSession = useRecoilValue(selectedSessionIdState);
     const allSessionVariable = useRecoilValue(selectedAllSessionVariableState);
 
-    // TODO: use all sessions state to get current variable
-
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
     const [dur, setDuration] = useState<string>("");
 
@@ -73,18 +71,15 @@ export default function Header(): JSX.Element {
     return (
         <>
             <HeaderWrapper
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                /**@ts-ignore */
-                title={selectedSession != null ? selectedSessionInfo.sessionName : "All Sessions"}
+                title={
+                    selectedSession != null && selectedSessionInfo ? selectedSessionInfo.sessionName : "All Sessions"
+                }
                 infoBar={
-                    selectedSession != null ? (
+                    selectedSession != null && selectedSessionInfo ? (
                         <>
                             <div className={classes.indicatorContainer}>
                                 <div className={classes.indicatorIcon}></div>
 
-                                {/**
-                                 * eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                 * @ts-ignore */}
                                 <Typography>{selectedSessionInfo.student.name}</Typography>
                             </div>
                             <InfoItem icon={<TimerIcon />} text={dur} />

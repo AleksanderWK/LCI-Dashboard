@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {render, screen} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
 import {EyeTrackingDevice} from "../../../constants";
-import Menu from "../Menu/Menu";
+import Menu from "../menu/Menu";
 import {
     selectedSessionIdState,
     Session,

@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
 import {useRecoilCallback} from "recoil";
 import PageContainer from "../components/common/PageContainer";
-import Dashboard from "../components/dashboard/live/Dashboard";
+import Dashboard from "../components/sessionview/dashboard/Dashboard";
 import Header from "../components/sessionview/Header";
-import Menu from "../components/sessionview/Menu/Menu";
+import Menu from "../components/sessionview/menu/Menu";
 import Popups from "../components/sessionview/Popups";
 import Snackbars from "../components/sessionview/Snackbars";
 import {emotionsColorMapper, emotionsIndexMapper, FREQUENCY, Variable} from "../constants";

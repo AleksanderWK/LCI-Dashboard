@@ -3,10 +3,10 @@ import {createStyles, IconButton, makeStyles, Theme, Typography} from "@material
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import {MMDVariables, Variable} from "../../../constants";
-import Tooltip from "../Tooltip";
+import Tooltip from "../../common/Tooltip";
 import Menu from "./Menu";
 import LineChart from "./LineChart";
-import ContainerCard from "../ContainerCard";
+import ContainerCard from "../../common/ContainerCard";
 import XRangeChart from "./XRangeChart";
 
 const useStyles = makeStyles((theme: Theme) =>

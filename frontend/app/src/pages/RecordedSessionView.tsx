@@ -4,7 +4,7 @@ import Header from "../components/recordedsessionview/Header";
 import {ipcInvoke} from "../ipc";
 import {selectedRecordedSessionIdState, RecordedSession, recordedSessionState} from "../state/recordedSession";
 import Footer from "../components/recordedsessionview/Footer";
-import Dashboard from "../components/dashboard/recording/Dashboard";
+import Dashboard from "../components/recordedsessionview/dashboard/Dashboard";
 import PageContainer from "../components/common/PageContainer";
 
 export default function RecordedSessionView(): JSX.Element {
