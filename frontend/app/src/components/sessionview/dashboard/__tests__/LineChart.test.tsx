@@ -53,7 +53,8 @@ it("renders without crashing for different data lenghts", () => {
                     ps: [[0, 0.5]],
                     er: [[0, 0.5]],
                     ms: [[0, 0.5]],
-                    esf: [[0, 0.5]]
+                    esf: [[0, 0.5]],
+                    ese: [[0, {boredom: false, confusion: false, delight: true, frustration: false}]]
                 } as Data);
             }}
         >

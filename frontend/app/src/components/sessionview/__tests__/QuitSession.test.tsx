@@ -61,6 +61,7 @@ it("Displays session name and student name correctly", () => {
                     eyeTrackingDevice: EyeTrackingDevice.Mobile,
                     sessionName: "Educational Game",
                     studentId: "1",
+                    studentName: "Aleksander",
                     startTime: 0,
                     endTime: 0,
                     sessionCode: "abc"

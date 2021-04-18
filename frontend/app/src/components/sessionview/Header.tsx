@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {createStyles, makeStyles, Typography, IconButton, Theme} from "@material-ui/core";
 import TimerIcon from "@material-ui/icons/Timer";
 import RecordingButton from "./RecordingButton";
@@ -9,11 +9,7 @@ import InfoItem from "../common/InfoItem";
 import {AddChartIcon, CloseIcon, ExitIcon} from "../common/Icons";
 import {selectChartsPopupOpenState, quitSessionPopupOpenState} from "../../state/popup";
 import {StyledTooltipBottom} from "../common/Tooltips";
-import Tooltip from "../common/Tooltip";
-import {MMDVariables} from "../../constants";
-import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import {duration} from "../../utils/duration";
-import {selectedAllSessionVariableState} from "../../state/allSessions";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -44,7 +40,6 @@ export default function Header(): JSX.Element {
     const setSelectChartsPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const setQuitSessionPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
     const selectedSession = useRecoilValue(selectedSessionIdState);
-    const allSessionVariable = useRecoilValue(selectedAllSessionVariableState);
 
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
     const [dur, setDuration] = useState<string>("");
@@ -80,33 +75,12 @@ export default function Header(): JSX.Element {
                             <div className={classes.indicatorContainer}>
                                 <div className={classes.indicatorIcon}></div>
 
-                                <Typography>{selectedSessionInfo.student.name}</Typography>
+                                <Typography>{selectedSessionInfo.studentName}</Typography>
                             </div>
                             <InfoItem icon={<TimerIcon />} text={dur} />
                         </>
                     ) : (
-                        <div
-                            className={classes.indicatorContainer}
-                            style={{gridTemplateColumns: "20px max-content", gridTemplateRows: "24px"}}
-                        >
-                            {allSessionVariable && (
-                                <>
-                                    <Tooltip variable={allSessionVariable}>
-                                        <IconButton
-                                            aria-label="info"
-                                            disableFocusRipple={true}
-                                            disableRipple={true}
-                                            disableTouchRipple={true}
-                                            className={`${classes.iconButton} ${classes.infoIcon}`}
-                                        >
-                                            <InfoOutlinedIcon color="action" />
-                                        </IconButton>
-                                    </Tooltip>
-
-                                    <Typography>{MMDVariables[allSessionVariable].name}</Typography>
-                                </>
-                            )}
-                        </div>
+                        <></>
                     )
                 }
                 buttonGroup={

@@ -2,33 +2,18 @@ import {createStyles, makeStyles} from "@material-ui/core";
 import React, {useMemo} from "react";
 import GridLayout, {Layout, WidthProvider} from "react-grid-layout";
 import {useRecoilCallback, useRecoilState, useRecoilValue} from "recoil";
-import {Variable} from "../../../constants";
+import {Variable} from "../../../../constants";
 import {
     selectedSessionActiveContainersState,
     selectedSessionLayoutItemState,
     selectedSessionLayoutState
-} from "../../../state/dashboard";
-import packer from "../../../utils/packer";
-import {ResizeIcon} from "../../common/Icons";
+} from "../../../../state/dashboard";
+import packer from "../../../../utils/packer";
+import {ResizeIcon} from "../../../common/Icons";
 import Container from "./Container";
 
 const useStyles = makeStyles(() =>
     createStyles({
-        dashboard: {
-            position: "relative",
-            width: "100%",
-            padding: "30px 0",
-            boxSizing: "border-box"
-        },
-        feedback: {
-            position: "relative",
-            margin: "30px 0",
-            width: "100%",
-            height: "calc(100% - 86px - 30px)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center"
-        },
         resizeIcon: {
             position: "absolute",
             right: "4px",
@@ -44,7 +29,7 @@ const useStyles = makeStyles(() =>
 
 const StaticGridLayout = WidthProvider(GridLayout);
 
-export default function Grid(): JSX.Element {
+export default function SessionGrid(): JSX.Element {
     const classes = useStyles();
 
     const selectedSessionActiveContainers = useRecoilValue(selectedSessionActiveContainersState);
@@ -82,8 +67,6 @@ export default function Grid(): JSX.Element {
             resizeHandle={<ResizeIcon className={`${classes.resizeIcon} noDrag`} color="action" />}
             layout={selectedSessionLayout}
             onLayoutChange={(layout) => {
-                console.log(layout);
-
                 if (JSON.stringify(layout) !== JSON.stringify(selectedSessionLayout)) {
                     setSelectedSessionLayout(layout);
                 }

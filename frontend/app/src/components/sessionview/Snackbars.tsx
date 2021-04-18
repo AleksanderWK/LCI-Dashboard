@@ -2,7 +2,7 @@ import {Snackbar} from "@material-ui/core";
 import {Alert} from "@material-ui/lab";
 import React from "react";
 import {useRecoilValue} from "recoil";
-import {snackOpenState} from "../../state/session";
+import {snackOpenState} from "../../state/popup";
 
 export default function Snackbars(): JSX.Element {
     const snackOpen = useRecoilValue(snackOpenState);

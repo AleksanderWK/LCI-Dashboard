@@ -3,10 +3,11 @@ import Button from "@material-ui/core/Button";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import {useRecoilState, useSetRecoilState} from "recoil";
-import {selectedSessionRecordingState, snackOpenState} from "../../state/session";
+import {selectedSessionRecordingState} from "../../state/session";
 import {createStyles, makeStyles, Theme} from "@material-ui/core";
 import {useInterval} from "../../utils/useInterval";
 import {duration} from "../../utils/duration";
+import {snackOpenState} from "../../state/popup";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

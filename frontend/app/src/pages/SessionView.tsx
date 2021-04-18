@@ -12,11 +12,11 @@ import {callbackFunctionsState} from "../state/chart";
 import {
     Data,
     EducationalSpecificEmotions,
+    Session,
     sessionDataState,
     sessionESEXRangeDataState,
     sessionRecordingState,
-    sessionsState,
-    SessionWithStudent
+    sessionsState
 } from "../state/session";
 
 export interface DataPoints {
@@ -47,7 +47,7 @@ export default function SessionView(): JSX.Element {
             const now = Math.round(timestamp);
 
             // Find the Session with the same sessionCode as this data has
-            const session: SessionWithStudent | undefined = snapshot
+            const session: Session | undefined = snapshot
                 .getLoadable(sessionsState)
                 .getValue()
                 .find((session) => session.sessionCode == sessionCode);

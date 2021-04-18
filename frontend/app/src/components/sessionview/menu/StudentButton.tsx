@@ -1,9 +1,8 @@
 import {createStyles, makeStyles, Typography} from "@material-ui/core";
 import PersonIcon from "@material-ui/icons/Person";
-import {useSetRecoilState} from "recoil";
-import {selectedSessionIdState} from "../../../state/session";
+import {useRecoilValue, useSetRecoilState} from "recoil";
+import {selectedSessionIdState, sessionRecordingState} from "../../../state/session";
 import MenuButton from "./MenuButton";
-import clsx from "clsx";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -59,13 +58,13 @@ interface Props {
     sessionId: number;
     selected: boolean;
     studentName: string;
-    recording: boolean;
 }
 
 export default function StudentButton(props: Props): JSX.Element {
     const classes = useStyles();
 
     const setSelectedSessionId = useSetRecoilState(selectedSessionIdState);
+    const recording = useRecoilValue(sessionRecordingState(props.sessionId));
 
     const getInitials = (name: string) => {
         const names = name.split(" ");
@@ -92,7 +91,7 @@ export default function StudentButton(props: Props): JSX.Element {
                     <Typography className={classes.initials}>{getInitials(props.studentName)}</Typography>
                 </div>
                 <PersonIcon className={classes.icon} />
-                {props.recording && <RecordingLabel />}
+                {recording.status && <RecordingLabel />}
             </>
         </MenuButton>
     );
