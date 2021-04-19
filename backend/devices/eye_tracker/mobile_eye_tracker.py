@@ -1,11 +1,11 @@
 '''
-    Calibrate and get data_stream from Tobii Glasses 2
+    Live data stream from Tobii Glasses 2
 
-    Code in this file i inspired by Tobii Glasses 2 API example code and the
-     following repo :
+    Code in this file is inspired by Tobii Glasses 2 API example code and the
+     following repos :
      https://github.com/ddetommaso/TobiiProGlasses2_PyCtrl
+     https://github.com/grebtsew/Tobii_Glasses_2_Python3_And_C/
 
-    Note: This example program is tested with Python 3 on Windows 10 and Ubuntu 16.04 (precise),
 '''
 
 import requests
@@ -13,14 +13,43 @@ import json
 import time
 import threading
 import socket
-import cv2
 import numpy as np
 from threading import Thread
 import os
 import sys
+import warnings
+from datamodels.eye_tracking import EyeTrackingDataPoint
 
 
-class Data_Stream():
+# A gaze point is added to the fixation if it's distance
+# to the previous gaze point is below DISTANCE_THRESHOLD.
+# Active Display Coordinate System (ADCS) is used, going from
+# (0,0) in top left corner to (1,1) in bottom right corner.
+DISTANCE_THRESHOLD = 0.08
+
+# A fixation is kept if it contains at least GAZE_POINT_THRESHOLD number of
+# gaze points (filters small wrongly classified fixations during saccades)
+GAZE_POINT_THRESHOLD = 5
+
+screen_size = 1920, 1080
+
+
+class MobileEyeTracker():
+
+    # A list of all fixations calculated in this batch
+    current_fixations = []
+
+    current_fixation_id = 0
+    current_fixation_init_time = None
+    # A list of gaze points in the fixation, with format: [lpup, rpup, fx, fy]
+    current_fixation_points = []
+
+    # Previous gaze data, with format: [timestamp, lpup, rpup, fx, fy]
+    prev_gaze_data = None
+
+    current_gaze_data = None
+
+    temp_data = {}
 
     GLASSES_IP = "192.168.71.50"  # IPv4 address
     PORT = 49152
@@ -36,7 +65,7 @@ class Data_Stream():
     # Keep-alive message content used to request live data and live video streams
     KA_DATA_MSG = "{\"type\": \"live.data.unicast\", \"key\": \"some_GUID\", \"op\": \"start\"}"
     # KA_EYES_MSG = "{\"type\": \"live.eyes.unicast\", \"key\": \"some_GUID\", \"op\": \"start\"}" # used to sync eyes
-    KA_VIDEO_MSG = "{\"type\": \"live.video.unicast\", \"key\": \"some_other_GUID\", \"op\": \"start\"}"
+    # KA_VIDEO_MSG = "{\"type\": \"live.video.unicast\", \"key\": \"some_other_GUID\", \"op\": \"start\"}"
 
     def mksock(self, peer):
         '''
@@ -226,6 +255,91 @@ class Data_Stream():
 
         return
 
+    def add_to_temp_data_point(self, data):
+
+        if(data["s"] != 0):
+            return
+
+        if ("ts" not in self.temp_data):  # timestamp
+            self.temp_data["ts"] = data["ts"]
+
+        elif ("pd" in str(data)):  # pupil-diameter
+            if ("left" in str(data)):
+                self.temp_data["lpup"] = data["pd"]
+            else:
+                self.temp_data["rpup"] = data["pd"]
+
+        if ("'gp'" in str(data)):  # gaze position
+            self.temp_data["fx"] = data["gp"][0]
+            self.temp_data["fy"] = data["gp"][1]
+
+    def check_temp_data(self):
+        return (None not in self.temp_data.values() and len(self.temp_data.values()) == 5)
+
+    def fixation_check(self):
+        if (True):
+            fx, fy = self.current_gaze_data[3], self.current_gaze_data[4]
+
+            if (fx != None and fy != None):
+                lpup, rpup = self.current_gaze_data[1], self.current_gaze_data[2]
+
+                timestamp = self.current_gaze_data[0]
+
+                if (self.prev_gaze_data != None):
+
+                    # Calculate Euclidean distance between current point and previous point
+                    distance = np.linalg.norm(
+                        np.array([self.prev_gaze_data[3], self.prev_gaze_data[4]]) - np.array([fx, fy]))
+
+                    # If distance is below the threshold, the point is part of the fixation
+                    if (distance < DISTANCE_THRESHOLD):
+                        if (self.current_fixation_init_time == None):
+
+                            # Initialization of fixation
+                            self.current_fixation_init_time = round(
+                                self.prev_gaze_data[0] / 1000)
+
+                            # Add prev point to fixation points list
+                            self.current_fixation_points.append(
+                                [self.prev_gaze_data[1], self.prev_gaze_data[2],  self.prev_gaze_data[3], self.prev_gaze_data[4]])
+
+                        # Add current point to fixation points list
+                        self.current_fixation_points.append(
+                            [lpup, rpup, fx, fy])
+
+                    else:
+                        if (self.current_fixation_init_time != None):
+                            # Fixation is over
+                            # Keep fixation if it has enough gaze points
+                            if (len(self.current_fixation_points) >= GAZE_POINT_THRESHOLD):
+                                self.current_fixation_id += 1
+                                end_time = round(self.prev_gaze_data[0] / 1000)
+
+                                # Suppress warnings that come from for example all left pupil diameters being NaN
+                                with warnings.catch_warnings():
+                                    warnings.simplefilter(
+                                        "ignore", category=RuntimeWarning)
+                                    mean_values = np.nanmean(
+                                        np.asarray(self.current_fixation_points), axis=0)
+
+                                mean_fx_screen, mean_fy_screen = self.map_to_screen_resolution(
+                                    mean_values[2], mean_values[3])
+
+                                fixation = [self.current_fixation_id, self.current_fixation_init_time,
+                                            end_time, mean_values[0], mean_values[1], mean_fx_screen, mean_fy_screen]
+
+                                print(fixation)
+                                self.current_fixations.append(
+                                    EyeTrackingDataPoint(fixation))
+
+                                # Clear fixation data
+                                self.current_fixation_init_time = None
+                                self.current_fixation_points = []
+                                self.prev_gaze_data = None
+                                return
+
+                self.prev_gaze_data = [timestamp, lpup, rpup, fx, fy]
+
     def data_stream_loop(self, args):
         '''
         Loop and post datavalues
@@ -234,38 +348,49 @@ class Data_Stream():
         sensor = ""
         data_gp = (0, [0.0, 0.0])
         data_pts = (0, 0)
-        while(True):
+        while(self.running == True):
             raw_data, address = args.recvfrom(1024)
             raw_data = raw_data.decode('ascii')
             raw_data = raw_data.replace("\\n", "")
             raw_data = raw_data.replace("b", "")
             data = json.loads(raw_data)
 
-            '''
-            Save Synced Sensor data
-            '''
-            print(data)
-            '''
-            Save unsynced sensor data to shared variables
-            '''
-            """
-            if (str(data).__contains__("ac")): #accelerometer
-            if (str(data).__contains__("pd")):  #pupil-diameter
-            if (str(data).__contains__("gd")):  #gaze-direction
-            if (str(data).__contains__("gp3")):  #gaze-position-3d
-            if (str(data).__contains__("gy")):  #gyro-scope
-            """
-            '''
-            We also have several sync packages to use to know
-            time-differences between video and data streams
-            '''
-            """
-            if (str(data).__contains__("\"epts")):  #pts
-            if (str(data).__contains__("\"vts")):  #vts
-            if (str(data).__contains__("evts")):  #evts
-            if (str(data).__contains__("sig")):  #sig
-            if (str(data).__contains__("ets")):  #api
-            """
+            # print(data)
+
+            self.add_to_temp_data_point(data)
+            if (self.check_temp_data()):
+                self.prev_gaze_data = self.current_gaze_data
+                self.current_gaze_data = [self.temp_data["ts"], self.temp_data["lpup"],
+                                          self.temp_data["rpup"], self.temp_data["fx"], self.temp_data["fy"]]
+                self.temp_data.clear()
+
+                self.fixation_check()
+
+        self.data_socket.close()
+
+    def calibrate(self):
+        # Get all id
+        self.get_ids()
+
+        # Show config data
+        print("Project: " + self.pr_id, ", Participant: ",
+              self.pa_id, ", Calibration: ", self.ca_id, " ")
+
+        # Start calibration
+        print()
+        input_var = input("Press enter to calibrate")
+
+        print("Calibration started waiting for calibration...")
+        print("Status polling...")
+        self.start_calibration(self.ca_id)
+        status = self.wait_for_status(
+            '/api/calibrations/' + self.ca_id + '/status', 'ca_state', ['failed', 'calibrated'])
+
+        # Show calibration result
+        if status == 'failed':
+            print('Calibration failed, using default calibration instead')
+        else:
+            print('Calibration successful')
 
     def run(self):
         self.running = True
@@ -279,50 +404,31 @@ class Data_Stream():
             self.data_socket = self.mksock(peer)
 
             td = threading.Timer(0, self.send_keepalive_msg, [
-                                 self.data_socket, self.KA_DATA_MSG, peer])
+                self.data_socket, self.KA_DATA_MSG, peer])
             td.start()
 
             # Create socket which will send a keep alive message for the live video stream
-            self.video_socket = self.mksock(peer)
-            tv = threading.Timer(0, self.send_keepalive_msg, [
-                                 self.video_socket, self.KA_VIDEO_MSG, peer])
-            tv.start()
-
-            # Get all id
-            self.get_ids()
-
-            # Show config data
-            print("Project: " + self.pr_id, ", Participant: ",
-                  self.pa_id, ", Calibration: ", self.ca_id, " ")
-
-            # Start calibration
-            print()
-            input_var = input("Press enter to calibrate")
-
-            print("Calibration started waiting for calibration...")
-            print("Status polling...")
-            self.start_calibration(self.ca_id)
-            status = self.wait_for_status(
-                '/api/calibrations/' + self.ca_id + '/status', 'ca_state', ['failed', 'calibrated'])
-
-            # Show calibration result
-            if status == 'failed':
-                print('Calibration failed, using default calibration instead')
-            else:
-                print('Calibration successful')
+            # self.video_socket = self.mksock(peer)
+            # tv = threading.Timer(0, self.send_keepalive_msg, [
+            #                      self.video_socket, self.KA_VIDEO_MSG, peer])
+            # tv.start()
 
             # Start data_stream
             print("Starting data_stream thread")
             self.data_stream_loop(self.data_socket)
 
         except Exception as e:
-            print(e)
+            print(e.with_traceback())
         self.running = False
 
+    def map_to_screen_resolution(self, x, y):
+        return round(x * screen_size[0]), round(y * screen_size[1])
 
-def main():
-    Data_Stream().run()
+    def get_current_data(self):
+        return self.current_fixations
 
+    def clear_current_data(self):
+        self.current_fixations.clear()
 
-if __name__ == "__main__":
-    main()
+    def set_running(self):
+        self.running = False
