@@ -1,6 +1,8 @@
-import {MMDVariables, Variable} from "../../../constants";
-import {createStyles, makeStyles} from "@material-ui/core";
+import {createStyles, makeStyles, Typography} from "@material-ui/core";
 import Container from "./Container";
+import React from "react";
+import {useRecoilValue} from "recoil";
+import {selectedRecordingActiveContainersState} from "../../../state/recordedSession";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -15,6 +17,15 @@ const useStyles = makeStyles(() =>
             gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
             gridAutoRows: "200px",
             gap: 40
+        },
+        feedback: {
+            position: "relative",
+            margin: "30px 0",
+            width: "100%",
+            height: "calc(100% - 86px - 30px)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center"
         }
     })
 );
@@ -22,13 +33,17 @@ const useStyles = makeStyles(() =>
 function Dashboard(): JSX.Element {
     const classes = useStyles();
 
-    return (
+    const selectedRecordingActiveContainers = useRecoilValue(selectedRecordingActiveContainersState);
+
+    return selectedRecordingActiveContainers.length == 0 ? (
+        <div className={classes.feedback}>
+            <Typography>No variables selected</Typography>
+        </div>
+    ) : (
         <div className={classes.dashboard}>
-            {Object.values(Variable)
-                .filter((variable) => MMDVariables[variable].enabled)
-                .map((variable) => {
-                    return <Container key={variable} variable={variable} />;
-                })}
+            {selectedRecordingActiveContainers.map((variable) => {
+                return <Container key={variable} variable={variable} />;
+            })}
         </div>
     );
 }

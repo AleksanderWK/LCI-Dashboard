@@ -4,7 +4,7 @@ import TimerIcon from "@material-ui/icons/Timer";
 import PersonIcon from "@material-ui/icons/Person";
 import EventIcon from "@material-ui/icons/Event";
 import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
-import {useRecoilState, useRecoilValue, useResetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
 import {
     currentRecordingInterval,
     RecordedSessionInfo,
@@ -21,6 +21,7 @@ import InfoItem from "../common/InfoItem";
 import {AddChartIcon, ExitIcon} from "../common/Icons";
 import {StyledTooltipBottom} from "../common/Tooltips";
 import {duration} from "../../utils/duration";
+import {selectChartsPopupOpenState} from "../../state/popup";
 
 export default function Header(): JSX.Element {
     const history = useHistory();
@@ -31,6 +32,7 @@ export default function Header(): JSX.Element {
     const resetRecordedSessionInfo = useResetRecoilState(recordedSessionInfoState);
     const resetRecordedSession = useResetRecoilState(recordedSessionState);
     const resetInterval = useResetRecoilState(currentRecordingInterval);
+    const setSelectChartsPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
 
     useEffect(() => {
         if (recordedSessionId) {
@@ -78,7 +80,12 @@ export default function Header(): JSX.Element {
                 buttonGroup={
                     <>
                         <StyledTooltipBottom title="Select views">
-                            <IconButton aria-label="select views">
+                            <IconButton
+                                aria-label="select views"
+                                onClick={() => {
+                                    setSelectChartsPopupOpen(true);
+                                }}
+                            >
                                 <AddChartIcon />
                             </IconButton>
                         </StyledTooltipBottom>
