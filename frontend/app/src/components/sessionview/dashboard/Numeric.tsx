@@ -110,7 +110,11 @@ function Numeric(props: Props): JSX.Element {
     return (
         <div className={`${"noDrag"} ${classes.numericWrapper}`}>
             {dataPoint && props.variable !== Variable.EducationalSpecificEmotions ? (
-                <Typography className={classes.numeric}>{Math.round(dataPoint as number)}</Typography>
+                <Typography className={classes.numeric}>
+                    {dataPoint < 1 && dataPoint > 0
+                        ? (dataPoint as number).toFixed(1)
+                        : Math.round(dataPoint as number)}
+                </Typography>
             ) : dataPoint && props.variable == Variable.EducationalSpecificEmotions ? (
                 <EmotionsDisplay emotions={dataPoint as EducationalSpecificEmotions} />
             ) : (

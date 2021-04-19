@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import {render, screen} from "@testing-library/react";
 import {RecoilRoot} from "recoil";
 import {EyeTrackingDevice} from "../../../constants";
-import Menu from "../Menu/Menu";
+import Menu from "../menu/Menu";
 import {
     selectedSessionIdState,
     Session,
@@ -25,6 +25,7 @@ const testSessions: {[key: number]: Session} = {
         _id: 1,
         sessionName: "Test1",
         studentId: "1",
+        studentName: "John Doe",
         eyeTrackingDevice: EyeTrackingDevice.Mobile,
         startTime: 0,
         endTime: 100,
@@ -34,6 +35,7 @@ const testSessions: {[key: number]: Session} = {
         _id: 2,
         sessionName: "Test2",
         studentId: "2",
+        studentName: "Jane Smith",
         eyeTrackingDevice: EyeTrackingDevice.Stationary,
         startTime: 200,
         endTime: 300,

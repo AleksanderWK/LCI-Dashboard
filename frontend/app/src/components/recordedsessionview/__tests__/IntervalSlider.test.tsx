@@ -21,7 +21,8 @@ const testRecordedSession: RecordedSession = {
             ps: [],
             er: [],
             ms: [],
-            esf: []
+            esf: [],
+            ese: []
         },
         "1": {
             timestamps: [],
@@ -34,7 +35,8 @@ const testRecordedSession: RecordedSession = {
             ps: [],
             er: [],
             ms: [],
-            esf: []
+            esf: [],
+            ese: []
         }
     }
 };

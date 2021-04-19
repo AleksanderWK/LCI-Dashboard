@@ -1,5 +1,5 @@
 /*
- *  State for dashboard (containers and layout)
+ *  State for dashboard (selected variables, container views and layout)
  */
 
 import {Layout} from "react-grid-layout";
@@ -10,10 +10,10 @@ import {selectedSessionIdState} from "./session";
 export type View = "chart" | "numeric";
 
 /*
- *   An atomFamily that stores the container state for each variable for each session
+ *   An atomFamily that stores the view state for each variable for each session
  */
-export const containerState = atomFamily<View, [number | null, Variable]>({
-    key: "container",
+export const viewState = atomFamily<View, [number | null, Variable]>({
+    key: "view",
     default: "chart"
 });
 

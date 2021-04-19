@@ -1,23 +1,18 @@
 import React, {useRef, useState} from "react";
-import {MMDVariables, Variable} from "../../../constants";
-import Menu from "./Menu";
-import LineChart from "./LineChart";
-import Numeric from "./Numeric";
-import ContainerCard from "../ContainerCard";
-import Tooltip from "../Tooltip";
+import {MMDVariables, Variable} from "../../../../constants";
+import Menu from "../Menu";
+import LineChart from "../LineChart";
+import Numeric from "../Numeric";
+import ContainerCard from "../../../common/ContainerCard";
+import Tooltip from "../../../common/Tooltip";
 import {makeStyles, Theme, createStyles, IconButton, Typography} from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import CalculatingIndicator from "./CalculatingIndicator";
+import CalculatingIndicator from "../CalculatingIndicator";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
-import {selectedSessionDataLengthVariableState, selectedSessionIdState} from "../../../state/session";
-import XRangeChart from "./XRangeChart";
-import {
-    containerState,
-    selectedSessionActiveContainersState,
-    selectedSessionLayoutState,
-    View
-} from "../../../state/dashboard";
+import {selectedSessionDataLengthVariableState, selectedSessionIdState} from "../../../../state/session";
+import XRangeChart from "../XRangeChart";
+import {viewState, selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -50,17 +45,13 @@ export default function Container(props: Props): JSX.Element {
     const dataLength = useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
 
     const selectedSessionId = useRecoilValue(selectedSessionIdState);
-    const [container, setContainer] = useRecoilState(containerState([selectedSessionId, props.variable]));
+    const [view, setView] = useRecoilState(viewState([selectedSessionId, props.variable]));
     const setActiveContainers = useSetRecoilState(selectedSessionActiveContainersState);
     const setSelectedSessionLayout = useSetRecoilState(selectedSessionLayoutState);
 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
-
-    function setView(view: View): void {
-        setContainer(view);
-    }
 
     function removeContainer(): void {
         setActiveContainers((prevState) => {
@@ -107,7 +98,7 @@ export default function Container(props: Props): JSX.Element {
                     <Menu
                         open={menuOpen}
                         anchorEl={menuAnchorElement.current}
-                        isDetailedView={container === "chart"}
+                        isDetailedView={view === "chart"}
                         onShowMore={() => setView("chart")}
                         onShowLess={() => setView("numeric")}
                         onRemoveView={() => removeContainer()}
@@ -116,9 +107,9 @@ export default function Container(props: Props): JSX.Element {
                 </div>
                 {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
                     <CalculatingIndicator variable={props.variable} />
-                ) : container === "chart" && props.variable != Variable.EducationalSpecificEmotions ? (
+                ) : view === "chart" && props.variable != Variable.EducationalSpecificEmotions ? (
                     <LineChart variable={props.variable} />
-                ) : container === "chart" ? (
+                ) : view === "chart" ? (
                     <XRangeChart variable={props.variable} />
                 ) : (
                     <Numeric variable={props.variable} />

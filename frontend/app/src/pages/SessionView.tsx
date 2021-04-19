@@ -1,9 +1,9 @@
 import React, {useEffect} from "react";
 import {useRecoilCallback} from "recoil";
 import PageContainer from "../components/common/PageContainer";
-import Dashboard from "../components/dashboard/live/Dashboard";
+import Dashboard from "../components/sessionview/dashboard/Dashboard";
 import Header from "../components/sessionview/Header";
-import Menu from "../components/sessionview/Menu/Menu";
+import Menu from "../components/sessionview/menu/Menu";
 import Popups from "../components/sessionview/Popups";
 import Snackbars from "../components/sessionview/Snackbars";
 import {emotionsColorMapper, emotionsIndexMapper, FREQUENCY, Variable} from "../constants";
@@ -12,11 +12,11 @@ import {callbackFunctionsState} from "../state/chart";
 import {
     Data,
     EducationalSpecificEmotions,
+    Session,
     sessionDataState,
     sessionESEXRangeDataState,
     sessionRecordingState,
-    sessionsState,
-    SessionWithStudent
+    sessionsState
 } from "../state/session";
 
 export interface DataPoints {
@@ -47,7 +47,7 @@ export default function SessionView(): JSX.Element {
             const now = Math.round(timestamp);
 
             // Find the Session with the same sessionCode as this data has
-            const session: SessionWithStudent | undefined = snapshot
+            const session: Session | undefined = snapshot
                 .getLoadable(sessionsState)
                 .getValue()
                 .find((session) => session.sessionCode == sessionCode);

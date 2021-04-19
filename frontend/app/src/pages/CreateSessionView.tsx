@@ -1,6 +1,6 @@
 import React from "react";
 import {makeStyles, createStyles} from "@material-ui/core";
-import dashboardIllustration from "../assets/Images/dashboardIllustration.svg";
+import dashboardIllustration from "../assets/images/dashboardIllustration.svg";
 import CreateSession from "../components/createsessionview/CreateSession";
 import PopupContainer from "../components/common/PopupContainer";
 import AddStudent from "../components/createsessionview/AddStudent";

@@ -1,4 +1,4 @@
-import {Variable} from "../../../constants";
+import {MMDVariables, Variable} from "../../../constants";
 import {createStyles, makeStyles} from "@material-ui/core";
 import Container from "./Container";
 
@@ -24,9 +24,11 @@ function Dashboard(): JSX.Element {
 
     return (
         <div className={classes.dashboard}>
-            {Object.values(Variable).map((variable) => {
-                return <Container key={variable} variable={variable} />;
-            })}
+            {Object.values(Variable)
+                .filter((variable) => MMDVariables[variable].enabled)
+                .map((variable) => {
+                    return <Container key={variable} variable={variable} />;
+                })}
         </div>
     );
 }

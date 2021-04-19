@@ -1,11 +1,14 @@
 /*
- *  State for all live sessions (information and data)
+ *  State for all live sessions (information, recording state and data)
  */
 
 import * as Highcharts from "highcharts";
 import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
-import {Student, studentState} from "./student";
+
+/*
+ *  SESSION INFORMATION
+ */
 
 /*
  *  An atom that stores which session is selected
@@ -27,6 +30,7 @@ export interface Session {
     _id: number;
     sessionName: string;
     studentId: string;
+    studentName: string;
     eyeTrackingDevice: EyeTrackingDevice;
     startTime: number;
     endTime: number | null;
@@ -40,6 +44,41 @@ export const sessionState = atomFamily<Session | undefined, number | null>({
     key: "session",
     default: undefined
 });
+
+/*
+ *  A selector that returns the selected session's session info
+ */
+export const selectedSessionState = selector<Session | undefined>({
+    key: "selectedSession",
+    get: ({get}) => {
+        const id = get(selectedSessionIdState);
+        return get(sessionState(id));
+    }
+});
+
+/*
+ *  A selector that returns the session info of all sessions
+ */
+export const sessionsState = selector<Session[]>({
+    key: "sessions",
+    get: ({get}) => {
+        const sessions: Session[] = [];
+        const sessionIds = get(sessionIdsState);
+
+        sessionIds.forEach((id) => {
+            const session = get(sessionState(id));
+            if (session) {
+                sessions.push(session);
+            }
+        });
+
+        return sessions;
+    }
+});
+
+/*
+ *  RECORDING INFORMATION
+ */
 
 interface Recording {
     status: boolean;
@@ -75,77 +114,9 @@ export const selectedSessionRecordingState = selector<Recording>({
     }
 });
 
-export interface SessionWithStudent {
-    _id: number;
-    sessionName: string;
-    student: Student;
-    eyeTrackingDevice: EyeTrackingDevice;
-    recording: Recording;
-    startTime: number;
-    endTime: number | null;
-    sessionCode: string;
-}
-
 /*
- *  A selector that returns the session info of the selected session
+ *  DATA
  */
-export const selectedSessionState = selector<SessionWithStudent | undefined>({
-    key: "selectedSession",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        const session = get(sessionState(id));
-
-        if (id && session) {
-            const student = get(studentState(session.studentId));
-
-            if (student) {
-                return {
-                    _id: id,
-                    sessionName: session.sessionName,
-                    student: student,
-                    eyeTrackingDevice: session.eyeTrackingDevice,
-                    recording: get(sessionRecordingState(id)),
-                    startTime: session.startTime,
-                    endTime: session.endTime,
-                    sessionCode: session.sessionCode
-                };
-            }
-        }
-    }
-});
-
-/*
- *  A selector that returns the session info of all sessions
- */
-export const sessionsState = selector<SessionWithStudent[]>({
-    key: "sessions",
-    get: ({get}) => {
-        const sessions: SessionWithStudent[] = [];
-        const sessionIds = get(sessionIdsState);
-
-        sessionIds.forEach((sessionId) => {
-            const session = get(sessionState(sessionId));
-            if (session) {
-                const student = get(studentState(session.studentId));
-
-                if (student) {
-                    sessions.push({
-                        _id: sessionId,
-                        sessionName: session.sessionName,
-                        student: student,
-                        eyeTrackingDevice: session.eyeTrackingDevice,
-                        recording: get(sessionRecordingState(sessionId)),
-                        startTime: session.startTime,
-                        endTime: session.endTime,
-                        sessionCode: session.sessionCode
-                    });
-                }
-            }
-        });
-
-        return sessions;
-    }
-});
 
 export interface EducationalSpecificEmotions {
     [key: string]: boolean;
@@ -216,6 +187,29 @@ export const selectedSessionVariableDataState = selectorFamily<
     key: "selectedSessionVariableData",
     get: (variable: Variable) => ({get}) => {
         return get(selectedSessionDataState)[variable];
+    }
+});
+
+/*
+ *  A selectorFamily that returns the data for a given variable and session id
+ */
+export const sessionVariableDataState = selectorFamily<
+    [number, number | EducationalSpecificEmotions][],
+    [Variable, number]
+>({
+    key: "sessionVariableData",
+    get: (param) => ({get}) => {
+        return get(sessionDataState(param[1]))[param[0]];
+    }
+});
+
+/*
+ *  A selector that returns the length of the data for a given variable and session id
+ */
+export const sessionVariableDataLengthState = selectorFamily<number, [Variable, number]>({
+    key: "sessionVariableDataLength",
+    get: (param) => ({get}) => {
+        return get(sessionDataState(param[1]))[param[0]].length;
     }
 });
 
@@ -298,22 +292,4 @@ export const selectedSessionLastPointState = selectorFamily<
             return null;
         }
     }
-});
-
-/*
- *  A selectorFamily that returns the data for a given variable and session id
- */
-export const sessionVariableDataState = selectorFamily<
-    [number, number | EducationalSpecificEmotions][],
-    [Variable, number]
->({
-    key: "sessionVariableData",
-    get: (Parameters: [Variable, number]) => ({get}) => {
-        return get(sessionDataState(Parameters[1]))[Parameters[0]];
-    }
-});
-
-export const snackOpenState = atom<boolean>({
-    key: "snackOpen",
-    default: false
 });

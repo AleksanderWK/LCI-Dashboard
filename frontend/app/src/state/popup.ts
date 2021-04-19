@@ -23,3 +23,8 @@ export const selectChartsPopupOpenState = atom<boolean>({
     key: "selectChartsPopupOpen",
     default: false
 });
+
+export const snackOpenState = atom<boolean>({
+    key: "snackOpen",
+    default: false
+});
