@@ -62,7 +62,9 @@ export default function SelectCharts(): JSX.Element {
     };
 
     const handleCheckAll = (checkAll: boolean) => {
-        setActiveContainers(checkAll ? Object.values(Variable) : []);
+        setActiveContainers(
+            checkAll ? Object.values(Variable).filter((variable) => MMDVariables[variable].enabled) : []
+        );
 
         if (!checkAll) {
             // Remove all layout items
@@ -74,29 +76,32 @@ export default function SelectCharts(): JSX.Element {
         <div className={classes.grid}>
             <Typography variant="h1">Select Variables</Typography>
             <List style={{maxHeight: "400px", overflowY: "auto"}}>
-                {Object.values(Variable).map((variable, index) => {
-                    const name = MMDVariables[variable].name;
-                    const labelId = `checkbox-list-label-${name}`;
-                    return (
-                        <ListItem key={index} role={undefined} dense button onClick={handleCheck(variable)}>
-                            <ListItemIcon className={classes.checkbox}>
-                                <Checkbox
-                                    edge="start"
-                                    checked={activeContainers.includes(variable)}
-                                    tabIndex={-1}
-                                    disableRipple
-                                    color="primary"
-                                    className={classes.checkbox}
-                                    inputProps={{"aria-labelledby": labelId}}
-                                />
-                            </ListItemIcon>
-                            <ListItemText disableTypography id={labelId} primary={name} />
-                        </ListItem>
-                    );
-                })}
+                {Object.values(Variable)
+                    .filter((variable) => MMDVariables[variable].enabled)
+                    .map((variable, index) => {
+                        const name = MMDVariables[variable].name;
+                        const labelId = `checkbox-list-label-${name}`;
+                        return (
+                            <ListItem key={index} role={undefined} dense button onClick={handleCheck(variable)}>
+                                <ListItemIcon className={classes.checkbox}>
+                                    <Checkbox
+                                        edge="start"
+                                        checked={activeContainers.includes(variable)}
+                                        tabIndex={-1}
+                                        disableRipple
+                                        color="primary"
+                                        className={classes.checkbox}
+                                        inputProps={{"aria-labelledby": labelId}}
+                                    />
+                                </ListItemIcon>
+                                <ListItemText disableTypography id={labelId} primary={name} />
+                            </ListItem>
+                        );
+                    })}
             </List>
             <div className={classes.btnGroup}>
-                {Object.values(Variable).length != activeContainers.length ? (
+                {Object.values(Variable).filter((variable) => MMDVariables[variable].enabled).length !=
+                activeContainers.length ? (
                     <Button
                         className={classes.btn}
                         data-testid="btn-select-all"

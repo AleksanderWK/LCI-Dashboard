@@ -36,6 +36,7 @@ export interface MMDVariableInfo {
     description: string;
     maxValue?: number;
     calculationTime?: number;
+    enabled: boolean;
 }
 
 export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
@@ -44,69 +45,80 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         device: Device.EyeTracker,
         description:
             "Cognitive load refers to the amount of information that the working memory of a person can hold at once. In an educational setting, it is the effort needed for a learner to learn new information.",
-        calculationTime: 30
+        calculationTime: 30,
+        enabled: true
     },
     [Variable.PerceivedDifficulty]: {
         name: "Perceived Difficulty",
         device: Device.EyeTracker,
         description:
             "Perceived difficulty is the perception of the ease or difficulty of performing in an educational context.",
-        maxValue: 100
+        maxValue: 100,
+        enabled: true
     },
     [Variable.Familiarity]: {
         name: "Familiarity",
         device: Device.EyeTracker,
-        description: ""
+        description: "",
+        enabled: false
     },
     [Variable.InformationProcessingIndex]: {
         name: "Information Processing Index",
         device: Device.EyeTracker,
         description:
             "The ratio of local (100) and global (0) information processing. Staring at one point is local processing, while rapidly scanning a larger area is global processing.",
-        maxValue: 100
+        maxValue: 100,
+        enabled: true
     },
     [Variable.PhysiologicalArousal]: {
         name: "Physiological Arousal",
         device: Device.Wristband,
         description:
             "Physiological Arousal is how strong the current emotions are. It is calculated by the average EDA in a time interval of 8 seconds.",
-        calculationTime: 8
+        calculationTime: 8,
+        enabled: true
     },
     [Variable.Engagement]: {
         name: "Engagement",
         device: Device.Wristband,
         description:
             "Engagement is a measure of involvement and enthusiasm for the activity. It is calculated by the area under the graph of tonic EDA, in a time interval of 4 seconds.",
-        calculationTime: 4
+        calculationTime: 4,
+        enabled: true
     },
     [Variable.PhysiologicalStress]: {
         name: "Physiological Stress",
         device: Device.Wristband,
         description:
             "Physioloigcal Stress is indicated by LF/HF, the relative strengths of the low frequency and high frequency waves of the heart pulse signal.",
-        calculationTime: 300
+        calculationTime: 300,
+        enabled: true
     },
     [Variable.EmotionalRegulation]: {
         name: "Emotional Regulation",
         device: Device.Wristband,
-        description: ""
+        description: "",
+        enabled: false
     },
     [Variable.MotionStability]: {
         name: "Motion Stability",
         device: Device.VideoBody,
-        description: ""
+        description: "",
+        enabled: false
     },
     [Variable.EnergySpentFatigue]: {
         name: "Energy Spent/Fatigue",
         device: Device.VideoBody,
         description:
             "The amount of energy spent by the student, also an indicator of fatigue. This is determined by calculating the jerk, the third derivative of the position skeletal body.",
-        calculationTime: 3
+        calculationTime: 3,
+        enabled: true
     },
     [Variable.EducationalSpecificEmotions]: {
         name: "Educational-specific Emotions",
         device: Device.VideoFace,
-        description: "Emotions that the student is experiencing in an educational setting."
+        description: "Emotions that the student is experiencing in an educational setting.",
+        enabled: true
     }
 };
 
