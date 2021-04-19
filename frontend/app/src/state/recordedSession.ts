@@ -1,9 +1,13 @@
+/*
+ *  State for recorded session view
+ */
+
 import {atom, selector} from "recoil";
 import {emotionsColorMapper, emotionsIndexMapper, EyeTrackingDevice, FREQUENCY, Variable} from "../constants";
 import {EducationalSpecificEmotions} from "./session";
 
 /*
- * An atom that stores the id of a session that has been recorded and selected
+ *  An atom that stores the id of a session that has been recorded and selected
  */
 export const selectedRecordedSessionIdState = atom<number | null>({
     key: "selectedRecordedSessionId",

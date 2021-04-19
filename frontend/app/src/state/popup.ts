@@ -1,3 +1,7 @@
+/*
+ *  State for popups
+ */
+
 import {atom} from "recoil";
 
 export const quitSessionPopupOpenState = atom<boolean>({

@@ -5,15 +5,16 @@ import {useEffect} from "react";
 import {useRecoilCallback, useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, Variable} from "../../../constants";
 import {
-    selectedSessionActiveContainersState,
     selectedSessionDataState,
     selectedSessionESEXRangeDataState,
+    selectedSessionIdState,
     sessionDataState,
     sessionESEXRangeDataState
 } from "../../../state/session";
 import theme from "../../../theme";
 import xrange from "../../../assets/xrange";
 import {useChartCallbacks} from "../../../utils/useChartCallbacks";
+import {selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../../state/dashboard";
 
 xrange(Highcharts);
 
@@ -37,9 +38,6 @@ function XRangeChart(props: Props): JSX.Element {
                     // Insert update callback function on load
                     // Callback will be called every 0.5s until removed (on unmount)
                     insertCallback(() => updateChart(400));
-                },
-                redraw: () => {
-                    console.log("redraw");
                 }
             }
         },
@@ -104,7 +102,7 @@ function XRangeChart(props: Props): JSX.Element {
         }
     });
 
-    const updateChart = useRecoilCallback(({snapshot}) => (animationDuration: number) => {
+    const updateChart = useRecoilCallback(({snapshot}) => (animationDuration?: number) => {
         if (chart.current) {
             const rawData = props.id
                 ? [...snapshot.getLoadable(sessionDataState(props.id)).getValue()[props.variable]]
@@ -126,14 +124,14 @@ function XRangeChart(props: Props): JSX.Element {
                 );
             }
 
-            chart.current.chart.redraw({duration: animationDuration});
+            chart.current.chart.redraw(animationDuration ? {duration: animationDuration} : false);
         }
     });
 
     useEffect(() => {
         if (chartId) {
             // Update chart on component mount
-            updateChart(0);
+            updateChart();
 
             return () => {
                 // Remove update callback function on unmount
@@ -144,14 +142,23 @@ function XRangeChart(props: Props): JSX.Element {
         }
     }, [chartId]);
 
-    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
 
     useEffect(() => {
-        // If active containers is changed, reflow graph as container size may have changed
+        // Update chart when session changes
+        // (containers with same variable across sessions are not rerendered, due to performance)
+        updateChart();
+    }, [selectedSessionId]);
+
+    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const layout = useRecoilValue(selectedSessionLayoutState);
+
+    useEffect(() => {
+        // If active containers/layouts is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers]);
+    }, [activeContainers, layout]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }

@@ -1,7 +1,11 @@
+/*
+ *  State for all live sessions (information and data)
+ */
+
 import * as Highcharts from "highcharts";
 import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {EyeTrackingDevice, Variable} from "../constants";
-import {studentState, Student} from "./student";
+import {Student, studentState} from "./student";
 
 /*
  *  An atom that stores which session is selected
@@ -296,91 +300,6 @@ export const selectedSessionLastPointState = selectorFamily<
     }
 });
 
-export interface VariableDisplay {
-    active: boolean;
-    display: "line" | "numeric";
-}
-
-export interface ActiveContainers {
-    [Variable.CognitiveLoad]: VariableDisplay;
-    [Variable.PerceivedDifficulty]: VariableDisplay;
-    [Variable.Familiarity]: VariableDisplay;
-    [Variable.InformationProcessingIndex]: VariableDisplay;
-    [Variable.PhysiologicalArousal]: VariableDisplay;
-    [Variable.Engagement]: VariableDisplay;
-    [Variable.PhysiologicalStress]: VariableDisplay;
-    [Variable.EmotionalRegulation]: VariableDisplay;
-    [Variable.MotionStability]: VariableDisplay;
-    [Variable.EnergySpentFatigue]: VariableDisplay;
-    [Variable.EducationalSpecificEmotions]: VariableDisplay;
-}
-
-/*
- *   An atomFamily that stores the active containers for each session
- */
-export const sessionActiveContainersState = atomFamily<ActiveContainers, number | null>({
-    key: "sessionActiveContainers",
-    default: {
-        [Variable.CognitiveLoad]: {active: false, display: "line"},
-        [Variable.PerceivedDifficulty]: {active: false, display: "line"},
-        [Variable.Familiarity]: {active: false, display: "line"},
-        [Variable.InformationProcessingIndex]: {active: false, display: "line"},
-        [Variable.PhysiologicalArousal]: {active: false, display: "line"},
-        [Variable.Engagement]: {active: false, display: "line"},
-        [Variable.PhysiologicalStress]: {active: false, display: "line"},
-        [Variable.EmotionalRegulation]: {active: false, display: "line"},
-        [Variable.MotionStability]: {active: false, display: "line"},
-        [Variable.EnergySpentFatigue]: {active: false, display: "line"},
-        [Variable.EducationalSpecificEmotions]: {active: false, display: "line"}
-    }
-});
-
-/*
- *  A selector for getting and setting display object for all containers in a session
- */
-export const selectedSessionActiveContainersState = selector<ActiveContainers>({
-    key: "selectedSessionActiveContainers",
-    get: ({get}) => {
-        const id = get(selectedSessionIdState);
-        return get(sessionActiveContainersState(id));
-    },
-    set: ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), newValue);
-    }
-});
-
-/*
- *  A selectorFamily that accesses a sessions containers active state
- */
-export const selectedSessionVariableContainerVisibleState = selectorFamily<VariableDisplay, Variable>({
-    key: "selectedSessionVariableContainer",
-    get: (variable: Variable) => ({get}) => {
-        const id = get(selectedSessionIdState);
-        return get(sessionActiveContainersState(id))[variable];
-    },
-    set: (variable: Variable) => ({get, set}, newValue) => {
-        const id = get(selectedSessionIdState);
-        set(sessionActiveContainersState(id), (activeContainerPrevState) => {
-            return {
-                ...activeContainerPrevState,
-                [variable]: newValue
-            };
-        });
-    }
-});
-
-export const snackOpenState = atom<boolean>({
-    key: "snackOpen",
-    default: false
-});
-
-export interface allsessionsObject {
-    sessionId: number;
-    studentName: string;
-    data: [number, number | EducationalSpecificEmotions][];
-}
-
 /*
  *  A selectorFamily that returns the data for a given variable and session id
  */
@@ -394,30 +313,7 @@ export const sessionVariableDataState = selectorFamily<
     }
 });
 
-/*
- *  An atom that stores which variable is selected for the all sessions view
- */
-export const selectedAllSessionVariableState = atom<Variable | null>({
-    key: "selectedAllSessionVariable",
-    default: null
-});
-
-/*
- *  A selector that returns array of objects that each contain student name and session data for
- *  the currently selected variable.
- */
-export const allSessionsState = selector<allsessionsObject[]>({
-    key: "allSessions",
-    get: ({get}) => {
-        const result: allsessionsObject[] = [];
-        const sessions = get(sessionsState);
-        const selectedVariable = get(selectedAllSessionVariableState);
-        sessions.forEach((session) => {
-            if (selectedVariable != null) {
-                const data = get(sessionVariableDataState([selectedVariable, session._id]));
-                result.push({sessionId: session._id, studentName: session.student.name, data: data});
-            }
-        });
-        return result;
-    }
+export const snackOpenState = atom<boolean>({
+    key: "snackOpen",
+    default: false
 });
