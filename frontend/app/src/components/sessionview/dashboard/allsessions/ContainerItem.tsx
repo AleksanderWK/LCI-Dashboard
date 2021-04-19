@@ -10,7 +10,16 @@ import XRangeChart from "../XRangeChart";
 
 const useStyles = makeStyles(() =>
     createStyles({
-        // Styles here
+        content: {
+            position: "relative",
+            display: "grid",
+            gridAutoRows: "24px 126px",
+            gap: 16
+        },
+        studentName: {
+            fontSize: 14,
+            fontWeight: "bold"
+        }
     })
 );
 
@@ -29,8 +38,10 @@ export default function ContainerItem(props: Props): JSX.Element {
     return (
         <>
             {session && (
-                <>
-                    <Typography>{session.studentName}</Typography>
+                <div className={classes.content}>
+                    <Typography noWrap className={classes.studentName}>
+                        {session.studentName}
+                    </Typography>
                     {MMDVariables[props.variable].calculationTime && dataLength == 0 ? (
                         <CalculatingIndicator variable={props.variable} id={props.id} />
                     ) : props.view === "chart" && props.variable != Variable.EducationalSpecificEmotions ? (
@@ -40,7 +51,7 @@ export default function ContainerItem(props: Props): JSX.Element {
                     ) : (
                         <Numeric variable={props.variable} id={props.id} />
                     )}
-                </>
+                </div>
             )}
         </>
     );

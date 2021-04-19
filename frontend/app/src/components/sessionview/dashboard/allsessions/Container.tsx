@@ -28,6 +28,11 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         infoIcon: {
             cursor: "default"
+        },
+        items: {
+            display: "grid",
+            gridTemplateColumns: "1fr",
+            gap: theme.spacing(3)
         }
     })
 );
@@ -103,9 +108,11 @@ export default function Container(props: Props): JSX.Element {
                     />
                 </div>
 
-                {sessionIds.map((id) => (
-                    <ContainerItem key={id} id={id} variable={props.variable} view={view} />
-                ))}
+                <div className={classes.items}>
+                    {sessionIds.map((id) => (
+                        <ContainerItem key={id} id={id} variable={props.variable} view={view} />
+                    ))}
+                </div>
             </>
         </ContainerCard>
     );

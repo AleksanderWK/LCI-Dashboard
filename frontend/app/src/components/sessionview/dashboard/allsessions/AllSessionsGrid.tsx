@@ -7,6 +7,7 @@ import Container from "./Container";
 const useStyles = makeStyles(() =>
     createStyles({
         grid: {
+            position: "relative",
             display: "grid",
             width: "100%",
             gridAutoColumns: "1fr",
