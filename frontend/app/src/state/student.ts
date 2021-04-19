@@ -1,3 +1,7 @@
+/*
+ *  State for student data
+ */
+
 import {atom, selectorFamily} from "recoil";
 
 export interface Student {

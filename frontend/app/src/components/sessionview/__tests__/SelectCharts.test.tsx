@@ -5,6 +5,7 @@ import userEvent from "@testing-library/user-event";
 import {RecoilRoot} from "recoil";
 import SelectCharts from "../SelectCharts";
 import {act} from "react-dom/test-utils";
+import {selectedSessionIdState} from "../../../state/session";
 
 /*  Selected containers at start are changing frequently during development,
     snapshot testing isn't applicable'
@@ -31,14 +32,17 @@ it("renders without crashing", () => {
 it("select all button works properly", () => {
     act(() => {
         render(
-            <RecoilRoot>
+            <RecoilRoot
+                initializeState={(snap) => {
+                    snap.set(selectedSessionIdState, 1);
+                }}
+            >
                 <SelectCharts />
             </RecoilRoot>
         );
     });
 
     const selectAllBtn = screen.getByTestId("btn-select-all");
-    //screen.getByTestId("btn-remove-all")
 
     expect(selectAllBtn).toBeInTheDocument();
     act(() => userEvent.click(selectAllBtn));

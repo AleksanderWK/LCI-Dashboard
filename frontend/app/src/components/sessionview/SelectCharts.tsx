@@ -1,10 +1,10 @@
 import React from "react";
 import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
 import {Button, List, ListItem, ListItemIcon, ListItemText, Checkbox, Typography} from "@material-ui/core";
-import {selectedSessionActiveContainersState} from "../../state/session";
 import {useRecoilState, useSetRecoilState} from "recoil";
 import {MMDVariables, Variable} from "../../constants";
 import {selectChartsPopupOpenState} from "../../state/popup";
+import {selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
             display: "flex",
             width: "100%"
         },
-        listItemText: {},
         checkbox: {
             color: theme.palette.primary.main
         }
@@ -34,26 +33,46 @@ export default function SelectCharts(): JSX.Element {
     const classes = useStyles();
     const setPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const [activeContainers, setActiveContainers] = useRecoilState(selectedSessionActiveContainersState);
+    const setSelectedSessionLayout = useSetRecoilState(selectedSessionLayoutState);
 
     const handleCheck = (variable: Variable) => () => {
+        let remove = false;
+
         setActiveContainers((prevState) => {
             const list = [...prevState];
+
+            // If variable is active, remove it
             if (list.includes(variable)) {
-                list.splice(list.indexOf(variable), 1);
-                return list;
+                remove = true;
+                return list.filter((item) => item != variable);
             }
+
+            // If variable is not active, add it
             list.push(variable);
             return list;
         });
+
+        if (remove) {
+            // Remove from layout
+            setSelectedSessionLayout((prevValue) => {
+                const layout = [...prevValue];
+                return layout.filter((item) => item.i != variable);
+            });
+        }
     };
 
     const handleCheckAll = (checkAll: boolean) => {
         setActiveContainers(checkAll ? Object.values(Variable) : []);
+
+        if (!checkAll) {
+            // Remove all layout items
+            setSelectedSessionLayout([]);
+        }
     };
 
     return (
         <div className={classes.grid}>
-            <Typography variant="h1">Select Variable Charts</Typography>
+            <Typography variant="h1">Select Variables</Typography>
             <List style={{maxHeight: "400px", overflowY: "auto"}}>
                 {Object.values(Variable).map((variable, index) => {
                     const name = MMDVariables[variable].name;
@@ -71,12 +90,7 @@ export default function SelectCharts(): JSX.Element {
                                     inputProps={{"aria-labelledby": labelId}}
                                 />
                             </ListItemIcon>
-                            <ListItemText
-                                disableTypography
-                                id={labelId}
-                                primary={name}
-                                className={classes.listItemText}
-                            />
+                            <ListItemText disableTypography id={labelId} primary={name} />
                         </ListItem>
                     );
                 })}

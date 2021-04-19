@@ -33,6 +33,7 @@ function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
         ["data." + recordingId + ".er"]: data.er,
         ["data." + recordingId + ".ms"]: data.ms,
         ["data." + recordingId + ".esf"]: data.esf,
+        ["data." + recordingId + ".ese"]: data.ese,
 
         // ALTERNATIVE: One object per data point containing all variables and timestamp
         // ["data." + recordingId]: { ...data, timestamp: timestamp },
@@ -49,6 +50,7 @@ function pushDataPointToSession(timestamp, data, sessionId, recordingId) {
         "data.er": [timestamp, data.er],
         "data.ms": [timestamp, data.ms],
         "data.esf": [timestamp, data.esf],
+        "data.esf": [timestamp, data.ese],
         */
       },
     },
