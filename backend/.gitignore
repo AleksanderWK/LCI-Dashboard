@@ -2,6 +2,8 @@
 /.pytest_cache
 /calculators/__pycache__
 /datamodels/__pycache__
-/devices/openface/bin
+/devices/openface/bin/*
+!/devices/openface/bin/.gitkeep
 /devices/openface/processed
-/devices/openpose/bin
+/devices/openpose/bin/*
+!/devices/openpose/bin/.gitkeep

@@ -41,9 +41,10 @@ python main.py SESSION_CODE [OPTIONS]
 
 Options:
 
-- --devices
+- --devices EYE_TRACKER
   - Retrieve data from devices
   - Devices must be set up correctly; see the [devices setup](#devices-setup) section below
+  - EYE_TRACKER is the type of eye tracker used, either _stationary_ or _mobile_ (see examples [below](#example:-run-with-devices))
 - --dataset=[id]
   - Retrieve data from a dataset (1-15).
 
@@ -59,8 +60,16 @@ python main.py SESSION_CODE --dataset=12
 
 Before launching, make sure all devices are connected and up and running.
 
+If stationary eye tracker is used:
+
 ```
-python main.py SESSION_CODE --devices
+python main.py SESSION_CODE --devices stationary
+```
+
+If mobile eye tracker is used:
+
+```
+python main.py SESSION_CODE --devices mobile
 ```
 
 ## Devices Setup
@@ -76,6 +85,9 @@ Devices needed:
 The following subsections will cover how to set these up correctly to be used with the program.
 
 ### Tobii Pro X3-120 (Stationary Eye Tracker)
+
+_Note_: Calculations derived from stationary eye tracker data assumes that
+the screen is **14"** with **16:9 aspect ratio** (can be changed at `devices/eye_tracker/stationary_eye_tracker.py:19`).
 
 #### Installation
 
