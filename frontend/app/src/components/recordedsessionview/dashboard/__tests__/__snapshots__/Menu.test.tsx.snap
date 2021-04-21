@@ -6,7 +6,7 @@ exports[`menu matches snapshot 1`] = `
     aria-hidden="true"
   />
   <div
-    class="MuiPopover-root"
+    class="MuiPopover-root noDrag"
     data-testid="dropdown-menu"
     role="presentation"
     style="position: fixed; z-index: 1300; right: 0px; bottom: 0px; top: 0px; left: 0px;"

@@ -6,7 +6,12 @@ import {useRecoilValue} from "recoil";
 import {Variable} from "../../../constants";
 import theme from "../../../theme";
 import xrange from "../../../assets/xrange";
-import {currentRecordingInterval, recordedSessionESEXRangeDataState} from "../../../state/recordedSession";
+import {
+    currentRecordingInterval,
+    recordedSessionESEXRangeDataState,
+    selectedRecordedSessionLayoutState,
+    selectedRecordingActiveContainersState
+} from "../../../state/recordedSession";
 
 xrange(Highcharts);
 
@@ -84,6 +89,9 @@ function XRangeChart(props: Props): JSX.Element {
     const recordedSessionESEXRangeData = useRecoilValue(recordedSessionESEXRangeDataState);
     const selectedRecordingInterval = useRecoilValue(currentRecordingInterval);
 
+    const selectedRecordingActiveContainers = useRecoilValue(selectedRecordingActiveContainersState);
+    const selectedRecordingLayout = useRecoilValue(selectedRecordedSessionLayoutState);
+
     // Listens on change in interval state and sets the x-axis' min and max values accordingly
     useEffect(() => {
         if (chart.current && selectedRecordingInterval) {
@@ -100,6 +108,13 @@ function XRangeChart(props: Props): JSX.Element {
             chart.current.chart.series[0].setData([...recordedSessionESEXRangeData], true);
         }
     }, [recordedSessionESEXRangeData]);
+
+    useEffect(() => {
+        // If active containers/layout is changed, reflow graph as container size may have changed
+        if (chart.current) {
+            chart.current.chart.reflow();
+        }
+    }, [selectedRecordingActiveContainers, selectedRecordingLayout]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }
