@@ -36,6 +36,7 @@ export default function Menu(props: Props): JSX.Element {
 
     return (
         <MUIMenu
+            className={"noDrag"}
             anchorEl={props.anchorEl}
             getContentAnchorEl={null}
             disableAutoFocusItem={true}

@@ -1,8 +1,8 @@
 import {createStyles, makeStyles, Typography} from "@material-ui/core";
-import Container from "./Container";
-import React from "react";
 import {useRecoilValue} from "recoil";
 import {selectedRecordingActiveContainersState} from "../../../state/recordedSession";
+import {AddChartIcon} from "../../common/Icons";
+import RecordedSessionGrid from "./RecordedSessionGrid";
 
 const useStyles = makeStyles(() =>
     createStyles({
@@ -10,13 +10,7 @@ const useStyles = makeStyles(() =>
             position: "relative",
             width: "100%",
             padding: "30px 0",
-            boxSizing: "border-box",
-
-            // Temporary grid
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(400px, 1fr))",
-            gridAutoRows: "200px",
-            gap: 40
+            boxSizing: "border-box"
         },
         feedback: {
             position: "relative",
@@ -24,8 +18,15 @@ const useStyles = makeStyles(() =>
             width: "100%",
             height: "calc(100% - 86px - 30px)",
             display: "flex",
+            flexDirection: "column",
             justifyContent: "center",
             alignItems: "center"
+        },
+        icon: {
+            margin: "0 3px 0 2px",
+            width: "18px",
+            height: "18px",
+            transform: "translate(0, 2px)"
         }
     })
 );
@@ -37,13 +38,16 @@ function Dashboard(): JSX.Element {
 
     return selectedRecordingActiveContainers.length == 0 ? (
         <div className={classes.feedback}>
-            <Typography>No variables selected</Typography>
+            <Typography align="center" color="textSecondary" gutterBottom>
+                No variables selected.
+            </Typography>
+            <Typography align="center" color="textSecondary">
+                Click on <AddChartIcon className={classes.icon} htmlColor="#FFFFFF" /> to select variables.
+            </Typography>
         </div>
     ) : (
         <div className={classes.dashboard}>
-            {selectedRecordingActiveContainers.map((variable) => {
-                return <Container key={variable} variable={variable} />;
-            })}
+            <RecordedSessionGrid />
         </div>
     );
 }

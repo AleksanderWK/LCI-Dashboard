@@ -4,7 +4,12 @@ import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
 import {useRecoilValue} from "recoil";
 import {MMDVariables, Variable} from "../../../constants";
-import {currentRecordingInterval, recordedSessionState} from "../../../state/recordedSession";
+import {
+    currentRecordingInterval,
+    recordedSessionState,
+    selectedRecordedSessionLayoutState,
+    selectedRecordingActiveContainersState
+} from "../../../state/recordedSession";
 import theme from "../../../theme";
 
 interface Props {
@@ -119,6 +124,9 @@ function LineChart(props: Props): JSX.Element {
     const recordedSession = useRecoilValue(recordedSessionState);
     const selectedRecordingInterval = useRecoilValue(currentRecordingInterval);
 
+    const selectedRecordingActiveContainers = useRecoilValue(selectedRecordingActiveContainersState);
+    const selectedRecordingLayout = useRecoilValue(selectedRecordedSessionLayoutState);
+
     // Listens on change in interval state and sets the x-axis' min and max values accordingly
     useEffect(() => {
         if (chart.current && selectedRecordingInterval) {
@@ -152,6 +160,13 @@ function LineChart(props: Props): JSX.Element {
             chart.current.chart.redraw();
         }
     }, [recordedSession]);
+
+    useEffect(() => {
+        // If active containers/layout is changed, reflow graph as container size may have changed
+        if (chart.current) {
+            chart.current.chart.reflow();
+        }
+    }, [selectedRecordingActiveContainers, selectedRecordingLayout]);
 
     return (
         <HighchartsReact highcharts={Highcharts} constructorType={"stockChart"} options={chartOptions} ref={chart} />
