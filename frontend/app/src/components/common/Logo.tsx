@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../assets/Images/LCI_logo.png";
+import logo from "../../assets/images/LCI_logo.png";
 import {createStyles, makeStyles} from "@material-ui/core";
 
 const useStyles = makeStyles(() =>

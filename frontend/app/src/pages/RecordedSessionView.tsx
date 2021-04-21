@@ -1,13 +1,19 @@
 import React, {useEffect} from "react";
-import {useRecoilValue, useSetRecoilState} from "recoil";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import Header from "../components/recordedsessionview/Header";
 import {ipcInvoke} from "../ipc";
 import {selectedRecordedSessionIdState, RecordedSession, recordedSessionState} from "../state/recordedSession";
 import Footer from "../components/recordedsessionview/Footer";
-import Dashboard from "../components/dashboard/recording/Dashboard";
+import Dashboard from "../components/recordedsessionview/dashboard/Dashboard";
 import PageContainer from "../components/common/PageContainer";
+import Popup from "../components/common/Popup";
+import PopupContainer from "../components/common/PopupContainer";
+import {selectChartsPopupOpenState} from "../state/popup";
+import SelectCharts from "../components/recordedsessionview/SelectCharts";
 
 export default function RecordedSessionView(): JSX.Element {
+    const [selectChartsPopupOpen, setSelectChartsPopupOpen] = useRecoilState(selectChartsPopupOpenState);
+
     const recordedSessionId = useRecoilValue(selectedRecordedSessionIdState);
     const setRecordedSession = useSetRecoilState(recordedSessionState);
 
@@ -27,6 +33,23 @@ export default function RecordedSessionView(): JSX.Element {
                     <Dashboard />
                 </>
             </PageContainer>
+            <PopupContainer
+                open={selectChartsPopupOpen}
+                onClose={(e) => {
+                    if (selectChartsPopupOpen) {
+                        e.preventDefault();
+                        setSelectChartsPopupOpen(false);
+                    }
+                }}
+            >
+                <>
+                    {selectChartsPopupOpen ? (
+                        <Popup>
+                            <SelectCharts />
+                        </Popup>
+                    ) : null}
+                </>
+            </PopupContainer>
         </>
     );
 }

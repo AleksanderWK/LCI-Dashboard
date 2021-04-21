@@ -130,10 +130,17 @@ export default function CreateSession(): JSX.Element {
     }, []);
 
     const handleSelectionChange = (selection: string, value: string) => {
+        let student = undefined;
+
+        if (selection == "studentId") {
+            student = students.find((student) => student._id == value);
+        }
+
         // Overwrite an attribute based on the selection parameter
         const updatedSessionSelections = {
             ...createSessionValues,
-            [selection]: value
+            [selection]: value,
+            ...(selection == "studentId" && student && {studentName: student.name})
         };
 
         // Save updated menu values to state
@@ -156,6 +163,7 @@ export default function CreateSession(): JSX.Element {
         const session: Partial<Session> = {
             sessionName: createSessionValues.sessionName,
             studentId: createSessionValues.studentId,
+            studentName: createSessionValues.studentName,
             eyeTrackingDevice:
                 createSessionValues.eyeTracker === "Mobile" ? EyeTrackingDevice.Mobile : EyeTrackingDevice.Stationary,
             startTime: new Date().getTime(),
@@ -310,13 +318,8 @@ export default function CreateSession(): JSX.Element {
                         Student has connected
                     </Typography>
                 ) : (
-                    <Typography
-                        variant="caption"
-                        style={createSessionValues.studentConnected ? {color: "#00FF00"} : {color: "#DD5757"}}
-                    >
-                        {createSessionValues.studentConnected
-                            ? "Student connected"
-                            : "Waiting for student connection..."}
+                    <Typography variant="caption" style={{color: "#DD5757"}}>
+                        Waiting for student connection...
                     </Typography>
                 )}
             </div>

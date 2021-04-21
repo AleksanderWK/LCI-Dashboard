@@ -1,3 +1,7 @@
+/*
+ *  State for popups
+ */
+
 import {atom} from "recoil";
 
 export const quitSessionPopupOpenState = atom<boolean>({
@@ -17,5 +21,10 @@ export const addStudentPopupOpenState = atom<boolean>({
 
 export const selectChartsPopupOpenState = atom<boolean>({
     key: "selectChartsPopupOpen",
+    default: false
+});
+
+export const snackOpenState = atom<boolean>({
+    key: "snackOpen",
     default: false
 });

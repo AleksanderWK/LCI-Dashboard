@@ -14,7 +14,13 @@ class EnergySpentFatigue(MMDVCalculator):
         pass
 
     def calculate_dataset(self, data: SkeletalNodeCollection):
+        # If it gets the same time as last time, it should return -1 as it is not defined
+        if self.last_positions != None and self.last_positions.time == data.time:
+            return -1
+
+        # Calculate the values based on the new data    
         self.set_last_values(data)
+        # If the jerk is not None, then return it, else return -1 as it is not defined yet
         if self.last_total_jerk != None:
             return self.last_total_jerk
         else:

@@ -27,14 +27,3 @@ def decodeToken(token):
     ip_num = int(num_code[2:-2])
     ip_address = int2ip(ip_num)
     return ip_address, random_code
-
-
-def tests():
-    with open("./tests/test_codes.txt") as f:
-        lines = f.readlines()
-        for code in lines:
-            ip, random = decodeToken(code.strip())
-            print(code.strip(), ip, ip == "192.168.38.101")
-
-# Uncomment out this to run the tests
-# tests()
