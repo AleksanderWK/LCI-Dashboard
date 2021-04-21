@@ -100,7 +100,6 @@ class FixationClassifier():
         return round(x * SCREEN_RESOLUTION[0]), round(y * SCREEN_RESOLUTION[1])
 
     def get_current_fixations(self):
-        print(self.current_fixations)
         return self.current_fixations
 
     def clear_current_fixations(self):
