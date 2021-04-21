@@ -61,7 +61,7 @@ If you want to run the program using a dataset, you can ignore this section. If 
 
 Devices needed:
 
-- Tobii Pro X3-120 (stationary eye tracker) **or** ??? (mobile eye tracker)
+- Tobii Pro X3-120 (stationary eye tracker) **or** Tobii Pro Glasses 2 (mobile eye tracker)
 - Empatica E4 (wristband)
 - HD camera
 
@@ -82,7 +82,22 @@ The following subsections will cover how to set these up correctly to be used wi
 
 ### Tobii Pro Glasses 2 (Mobile Eye Tracker)
 
-...
+To connect to the mobile eye tracker, you need two network connections.
+
+1. Connect to the network that the Tobii recording unit is broadcasting. The network's default name is the serial number of the unit.
+2. Connect to the internet with an ethernet cable. Since you need to be able to send device data to the teacher, this is a requirement.
+
+An Example of such a setup:
+
+<img src="../documentation/eye_tracker_network.png" alt="Calibrate"
+	title="Calibration" style="margin: 20px auto 20px;
+    display: block;" />
+
+When you start the backend, you will be prompted to start a calibration of the glasses. To do this successfully, press "Enter" and lock your eyes on the black ring on the white card that comes with the glasses. When calibrating, this card should be 0.5-1.5 metres away from viewer.
+
+<img src="../documentation/eye_tracker_calibrate.png" alt="Calibrate"
+	title="Calibration" width="400" height="484" style="margin: 20px auto 30px; 
+    display: block;" />
 
 ### Empatica E4 (wristband)
 
