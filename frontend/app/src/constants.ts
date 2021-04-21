@@ -74,7 +74,7 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Physiological Arousal",
         device: Device.Wristband,
         description:
-            "Physiological Arousal is how strong the current emotions are. It is calculated by the average EDA in a time interval of 8 seconds.",
+            "Physiological arousal is how strong the current emotions are. It is calculated by the average EDA in a time interval of 8 seconds.",
         calculationTime: 8,
         enabled: true
     },
@@ -90,7 +90,7 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
         name: "Physiological Stress",
         device: Device.Wristband,
         description:
-            "Physioloigcal Stress is indicated by LF/HF, the relative strengths of the low frequency and high frequency waves of the heart pulse signal.",
+            "Physioloigcal stress is indicated by LF/HF, the relative strengths of the low frequency and high frequency waves of the heart pulse signal.",
         calculationTime: 300,
         enabled: true
     },
