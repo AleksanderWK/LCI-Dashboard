@@ -4,7 +4,7 @@ exports[`matches snapshot 1`] = `
 <body>
   <div>
     <div
-      class="makeStyles-numericWrapper-1"
+      class="noDrag makeStyles-numericWrapper-1"
     >
       <p
         class="MuiTypography-root makeStyles-noData-3 MuiTypography-body1"

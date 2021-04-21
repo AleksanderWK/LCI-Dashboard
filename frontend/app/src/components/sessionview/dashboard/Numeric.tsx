@@ -15,10 +15,11 @@ const useStyles = makeStyles((theme: Theme) =>
             height: "100%",
             display: "flex",
             justifyContent: "center",
-            alignItems: "center"
+            alignItems: "center",
+            userSelect: "none"
         },
         numeric: {
-            fontSize: 50,
+            fontSize: 70,
             color: theme.palette.text.default,
             textAlign: "center"
         },
@@ -104,12 +105,16 @@ function Numeric(props: Props): JSX.Element {
 
     const dataPoint = !props.id
         ? useRecoilValue(selectedSessionLastValueState(props.variable))
-        : useRecoilValue(sessionVariableDataState([props.variable, props.id])).slice(-1)[0];
+        : useRecoilValue(sessionVariableDataState([props.variable, props.id])).slice(-1)[0][1];
 
     return (
-        <div className={classes.numericWrapper}>
+        <div className={`${"noDrag"} ${classes.numericWrapper}`}>
             {dataPoint && props.variable !== Variable.EducationalSpecificEmotions ? (
-                <Typography className={classes.numeric}>{Math.round(dataPoint as number)}</Typography>
+                <Typography className={classes.numeric}>
+                    {dataPoint < 1 && dataPoint > 0
+                        ? (dataPoint as number).toFixed(1)
+                        : Math.round(dataPoint as number)}
+                </Typography>
             ) : dataPoint && props.variable == Variable.EducationalSpecificEmotions ? (
                 <EmotionsDisplay emotions={dataPoint as EducationalSpecificEmotions} />
             ) : (

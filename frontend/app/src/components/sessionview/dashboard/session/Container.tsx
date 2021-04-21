@@ -1,13 +1,18 @@
-import {useRef, useState} from "react";
-import {createStyles, IconButton, makeStyles, Theme, Typography} from "@material-ui/core";
+import React, {useRef, useState} from "react";
+import {MMDVariables, Variable} from "../../../../constants";
+import Menu from "../Menu";
+import LineChart from "../LineChart";
+import Numeric from "../Numeric";
+import ContainerCard from "../../../common/ContainerCard";
+import Tooltip from "../../../common/Tooltip";
+import {makeStyles, Theme, createStyles, IconButton, Typography} from "@material-ui/core";
 import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import {MMDVariables, Variable} from "../../../constants";
-import Tooltip from "../Tooltip";
-import Menu from "./Menu";
-import LineChart from "./LineChart";
-import ContainerCard from "../ContainerCard";
-import XRangeChart from "./XRangeChart";
+import CalculatingIndicator from "../CalculatingIndicator";
+import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import {selectedSessionDataLengthVariableState, selectedSessionIdState} from "../../../../state/session";
+import XRangeChart from "../XRangeChart";
+import {viewState, selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../../../state/dashboard";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -37,9 +42,29 @@ interface Props {
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
+    const dataLength = useRecoilValue(selectedSessionDataLengthVariableState(props.variable));
+
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
+    const [view, setView] = useRecoilState(viewState([selectedSessionId, props.variable]));
+    const setActiveContainers = useSetRecoilState(selectedSessionActiveContainersState);
+    const setSelectedSessionLayout = useSetRecoilState(selectedSessionLayoutState);
+
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
+
+    function removeContainer(): void {
+        setActiveContainers((prevState) => {
+            const newState = [...prevState];
+            return newState.filter((item) => item != props.variable);
+        });
+
+        // Remove from layout
+        setSelectedSessionLayout((prevValue) => {
+            const layout = [...prevValue];
+            return layout.filter((item) => item.i != props.variable);
+        });
+    }
 
     return (
         <ContainerCard>
@@ -49,7 +74,7 @@ export default function Container(props: Props): JSX.Element {
                         {MMDVariables[props.variable].name}
                     </Typography>
 
-                    <div className={classes.menu} ref={menuAnchorElement}>
+                    <div className={`${classes.menu} noDrag`} ref={menuAnchorElement}>
                         <Tooltip variable={props.variable}>
                             <IconButton
                                 aria-label="info"
@@ -73,14 +98,21 @@ export default function Container(props: Props): JSX.Element {
                     <Menu
                         open={menuOpen}
                         anchorEl={menuAnchorElement.current}
-                        onRemoveView={() => null}
+                        isDetailedView={view === "chart"}
+                        onShowMore={() => setView("chart")}
+                        onShowLess={() => setView("numeric")}
+                        onRemoveView={() => removeContainer()}
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
-                {props.variable == Variable.EducationalSpecificEmotions ? (
+                {MMDVariables[props.variable].calculationTime && dataLength === 0 ? (
+                    <CalculatingIndicator variable={props.variable} />
+                ) : view === "chart" && props.variable != Variable.EducationalSpecificEmotions ? (
+                    <LineChart variable={props.variable} />
+                ) : view === "chart" ? (
                     <XRangeChart variable={props.variable} />
                 ) : (
-                    <LineChart variable={props.variable} />
+                    <Numeric variable={props.variable} />
                 )}
             </>
         </ContainerCard>

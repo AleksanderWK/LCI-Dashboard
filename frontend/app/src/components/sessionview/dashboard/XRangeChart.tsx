@@ -2,18 +2,19 @@ import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
-import {useRecoilValue} from "recoil";
+import {useRecoilCallback, useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, Variable} from "../../../constants";
 import {
-    Data,
-    selectedSessionActiveContainersState,
     selectedSessionDataState,
     selectedSessionESEXRangeDataState,
+    selectedSessionIdState,
     sessionDataState,
     sessionESEXRangeDataState
 } from "../../../state/session";
 import theme from "../../../theme";
 import xrange from "../../../assets/xrange";
+import {useChartCallbacks} from "../../../utils/useChartCallbacks";
+import {selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../../state/dashboard";
 
 xrange(Highcharts);
 
@@ -25,11 +26,20 @@ interface Props {
 function XRangeChart(props: Props): JSX.Element {
     const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
 
+    const [chartId, insertCallback, removeCallback] = useChartCallbacks();
+
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
         chart: {
             type: "xrange",
-            animation: false
+            animation: false,
+            events: {
+                load: () => {
+                    // Insert update callback function on load
+                    // Callback will be called every 0.5s until removed (on unmount)
+                    insertCallback(() => updateChart(400));
+                }
+            }
         },
         plotOptions: {
             series: {
@@ -47,9 +57,6 @@ function XRangeChart(props: Props): JSX.Element {
                 states: {
                     hover: {
                         enabled: false
-                    },
-                    normal: {
-                        animation: false
                     }
                 }
             }
@@ -95,25 +102,17 @@ function XRangeChart(props: Props): JSX.Element {
         }
     });
 
-    const selectedSessionData = useRecoilValue(selectedSessionDataState);
-    const selectedSessionESEXRangeData = useRecoilValue(selectedSessionESEXRangeDataState).data;
-
-    let sessionData: Data | null = null;
-    let sessionESEXRangeData: Highcharts.XrangePointOptionsObject[] | null = null;
-    if (props.id) {
-        sessionData = useRecoilValue(sessionDataState(props.id));
-        sessionESEXRangeData = useRecoilValue(sessionESEXRangeDataState(props.id)).data;
-    }
-
-    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
-
-    // Add new values to the chart
-    useEffect(() => {
+    const updateChart = useRecoilCallback(({snapshot}) => (animationDuration?: number) => {
         if (chart.current) {
-            const rawData = props.id && sessionData ? sessionData[props.variable] : selectedSessionData[props.variable];
+            const rawData = props.id
+                ? [...snapshot.getLoadable(sessionDataState(props.id)).getValue()[props.variable]]
+                : [...snapshot.getLoadable(selectedSessionDataState).getValue()[props.variable]];
 
-            const processedData =
-                props.id && sessionESEXRangeData ? [...sessionESEXRangeData] : [...selectedSessionESEXRangeData];
+            const processedData = props.id
+                ? [...snapshot.getLoadable(sessionESEXRangeDataState(props.id)).getValue().data]
+                : [...snapshot.getLoadable(selectedSessionESEXRangeDataState).getValue().data];
+
+            chart.current.chart.series[0].setData(processedData, false);
 
             if (rawData.length > 0) {
                 chart.current.chart.xAxis[0].setExtremes(
@@ -125,16 +124,41 @@ function XRangeChart(props: Props): JSX.Element {
                 );
             }
 
-            chart.current.chart.series[0].setData(processedData, true, {duration: 400});
+            chart.current.chart.redraw(animationDuration ? {duration: animationDuration} : false);
         }
-    }, [selectedSessionESEXRangeData, sessionESEXRangeData]);
+    });
 
     useEffect(() => {
-        // If active containers is changed, reflow graph as container size may have changed
+        if (chartId) {
+            // Update chart on component mount
+            updateChart();
+
+            return () => {
+                // Remove update callback function on unmount
+                if (chartId) {
+                    removeCallback(chartId);
+                }
+            };
+        }
+    }, [chartId]);
+
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
+
+    useEffect(() => {
+        // Update chart when session changes
+        // (containers with same variable across sessions are not rerendered, due to performance)
+        updateChart();
+    }, [selectedSessionId]);
+
+    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const layout = useRecoilValue(selectedSessionLayoutState);
+
+    useEffect(() => {
+        // If active containers/layouts is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers]);
+    }, [activeContainers, layout]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }

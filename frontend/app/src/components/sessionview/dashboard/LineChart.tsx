@@ -1,15 +1,13 @@
 import * as Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import React, {createRef, RefObject, useRef, useState} from "react";
+import React, {RefObject, useRef, useState} from "react";
 import {useEffect} from "react";
-import {constSelector, useRecoilValue} from "recoil";
+import {useRecoilCallback, useRecoilValue} from "recoil";
 import {FREQUENCY, LIVE_CHART_RANGE, MMDVariables, Variable} from "../../../constants";
-import {
-    selectedSessionActiveContainersState,
-    selectedSessionDataState,
-    sessionVariableDataState
-} from "../../../state/session";
+import {selectedSessionActiveContainersState, selectedSessionLayoutState} from "../../../state/dashboard";
+import {selectedSessionDataState, selectedSessionIdState, sessionVariableDataState} from "../../../state/session";
 import theme from "../../../theme";
+import {useChartCallbacks} from "../../../utils/useChartCallbacks";
 
 interface Props {
     variable: Variable;
@@ -17,13 +15,22 @@ interface Props {
 }
 
 function LineChart(props: Props): JSX.Element {
-    const chart = createRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>();
+    const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
+
+    const [chartId, insertCallback, removeCallback] = useChartCallbacks();
 
     const [chartOptions] = useState<Highcharts.Options>({
         // Initial options for chart
         chart: {
             marginLeft: 40,
-            animation: false
+            animation: false,
+            events: {
+                load: () => {
+                    // Insert update callback function on load
+                    // Callback will be called every 0.5s until removed (on unmount)
+                    insertCallback(() => updateChart(400));
+                }
+            }
         },
         title: {
             text: undefined
@@ -107,16 +114,11 @@ function LineChart(props: Props): JSX.Element {
         }
     });
 
-    const selectedSessionData = useRecoilValue(selectedSessionDataState);
-    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
-
-    const sessionData = useRecoilValue(
-        props.id ? sessionVariableDataState([props.variable, props.id]) : constSelector(null)
-    );
-
-    useEffect(() => {
+    const updateChart = useRecoilCallback(({snapshot}) => (animationDuration?: number) => {
         if (chart.current) {
-            const data = props.id && sessionData ? [...sessionData] : [...selectedSessionData[props.variable]];
+            const data = props.id
+                ? [...snapshot.getLoadable(sessionVariableDataState([props.variable, props.id])).getValue()]
+                : [...snapshot.getLoadable(selectedSessionDataState).getValue()[props.variable]];
 
             const dataLength = data.length;
 
@@ -138,17 +140,41 @@ function LineChart(props: Props): JSX.Element {
                 chart.current.chart.xAxis[0].setExtremes(data[0][0], undefined, false);
             }
 
-            // Higher animation duration than update rate breaks the animation
-            chart.current.chart.redraw({duration: 500});
+            chart.current.chart.redraw(animationDuration ? {duration: animationDuration} : false);
         }
-    }, [selectedSessionData, sessionData]);
+    });
 
     useEffect(() => {
-        // If active containers is changed, reflow graph as container size may have changed
+        if (chartId) {
+            // Update chart on component mount
+            updateChart();
+
+            return () => {
+                // Remove update callback function on unmount
+                if (chartId) {
+                    removeCallback(chartId);
+                }
+            };
+        }
+    }, [chartId]);
+
+    const selectedSessionId = useRecoilValue(selectedSessionIdState);
+
+    useEffect(() => {
+        // Update chart when session changes
+        // (containers with same variable across sessions are not rerendered, due to performance)
+        updateChart();
+    }, [selectedSessionId]);
+
+    const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
+    const layout = useRecoilValue(selectedSessionLayoutState);
+
+    useEffect(() => {
+        // If active containers/layout is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
-    }, [activeContainers]);
+    }, [activeContainers, layout]);
 
     return <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chart} />;
 }

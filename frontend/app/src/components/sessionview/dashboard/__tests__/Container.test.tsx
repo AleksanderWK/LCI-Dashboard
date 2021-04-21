@@ -3,14 +3,14 @@ import ReactDOM from "react-dom";
 import {render, screen, waitFor} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {MMDVariables, Variable} from "../../../../constants";
-import Container from "../Container";
+import Container from "../session/Container";
 import {RecoilRoot} from "recoil";
 
 it("renders without crashing", () => {
     const div = document.createElement("div");
     ReactDOM.render(
         <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} display="line" />
+            <Container variable={Variable.CognitiveLoad} />
         </RecoilRoot>,
         div
     );
@@ -28,7 +28,7 @@ it("renders without crashing", () => {
 it("tooltip displays variable info", async () => {
     render(
         <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} display="line" />
+            <Container variable={Variable.CognitiveLoad} />
         </RecoilRoot>
     );
     userEvent.hover(screen.getByLabelText("info"));
@@ -41,7 +41,7 @@ it("tooltip displays variable info", async () => {
 it("menu toggle between show more/less", async () => {
     render(
         <RecoilRoot>
-            <Container variable={Variable.CognitiveLoad} display="line" />
+            <Container variable={Variable.CognitiveLoad} />
         </RecoilRoot>
     );
 
