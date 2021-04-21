@@ -47,7 +47,16 @@ export default function SelectCharts(): JSX.Element {
     };
 
     const handleCheckAll = (checkAll: boolean) => {
-        setActiveContainers(checkAll ? Object.values(Variable) : []);
+        setActiveContainers((prevValue) => {
+            return checkAll
+                ? [
+                      ...prevValue,
+                      ...Object.values(Variable).filter(
+                          (variable) => MMDVariables[variable].enabled && !prevValue.includes(variable)
+                      )
+                  ]
+                : [];
+        });
     };
 
     return (
