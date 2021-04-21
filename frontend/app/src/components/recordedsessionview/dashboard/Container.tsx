@@ -8,6 +8,11 @@ import Menu from "./Menu";
 import LineChart from "./LineChart";
 import ContainerCard from "../../common/ContainerCard";
 import XRangeChart from "./XRangeChart";
+import {
+    selectedRecordedSessionLayoutState,
+    selectedRecordingActiveContainersState
+} from "../../../state/recordedSession";
+import {useSetRecoilState} from "recoil";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -41,6 +46,22 @@ export default function Container(props: Props): JSX.Element {
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
+    const setSelectedRecordingActiveContainers = useSetRecoilState(selectedRecordingActiveContainersState);
+    const setSelectedRecordingLayout = useSetRecoilState(selectedRecordedSessionLayoutState);
+
+    function removeContainer(): void {
+        setSelectedRecordingActiveContainers((prevState) => {
+            const newState = [...prevState];
+            return newState.filter((item) => item != props.variable);
+        });
+
+        // Remove from layout
+        setSelectedRecordingLayout((prevValue) => {
+            const layout = [...prevValue];
+            return layout.filter((item) => item.i != props.variable);
+        });
+    }
+
     return (
         <ContainerCard>
             <>
@@ -49,7 +70,7 @@ export default function Container(props: Props): JSX.Element {
                         {MMDVariables[props.variable].name}
                     </Typography>
 
-                    <div className={classes.menu} ref={menuAnchorElement}>
+                    <div className={`${classes.menu} noDrag`} ref={menuAnchorElement}>
                         <Tooltip variable={props.variable}>
                             <IconButton
                                 aria-label="info"
@@ -73,7 +94,7 @@ export default function Container(props: Props): JSX.Element {
                     <Menu
                         open={menuOpen}
                         anchorEl={menuAnchorElement.current}
-                        onRemoveView={() => null}
+                        onRemoveView={() => removeContainer()}
                         onMenuClose={() => setMenuOpen(false)}
                     />
                 </div>
