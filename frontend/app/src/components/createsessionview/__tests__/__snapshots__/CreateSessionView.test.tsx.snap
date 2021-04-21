@@ -117,122 +117,6 @@ exports[`create session view matches snapshot 1`] = `
                 />
               </button>
             </div>
-            <div>
-              <span
-                class="MuiTypography-root MuiTypography-caption"
-              >
-                Eye tracking device
-              </span>
-              <div
-                aria-label="eye tracker decive"
-                class="MuiFormGroup-root MuiFormGroup-row"
-                role="radiogroup"
-              >
-                <label
-                  class="MuiFormControlLabel-root"
-                >
-                  <span
-                    aria-disabled="false"
-                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
-                  >
-                    <span
-                      class="MuiIconButton-label"
-                    >
-                      <input
-                        class="PrivateSwitchBase-input-24"
-                        name="eyetracker"
-                        type="radio"
-                        value="stationary"
-                      />
-                      <div
-                        class="PrivateRadioButtonIcon-root-25"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                          />
-                        </svg>
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                          />
-                        </svg>
-                      </div>
-                    </span>
-                    <span
-                      class="MuiTouchRipple-root"
-                    />
-                  </span>
-                  <span
-                    class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-                  >
-                    Stationary
-                  </span>
-                </label>
-                <label
-                  class="MuiFormControlLabel-root"
-                  style="margin-left: 20px;"
-                >
-                  <span
-                    aria-disabled="false"
-                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorSecondary MuiIconButton-colorSecondary"
-                  >
-                    <span
-                      class="MuiIconButton-label"
-                    >
-                      <input
-                        class="PrivateSwitchBase-input-24"
-                        name="eyetracker"
-                        type="radio"
-                        value="mobile"
-                      />
-                      <div
-                        class="PrivateRadioButtonIcon-root-25"
-                      >
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                          />
-                        </svg>
-                        <svg
-                          aria-hidden="true"
-                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
-                          focusable="false"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                          />
-                        </svg>
-                      </div>
-                    </span>
-                    <span
-                      class="MuiTouchRipple-root"
-                    />
-                  </span>
-                  <span
-                    class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-                  >
-                    Mobile
-                  </span>
-                </label>
-              </div>
-            </div>
             <div
               class="makeStyles-sessionInfoContainer-16"
             >
@@ -324,17 +208,17 @@ exports[`create session view matches snapshot 1`] = `
     </div>
     <div
       aria-hidden="true"
-      class="MuiBackdrop-root makeStyles-backdrop-29"
+      class="MuiBackdrop-root makeStyles-backdrop-22"
       style="opacity: 0; visibility: hidden;"
     >
       <div
-        class="MuiPaper-root MuiCard-root makeStyles-card-30 MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root MuiCard-root makeStyles-card-23 MuiPaper-elevation1 MuiPaper-rounded"
       >
         <div
-          class="MuiCardContent-root makeStyles-cardContent-31"
+          class="MuiCardContent-root makeStyles-cardContent-24"
         >
           <div
-            class="makeStyles-form-32"
+            class="makeStyles-form-25"
           >
             <h1
               class="MuiTypography-root MuiTypography-h1"
@@ -343,7 +227,7 @@ exports[`create session view matches snapshot 1`] = `
               Add Student
             </h1>
             <div
-              class="MuiFormControl-root MuiTextField-root makeStyles-inputNewStudentName-33"
+              class="MuiFormControl-root MuiTextField-root makeStyles-inputNewStudentName-26"
             >
               <label
                 class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated"
@@ -368,7 +252,7 @@ exports[`create session view matches snapshot 1`] = `
               style="width: 100%; justify-content: flex-end;"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-34"
+                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-btn-27"
                 tabindex="0"
                 type="button"
               >
@@ -382,7 +266,7 @@ exports[`create session view matches snapshot 1`] = `
                 />
               </button>
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-34 MuiButton-containedPrimary"
+                class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-btn-27 MuiButton-containedPrimary"
                 tabindex="0"
                 type="button"
               >
