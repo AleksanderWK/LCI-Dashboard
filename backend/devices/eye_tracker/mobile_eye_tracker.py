@@ -8,12 +8,14 @@
 
 '''
 
+import asyncio
 import requests
 import json
 import time
 import threading
 import socket
 import numpy as np
+import cv2
 from threading import Thread
 import os
 import sys
@@ -277,70 +279,68 @@ class MobileEyeTracker():
         return (None not in self.temp_data.values() and len(self.temp_data.values()) == 5)
 
     def fixation_check(self):
-        if (True):
-            fx, fy = self.current_gaze_data[3], self.current_gaze_data[4]
+        fx, fy = self.current_gaze_data[3], self.current_gaze_data[4]
 
-            if (fx != None and fy != None):
-                lpup, rpup = self.current_gaze_data[1], self.current_gaze_data[2]
+        if (fx != None and fy != None):
+            lpup, rpup = self.current_gaze_data[1], self.current_gaze_data[2]
 
-                timestamp = self.current_gaze_data[0]
+            timestamp = self.current_gaze_data[0]
 
-                if (self.prev_gaze_data != None):
+            if (self.prev_gaze_data != None):
 
-                    # Calculate Euclidean distance between current point and previous point
-                    distance = np.linalg.norm(
-                        np.array([self.prev_gaze_data[3], self.prev_gaze_data[4]]) - np.array([fx, fy]))
+                # Calculate Euclidean distance between current point and previous point
+                distance = np.linalg.norm(
+                    np.array([self.prev_gaze_data[3], self.prev_gaze_data[4]]) - np.array([fx, fy]))
 
-                    # If distance is below the threshold, the point is part of the fixation
-                    if (distance < DISTANCE_THRESHOLD):
-                        if (self.current_fixation_init_time == None):
+                # If distance is below the threshold, the point is part of the fixation
+                if (distance < DISTANCE_THRESHOLD):
+                    if (self.current_fixation_init_time == None):
 
-                            # Initialization of fixation
-                            self.current_fixation_init_time = round(
-                                self.prev_gaze_data[0] / 1000)
+                        # Initialization of fixation
+                        self.current_fixation_init_time = round(
+                            self.prev_gaze_data[0] / 1000)
 
-                            # Add prev point to fixation points list
-                            self.current_fixation_points.append(
-                                [self.prev_gaze_data[1], self.prev_gaze_data[2],  self.prev_gaze_data[3], self.prev_gaze_data[4]])
-
-                        # Add current point to fixation points list
+                        # Add prev point to fixation points list
                         self.current_fixation_points.append(
-                            [lpup, rpup, fx, fy])
+                            [self.prev_gaze_data[1], self.prev_gaze_data[2],  self.prev_gaze_data[3], self.prev_gaze_data[4]])
 
-                    else:
-                        if (self.current_fixation_init_time != None):
-                            # Fixation is over
-                            # Keep fixation if it has enough gaze points
-                            if (len(self.current_fixation_points) >= GAZE_POINT_THRESHOLD):
-                                self.current_fixation_id += 1
-                                end_time = round(self.prev_gaze_data[0] / 1000)
+                    # Add current point to fixation points list
+                    self.current_fixation_points.append(
+                        [lpup, rpup, fx, fy])
 
-                                # Suppress warnings that come from for example all left pupil diameters being NaN
-                                with warnings.catch_warnings():
-                                    warnings.simplefilter(
-                                        "ignore", category=RuntimeWarning)
-                                    mean_values = np.nanmean(
-                                        np.asarray(self.current_fixation_points), axis=0)
+                else:
+                    if (self.current_fixation_init_time != None):
+                        # Fixation is over
+                        # Keep fixation if it has enough gaze points
+                        if (len(self.current_fixation_points) >= GAZE_POINT_THRESHOLD):
+                            self.current_fixation_id += 1
+                            end_time = round(self.prev_gaze_data[0] / 1000)
 
-                                mean_fx_screen, mean_fy_screen = self.map_to_screen_resolution(
-                                    mean_values[2], mean_values[3])
+                            # Suppress warnings that come from for example all left pupil diameters being NaN
+                            with warnings.catch_warnings():
+                                warnings.simplefilter(
+                                    "ignore", category=RuntimeWarning)
+                                mean_values = np.nanmean(
+                                    np.asarray(self.current_fixation_points), axis=0)
 
-                                fixation = [self.current_fixation_id, self.current_fixation_init_time,
-                                            end_time, mean_values[0], mean_values[1], mean_fx_screen, mean_fy_screen]
+                            mean_fx_screen, mean_fy_screen = self.map_to_screen_resolution(
+                                mean_values[2], mean_values[3])
 
-                                print(fixation)
-                                self.current_fixations.append(
-                                    EyeTrackingDataPoint(fixation))
+                            fixation = [self.current_fixation_id, self.current_fixation_init_time,
+                                        end_time, mean_values[0], mean_values[1], mean_fx_screen, mean_fy_screen]
 
-                                # Clear fixation data
-                                self.current_fixation_init_time = None
-                                self.current_fixation_points = []
-                                self.prev_gaze_data = None
-                                return
+                            self.current_fixations.append(
+                                EyeTrackingDataPoint(fixation))
 
-                self.prev_gaze_data = [timestamp, lpup, rpup, fx, fy]
+                            # Clear fixation data
+                            self.current_fixation_init_time = None
+                            self.current_fixation_points = []
+                            self.prev_gaze_data = None
+                            return
 
-    def data_stream_loop(self, args):
+            self.prev_gaze_data = [timestamp, lpup, rpup, fx, fy]
+
+    async def data_stream_loop(self, args, loop):
         '''
         Loop and post datavalues
         See Developerguide Appendix C for value information.
@@ -348,25 +348,31 @@ class MobileEyeTracker():
         sensor = ""
         data_gp = (0, [0.0, 0.0])
         data_pts = (0, 0)
-        while(self.running == True):
-            raw_data, address = args.recvfrom(1024)
-            raw_data = raw_data.decode('ascii')
-            raw_data = raw_data.replace("\\n", "")
-            raw_data = raw_data.replace("b", "")
-            data = json.loads(raw_data)
+        while(self.running):
+            try:
+                raw_data, address = await loop.run_in_executor(None, args.recvfrom, 1024)
+                # raw_data, address = args.recvfrom(1024)
+                raw_data = raw_data.decode('ascii')
+                raw_data = raw_data.replace("\\n", "")
+                raw_data = raw_data.replace("b", "")
+                data = json.loads(raw_data)
 
-            # print(data)
+                # print(data)
 
-            self.add_to_temp_data_point(data)
-            if (self.check_temp_data()):
-                self.prev_gaze_data = self.current_gaze_data
-                self.current_gaze_data = [self.temp_data["ts"], self.temp_data["lpup"],
-                                          self.temp_data["rpup"], self.temp_data["fx"], self.temp_data["fy"]]
-                self.temp_data.clear()
+                self.add_to_temp_data_point(data)
+                if (self.check_temp_data()):
+                    self.prev_gaze_data = self.current_gaze_data
+                    self.current_gaze_data = [self.temp_data["ts"], self.temp_data["lpup"],
+                                              self.temp_data["rpup"], self.temp_data["fx"], self.temp_data["fy"]]
+                    self.temp_data.clear()
 
-                self.fixation_check()
+                    # print(self.temp_data)
+                    self.fixation_check()
+            except Exception as e:
+                print(e)
+                time.sleep(.1)
 
-        self.data_socket.close()
+        # self.data_socket.close()
 
     def calibrate(self):
         # Get all id
@@ -392,17 +398,16 @@ class MobileEyeTracker():
         else:
             print('Calibration successful')
 
-    def run(self):
+    async def run(self, loop):
         self.running = True
         peer = (self.GLASSES_IP, self.PORT)
         project_id = None
         participant_id = None
         calibration_id = None
 
+        # Create socket which will send a keep alive message for the live data stream
+        self.data_socket = self.mksock(peer)
         try:
-            # Create socket which will send a keep alive message for the live data stream
-            self.data_socket = self.mksock(peer)
-
             td = threading.Timer(0, self.send_keepalive_msg, [
                 self.data_socket, self.KA_DATA_MSG, peer])
             td.start()
@@ -414,12 +419,11 @@ class MobileEyeTracker():
             # tv.start()
 
             # Start data_stream
-            print("Starting data_stream thread")
-            self.data_stream_loop(self.data_socket)
+            await self.data_stream_loop(self.data_socket, loop)
 
         except Exception as e:
             print(e.with_traceback())
-        self.running = False
+            self.running = False
 
     def map_to_screen_resolution(self, x, y):
         return round(x * screen_size[0]), round(y * screen_size[1])
@@ -430,5 +434,5 @@ class MobileEyeTracker():
     def clear_current_data(self):
         self.current_fixations.clear()
 
-    def set_running(self):
+    def terminate(self):
         self.running = False

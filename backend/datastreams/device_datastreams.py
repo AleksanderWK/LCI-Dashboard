@@ -13,6 +13,7 @@ class DeviceDatastreams(Datastreams):
     openface = None
     openpose = None
     stationary_eye_tracker = None
+    mobile_eye_tracker = None
     wristband = None
 
     loop = None
@@ -38,7 +39,8 @@ class DeviceDatastreams(Datastreams):
             self.openface.startDataRead()
             self.stationary_eye_tracker.subscribe()
         if self.device_mode == "mobile":
-            self.mobile_eye_tracker.run()
+            asyncio.run_coroutine_threadsafe(
+                self.mobile_eye_tracker.run(self.loop), self.loop)
 
         asyncio.run_coroutine_threadsafe(self.wristband.subscribe(), self.loop)
 
@@ -49,7 +51,7 @@ class DeviceDatastreams(Datastreams):
             self.stationary_eye_tracker.unsubscribe()
         elif self.device_mode == "mobile":
             self.openpose.terminateProcess()
-            self.mobile_eye_tracker.set_running(False)
+            self.mobile_eye_tracker.terminate()
 
         asyncio.run_coroutine_threadsafe(
             self.wristband.unsubscribe(), self.loop)
