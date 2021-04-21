@@ -7,9 +7,12 @@
     "electron": "^11.2.3"
   },
   "scripts": {
+    "dashboard": "concurrently --kill-others \"(cd app && yarn start)\" \"electron .\"",
+    "setup": "yarn install && (cd app && yarn install)",
     "start": "electron ."
   },
   "dependencies": {
+    "concurrently": "^6.0.2",
     "custom-electron-titlebar": "^3.2.6",
     "ip-to-int": "^0.3.1",
     "nedb": "^1.8.0",

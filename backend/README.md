@@ -1,6 +1,6 @@
 # Backend
 
-This is the backend part of the application, containing a program to connect to a dashboard with a session token, retrieve data from either devices or a dataset, compute different multimodal data variables and send the results to the connected dashboard in real-time.
+A program to connect to a dashboard with a session token, retrieve data from either devices or a dataset, compute different multimodal data variables and send the results to the connected dashboard in real-time.
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@ To run the program, the following is required:
 
 ## Installation
 
-Install all dependencies needed:
+In the `backend/` folder, install all dependencies needed:
 
 ```bash
 pipenv install
@@ -19,13 +19,13 @@ pipenv install
 
 ## Run the Program
 
-Start the virtual environment:
+Start the virtual environment from the `backend/` folder:
 
 ```
 pipenv shell
 ```
 
-Run the program:
+Run the program from the `backend/` folder:
 
 ```
 python main.py SESSION_CODE [OPTIONS]
