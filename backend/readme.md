@@ -17,6 +17,14 @@ Install all dependencies needed:
 pipenv install
 ```
 
+## Run The Tests
+
+Run the following command while being in the backend-root folder:
+
+```
+pipenv run pytest
+```
+
 ## Run the Program
 
 Start the virtual environment:

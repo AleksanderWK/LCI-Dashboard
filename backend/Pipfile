@@ -16,6 +16,7 @@ numpy = "*"
 heartpy = "*"
 tobii-research = "*"
 click = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.6"
