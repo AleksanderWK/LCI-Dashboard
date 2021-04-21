@@ -1,8 +1,13 @@
+/*
+ *  State for creating a session
+ */
+
 import {atom} from "recoil";
 
 export interface CreateSessionValues {
     sessionName: string;
     studentId: string;
+    studentName: string;
     eyeTracker: string;
     sessionCode: string;
     studentConnected: boolean;
@@ -13,6 +18,7 @@ export const createSessionValuesState = atom<CreateSessionValues>({
     default: {
         sessionName: "",
         studentId: "",
+        studentName: "",
         eyeTracker: "",
         sessionCode: "",
         studentConnected: false

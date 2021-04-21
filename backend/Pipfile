@@ -18,6 +18,7 @@ tobii-research = "*"
 click = "*"
 requests = "*"
 opencv-python = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.6"

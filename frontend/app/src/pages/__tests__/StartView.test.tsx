@@ -1,6 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {render} from "@testing-library/react";
 import StartView from "../StartView";
 
 // Snapshot test does not work due to dynamic MUI id's in the MUI table

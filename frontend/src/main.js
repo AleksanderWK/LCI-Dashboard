@@ -5,6 +5,8 @@ let win = null;
 function createWindow() {
   const window = new BrowserWindow({
     title: "LCI Dashboard",
+    minWidth: 780,
+    minHeight: 600,
     width: 1280,
     height: 720,
     webPreferences: {

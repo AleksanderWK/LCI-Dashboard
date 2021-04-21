@@ -122,7 +122,7 @@ export default function QuitSesson(): JSX.Element {
                 <Typography>
                     {selectedSessionId == null
                         ? "Are you sure you want to quit all the sessions?"
-                        : `Are you sure you want to quit ${selectedSession?.sessionName} with ${selectedSession?.student.name}?`}
+                        : `Are you sure you want to quit ${selectedSession?.sessionName} with ${selectedSession?.studentName}?`}
                 </Typography>
 
                 {recording.status && (

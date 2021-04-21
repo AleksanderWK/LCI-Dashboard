@@ -1,9 +1,14 @@
-import {atom, selector} from "recoil";
+/*
+ *  State for recorded session view
+ */
+
+import {Layout} from "react-grid-layout";
+import {atom, atomFamily, selector, selectorFamily} from "recoil";
 import {emotionsColorMapper, emotionsIndexMapper, EyeTrackingDevice, FREQUENCY, Variable} from "../constants";
 import {EducationalSpecificEmotions} from "./session";
 
 /*
- * An atom that stores the id of a session that has been recorded and selected
+ *  An atom that stores the id of a session that has been recorded and selected
  */
 export const selectedRecordedSessionIdState = atom<number | null>({
     key: "selectedRecordedSessionId",
@@ -140,4 +145,60 @@ export const recordingInterval = selector<TimeInterval | undefined>({
 export const currentRecordingInterval = atom<TimeInterval | undefined>({
     key: "currentRecordingInterval",
     default: recordingInterval
+});
+
+/*
+ *   An atomFamily that stores a list of all active containers/variables for each recording
+ */
+export const recordingActiveContainersState = atomFamily<Variable[], number | null>({
+    key: "recordingActiveContainers",
+    default: []
+});
+
+/*
+ *   A selector that returns/updates the selected recorded session's active containers (variables)
+ */
+export const selectedRecordingActiveContainersState = selector<Variable[]>({
+    key: "selectedRecordingActiveContainers",
+    get: ({get}) => {
+        const id = get(selectedRecordedSessionIdState);
+        return get(recordingActiveContainersState(id));
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedRecordedSessionIdState);
+        set(recordingActiveContainersState(id), newValue);
+    }
+});
+
+/*
+ *  An atomFamily that stores the layout for each recorded session
+ */
+export const recordingLayoutState = atomFamily<Layout[], number | null>({
+    key: "recordingLayout",
+    default: []
+});
+
+/*
+ *  A selector for getting and setting the layout for the selected recorded session
+ */
+export const selectedRecordedSessionLayoutState = selector<Layout[]>({
+    key: "selectedRecordedSessionLayout",
+    get: ({get}) => {
+        const id = get(selectedRecordedSessionIdState);
+        return get(recordingLayoutState(id));
+    },
+    set: ({get, set}, newValue) => {
+        const id = get(selectedRecordedSessionIdState);
+        set(recordingLayoutState(id), newValue);
+    }
+});
+
+/*
+ *  A selectorFamily to get the layout item for a specific variable, for the selected session
+ */
+export const selectedRecordedSessionLayoutItemState = selectorFamily<Layout | undefined, Variable>({
+    key: "selectedRecordedSessionLayoutItem",
+    get: (variable) => ({get}) => {
+        return get(selectedRecordedSessionLayoutState).find((layout) => layout.i == variable);
+    }
 });

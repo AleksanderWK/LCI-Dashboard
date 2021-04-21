@@ -1,3 +1,7 @@
+/*
+ *  State used to handle chart updates
+ */
+
 import {atom} from "recoil";
 
 /*
