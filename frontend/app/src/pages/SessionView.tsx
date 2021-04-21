@@ -7,7 +7,7 @@ import Menu from "../components/sessionview/menu/Menu";
 import Popups from "../components/sessionview/Popups";
 import Snackbars from "../components/sessionview/Snackbars";
 import {emotionsColorMapper, emotionsIndexMapper, FREQUENCY, Variable} from "../constants";
-import {ipcOn, ipcSend} from "../ipc";
+import {ipcOn, ipcRemoveAllListeners, ipcSend} from "../ipc";
 import {callbackFunctionsState} from "../state/chart";
 import {
     Data,
@@ -140,9 +140,12 @@ export default function SessionView(): JSX.Element {
         // Update all charts every 0.5s
         const updateInterval = setInterval(() => {
             updateCharts();
-        }, 500);
+        }, 1000 / FREQUENCY);
 
         return () => {
+            // Remove listener for newData event
+            ipcRemoveAllListeners("newData");
+
             // Stop chart update interval when leaving session view
             clearInterval(updateInterval);
         };

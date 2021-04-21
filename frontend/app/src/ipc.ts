@@ -24,6 +24,12 @@ export function ipcOn(event: string, callback: (event: any, data: any) => void):
     }
 }
 
+export function ipcRemoveAllListeners(event: string): void {
+    if (ipc != null) {
+        ipc.removeAllListeners(event);
+    }
+}
+
 export function ipcOnce(event: string, callback: (event: any, data: any) => void): void {
     if (ipc != null) {
         ipc.once(event, (event: any, data: any) => {
