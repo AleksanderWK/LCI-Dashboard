@@ -1,11 +1,14 @@
 import React from "react";
 import {createStyles, makeStyles, Theme, Typography, Button, CardActions} from "@material-ui/core";
-import {useRecoilCallback, useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
+import {useRecoilCallback, useRecoilValue, useResetRecoilState, useSetRecoilState} from "recoil";
 import {quitSessionPopupOpenState} from "../../state/popup";
 import {
+    allSessionsRecordingState,
     selectedSessionIdState,
     selectedSessionRecordingState,
     selectedSessionState,
+    sessionDataState,
+    sessionESEXRangeDataState,
     sessionIdsState,
     sessionRecordingState,
     sessionsState
@@ -41,7 +44,7 @@ export default function QuitSesson(): JSX.Element {
     const history = useHistory();
 
     const setPopupOpen = useSetRecoilState(quitSessionPopupOpenState);
-    const [recording, setRecording] = useRecoilState(selectedSessionRecordingState);
+    const recording = useRecoilValue(selectedSessionRecordingState);
 
     const selectedSession = useRecoilValue(selectedSessionState);
     const sessions = useRecoilValue(sessionsState);
@@ -50,9 +53,10 @@ export default function QuitSesson(): JSX.Element {
     const allSessions = useRecoilValue(sessionIdsState);
     const resetSessionIds = useResetRecoilState(sessionIdsState);
 
+    const allSessionsRecording = useRecoilValue(allSessionsRecordingState);
+
     // Stops recording, closes popup, sets session end time, terminates session and goes to the startview
     const quitSession = () => {
-        setRecording({status: false, startTime: null, recordingId: null});
         setPopupOpen(false);
 
         if (selectedSession) {
@@ -65,7 +69,7 @@ export default function QuitSesson(): JSX.Element {
         }
     };
 
-    const removeSession = useRecoilCallback(({set}) => (sessionId: number) => {
+    const removeSession = useRecoilCallback(({set, reset}) => (sessionId: number) => {
         // Remove this sessionId from the sessionIdsState
         set(sessionIdsState, (prevValue) => {
             const newValue: number[] = [...prevValue];
@@ -78,14 +82,19 @@ export default function QuitSesson(): JSX.Element {
             set(selectedSessionIdState, sessions.find((session) => session._id != sessionId)?._id as number | null);
         } else {
             history.push("/");
+            reset(selectedSessionIdState);
         }
+
+        reset(sessionDataState(sessionId));
+        reset(sessionESEXRangeDataState(sessionId));
+        reset(sessionRecordingState(sessionId));
 
         // Send terminate signal to the backend with this sessionId
         ipcSend("terminateSession", sessions.find((session) => session._id == sessionId)?.sessionCode);
     });
 
     const quitAllSessions = () => {
-        resetAllSessionRecordings();
+        resetAllSessionsData();
         allSessions.forEach((id) => {
             ipcSend("updateSessionEndTime", {
                 _id: id,
@@ -99,8 +108,12 @@ export default function QuitSesson(): JSX.Element {
         history.push("/");
     };
 
-    const resetAllSessionRecordings = useRecoilCallback(({reset}) => () => {
-        allSessions.forEach((id) => reset(sessionRecordingState(id)));
+    const resetAllSessionsData = useRecoilCallback(({reset}) => () => {
+        allSessions.forEach((id) => {
+            reset(sessionDataState(id));
+            reset(sessionESEXRangeDataState(id));
+            reset(sessionRecordingState(id));
+        });
     });
 
     const removeAllSessions = () => {
@@ -131,7 +144,7 @@ export default function QuitSesson(): JSX.Element {
                         <Typography>This will also stop the ongoing recording.</Typography>
                     </>
                 )}
-                {selectedSessionId == null && (
+                {selectedSessionId == null && allSessionsRecording.some((rec) => rec.status) && (
                     <>
                         <br />
                         <Typography>This will also stop all the ongoing recordings.</Typography>
