@@ -66,8 +66,6 @@ class MobileEyeTracker():
 
     # Keep-alive message content used to request live data and live video streams
     KA_DATA_MSG = "{\"type\": \"live.data.unicast\", \"key\": \"some_GUID\", \"op\": \"start\"}"
-    # KA_EYES_MSG = "{\"type\": \"live.eyes.unicast\", \"key\": \"some_GUID\", \"op\": \"start\"}" # used to sync eyes
-    # KA_VIDEO_MSG = "{\"type\": \"live.video.unicast\", \"key\": \"some_other_GUID\", \"op\": \"start\"}"
 
     def mksock(self, peer):
         '''
@@ -345,19 +343,13 @@ class MobileEyeTracker():
         Loop and post datavalues
         See Developerguide Appendix C for value information.
         '''
-        sensor = ""
-        data_gp = (0, [0.0, 0.0])
-        data_pts = (0, 0)
         while(self.running):
             try:
                 raw_data, address = await loop.run_in_executor(None, args.recvfrom, 1024)
-                # raw_data, address = args.recvfrom(1024)
                 raw_data = raw_data.decode('ascii')
                 raw_data = raw_data.replace("\\n", "")
                 raw_data = raw_data.replace("b", "")
                 data = json.loads(raw_data)
-
-                # print(data)
 
                 self.add_to_temp_data_point(data)
                 if (self.check_temp_data()):
@@ -366,13 +358,10 @@ class MobileEyeTracker():
                                               self.temp_data["rpup"], self.temp_data["fx"], self.temp_data["fy"]]
                     self.temp_data.clear()
 
-                    # print(self.temp_data)
                     self.fixation_check()
             except Exception as e:
                 print(e)
                 time.sleep(.1)
-
-        # self.data_socket.close()
 
     def calibrate(self):
         # Get all id
@@ -411,12 +400,6 @@ class MobileEyeTracker():
             td = threading.Timer(0, self.send_keepalive_msg, [
                 self.data_socket, self.KA_DATA_MSG, peer])
             td.start()
-
-            # Create socket which will send a keep alive message for the live video stream
-            # self.video_socket = self.mksock(peer)
-            # tv = threading.Timer(0, self.send_keepalive_msg, [
-            #                      self.video_socket, self.KA_VIDEO_MSG, peer])
-            # tv.start()
 
             # Start data_stream
             await self.data_stream_loop(self.data_socket, loop)
