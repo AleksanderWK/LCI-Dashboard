@@ -13,7 +13,7 @@ To run the program, the following is required:
 
 In the `frontend/` folder, install all dependencies with:
 
-```bash
+```
 yarn run setup
 ```
 
@@ -21,6 +21,14 @@ yarn run setup
 
 In the `frontend/` folder, start both the React and Electron application with:
 
-```bash
+```
 yarn run dashboard
+```
+
+## Run the Tests
+
+In the `frontend/app/` folder, run the tests with:
+
+```
+yarn test --watchAll
 ```
