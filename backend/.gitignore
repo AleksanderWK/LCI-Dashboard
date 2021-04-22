@@ -1,10 +1,8 @@
 /__pycache__
 /.pytest_cache
-/calculators/__pycache__
-/datamodels/__pycache__
-/datastreams/__pycache__
-/devices/eye_tracker/__pycache__
-/devices/openpose/__pycache__
+__pycache__/
+.pytest_cache/
+
 /devices/openface/bin/*
 !/devices/openface/bin/.gitkeep
 /devices/openface/processed
