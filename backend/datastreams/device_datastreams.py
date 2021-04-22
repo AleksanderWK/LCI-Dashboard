@@ -2,15 +2,18 @@ from devices.openpose.openpose import OpenPoseInstance
 from datastreams.datastreams import Datastreams
 from devices.openface.openface import OpenFaceInstance
 from devices.eye_tracker.stationary_eye_tracker import StationaryEyeTracker
+from devices.eye_tracker.mobile_eye_tracker import MobileEyeTracker
 from devices.wristband.wristband import Wristband
 from datamodels.skeletal import SkeletalNodeCollection
 import asyncio
+
 
 class DeviceDatastreams(Datastreams):
 
     openface = None
     openpose = None
     stationary_eye_tracker = None
+    mobile_eye_tracker = None
     wristband = None
 
     loop = None
@@ -26,6 +29,8 @@ class DeviceDatastreams(Datastreams):
         elif self.device_mode == "mobile":
             self.openpose = OpenPoseInstance()
             self.openpose.startProcess()
+            self.mobile_eye_tracker = MobileEyeTracker()
+            self.mobile_eye_tracker.calibrate()
 
         self.wristband = Wristband(self.loop)
 
@@ -33,9 +38,11 @@ class DeviceDatastreams(Datastreams):
         if self.device_mode == "stationary":
             self.openface.startDataRead()
             self.stationary_eye_tracker.subscribe()
+        if self.device_mode == "mobile":
+            asyncio.run_coroutine_threadsafe(
+                self.mobile_eye_tracker.run(self.loop), self.loop)
 
         asyncio.run_coroutine_threadsafe(self.wristband.subscribe(), self.loop)
-        
 
     def terminate(self):
         if self.device_mode == "stationary":
@@ -44,9 +51,10 @@ class DeviceDatastreams(Datastreams):
             self.stationary_eye_tracker.unsubscribe()
         elif self.device_mode == "mobile":
             self.openpose.terminateProcess()
+            self.mobile_eye_tracker.terminate()
 
-        asyncio.run_coroutine_threadsafe(self.wristband.unsubscribe(), self.loop)
-        
+        asyncio.run_coroutine_threadsafe(
+            self.wristband.unsubscribe(), self.loop)
 
     def clear_current_data(self):
         if self.device_mode == "stationary":
@@ -54,6 +62,7 @@ class DeviceDatastreams(Datastreams):
             self.stationary_eye_tracker.clear_current_data()
         elif self.device_mode == "mobile":
             self.openpose.clearCurrentData()
+            self.mobile_eye_tracker.clear_current_data()
 
         self.wristband.clear_current_data()
 
@@ -90,5 +99,5 @@ class DeviceDatastreams(Datastreams):
     def get_current_eye_tracking_data(self):
         if self.device_mode == "stationary":
             return self.stationary_eye_tracker.get_current_data()
-        else:
-            return []
+        elif self.device_mode == "mobile":
+            return self.mobile_eye_tracker.get_current_data()
