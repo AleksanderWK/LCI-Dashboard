@@ -1,6 +1,6 @@
 # Backend
 
-This is the backend part of the application, containing a program to connect to a dashboard with a session token, retrieve data from either devices or a dataset, compute different multimodal data variables and send the results to the connected dashboard in real-time.
+A program to connect to a dashboard with a session token, retrieve data from either devices or a dataset, compute different multimodal data variables and send the results to the connected dashboard in real-time.
 
 ## Prerequisites
 
@@ -11,29 +11,21 @@ To run the program, the following is required:
 
 ## Installation
 
-Install all dependencies needed:
+In the `backend/` folder, install all dependencies needed:
 
-```bash
+```
 pipenv install
-```
-
-## Run The Tests
-
-Run the following command while being in the backend-root folder:
-
-```
-pipenv run pytest
 ```
 
 ## Run the Program
 
-Start the virtual environment:
+Start the virtual environment from the `backend/` folder:
 
 ```
 pipenv shell
 ```
 
-Run the program:
+Run the program from the `backend/` folder:
 
 ```
 python main.py SESSION_CODE [OPTIONS]
@@ -41,12 +33,13 @@ python main.py SESSION_CODE [OPTIONS]
 
 Options:
 
-- --devices EYE_TRACKER
+- --devices EYETRACKER
   - Retrieve data from devices
   - Devices must be set up correctly; see the [devices setup](#devices-setup) section below
-  - EYE_TRACKER is the type of eye tracker used, either _stationary_ or _mobile_ (see examples [below](#example:-run-with-devices))
+  - EYETRACKER is the type of eye tracker used, either _stationary_ or _mobile_ (see examples [below](#example:-run-with-devices))
 - --dataset=[id]
-  - Retrieve data from a dataset (1-15).
+  - Retrieve data from a dataset
+  - [id] is the id of the dataset (1-15)
 
 If no options are specified, dataset 1 will be used.
 
@@ -105,7 +98,7 @@ the screen is **14"** with **16:9 aspect ratio** (can be changed at `devices/eye
 To connect to the mobile eye tracker, you need two network connections.
 
 1. Connect to the network that the Tobii recording unit is broadcasting. The network's default name is the serial number of the unit.
-2. Connect to the internet with an ethernet cable. Since you need to be able to send device data to the teacher, this is a requirement.
+2. Connect to the internet with an ethernet cable. Since you need to be able to send device data to the dashboard, this is a requirement.
 
 An Example of such a setup:
 
@@ -181,4 +174,12 @@ Run the following command from `backend/devices/openpose/bin/models`:
 
 ```
 getBaseModels.bat
+```
+
+## Run The Tests
+
+Run the following command while being in the `backend/` folder:
+
+```
+pipenv run pytest
 ```
