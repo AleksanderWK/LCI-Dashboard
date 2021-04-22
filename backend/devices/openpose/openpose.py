@@ -14,7 +14,7 @@ class OpenPoseInstance:
 
     file = None
     current_frame = 0
-    current_data = None
+    current_data = SkeletalNodeCollection([])
 
     def __init__(self):
         self.clearOutputDirectory()

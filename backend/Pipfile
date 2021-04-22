@@ -16,6 +16,8 @@ numpy = "*"
 heartpy = "*"
 tobii-research = "*"
 click = "*"
+requests = "*"
+opencv-python = "*"
 pytest = "*"
 
 [requires]
