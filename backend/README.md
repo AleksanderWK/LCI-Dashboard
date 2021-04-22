@@ -33,10 +33,10 @@ python main.py SESSION_CODE [OPTIONS]
 
 Options:
 
-- --devices EYE_TRACKER
+- --devices EYETRACKER
   - Retrieve data from devices
   - Devices must be set up correctly; see the [devices setup](#devices-setup) section below
-  - EYE*TRACKER is the type of eye tracker used, either \_stationary* or _mobile_ (see examples [below](#example:-run-with-devices))
+  - EYETRACKER is the type of eye tracker used, either _stationary_ or _mobile_ (see examples [below](#example:-run-with-devices))
 - --dataset=[id]
   - Retrieve data from a dataset
   - [id] is the id of the dataset (1-15)
