@@ -115,6 +115,18 @@ export const selectedSessionRecordingState = selector<Recording>({
 });
 
 /*
+ *  A selector that returns the recording status for all sessions
+ */
+export const allSessionsRecordingState = selector<Recording[]>({
+    key: "allSessionsRecording",
+    get: ({get}) => {
+        const allSessions = get(sessionIdsState);
+
+        return allSessions.map((id) => get(sessionRecordingState(id)));
+    }
+});
+
+/*
  *  DATA
  */
 
@@ -174,19 +186,6 @@ export const selectedSessionDataState = selector<Data>({
         const id = get(selectedSessionIdState);
 
         set(sessionDataState(id), newValue);
-    }
-});
-
-/*
- *  A selectorFamily that returns the data for a given variable from the selected session's data
- */
-export const selectedSessionVariableDataState = selectorFamily<
-    [number, number | EducationalSpecificEmotions][],
-    Variable
->({
-    key: "selectedSessionVariableData",
-    get: (variable: Variable) => ({get}) => {
-        return get(selectedSessionDataState)[variable];
     }
 });
 
@@ -272,22 +271,6 @@ export const selectedSessionLastValueState = selectorFamily<number | Educational
 
         if (data.length > 0) {
             return data.slice(-1)[0][1];
-        } else {
-            return null;
-        }
-    }
-});
-
-export const selectedSessionLastPointState = selectorFamily<
-    [number, EducationalSpecificEmotions | number] | null,
-    Variable
->({
-    key: "selectedSessionLastPoint",
-    get: (variable: Variable) => ({get}) => {
-        const data = get(selectedSessionDataState)[variable];
-
-        if (data.length > 0) {
-            return data.slice(-1)[0];
         } else {
             return null;
         }

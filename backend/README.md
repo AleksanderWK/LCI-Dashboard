@@ -80,7 +80,7 @@ The following subsections will cover how to set these up correctly to be used wi
 ### Tobii Pro X3-120 (Stationary Eye Tracker)
 
 _Note_: Calculations derived from stationary eye tracker data assumes that
-the screen is **14"** with **16:9 aspect ratio** (can be changed at `devices/eye_tracker/stationary_eye_tracker.py:19`).
+the screen is **14"** with **16:9 aspect ratio** (can be changed at `utils/fixation_classifier.py:22`).
 
 #### Installation
 

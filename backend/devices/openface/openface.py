@@ -28,7 +28,8 @@ class OpenFaceInstance:
             self.process = Popen("\".\devices\openface\\bin\FeatureExtraction.exe\"" +
                                  " -device " + str(self.device_id) +
                                  " -of " + "\"" + self.out_filename + "\"" +
-                                 " -out_dir " + self.out_dir)
+                                 " -out_dir " + self.out_dir +
+                                 " -aus")
         except FileNotFoundError:
             self.process = None
             print(

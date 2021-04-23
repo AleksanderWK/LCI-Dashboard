@@ -5,9 +5,6 @@ import {
     Theme,
     Typography,
     TextField,
-    RadioGroup,
-    FormControlLabel,
-    Radio,
     Button,
     Input,
     Select,
@@ -105,7 +102,6 @@ export default function CreateSession(): JSX.Element {
 
     const [sessionNameNotSet, setSessionNameNotSet] = useState(true);
     const [studentNameNotSet, setStudentNameNotSet] = useState(true);
-    const [deviceNotSet, setDeviceNotSet] = useState(true);
 
     const setAddStudentPopupOpen = useSetRecoilState(addStudentPopupOpenState);
     const setCreateSessionPopupOpen = useSetRecoilState(createSessionPopupOpenState);
@@ -275,24 +271,29 @@ export default function CreateSession(): JSX.Element {
                     </IconButton>
                 </StyledTooltipBottom>
             </div>
+            {
+                // TODO: Implement constraints in frontend based on the chosen eye tracking device,
+                // i.e. which variables the user can choose to view.
+                /*
+                <div>
+                    <Typography variant="caption">Eye tracking device</Typography>
+                    <RadioGroup
+                        row
+                        aria-label="eye tracker decive"
+                        name="eyetracker"
+                        onChange={(event: React.ChangeEvent<{value: unknown}>) => {
+                            handleSelectionChange("eyeTracker", event.target.value as string);
 
-            <div>
-                <Typography variant="caption">Eye tracking device</Typography>
-                <RadioGroup
-                    row
-                    aria-label="eye tracker decive"
-                    name="eyetracker"
-                    onChange={(event: React.ChangeEvent<{value: unknown}>) => {
-                        handleSelectionChange("eyeTracker", event.target.value as string);
-
-                        setDeviceNotSet(!event.target.value);
-                    }}
-                    value={createSessionValues.eyeTracker}
-                >
-                    <FormControlLabel value="stationary" control={<Radio />} label="Stationary" />
-                    <FormControlLabel value="mobile" control={<Radio />} label="Mobile" style={{marginLeft: "20px"}} />
-                </RadioGroup>
-            </div>
+                            setDeviceNotSet(!event.target.value);
+                        }}
+                        value={createSessionValues.eyeTracker}
+                    >
+                        <FormControlLabel value="stationary" control={<Radio />} label="Stationary" />
+                        <FormControlLabel value="mobile" control={<Radio />} label="Mobile" style={{marginLeft: "20px"}} />
+                    </RadioGroup>
+                </div>
+                */
+            }
 
             <div className={classes.sessionInfoContainer}>
                 <Typography variant="caption">Session code</Typography>
@@ -328,9 +329,7 @@ export default function CreateSession(): JSX.Element {
                     variant="contained"
                     color="primary"
                     onClick={handleCreateSession}
-                    disabled={
-                        sessionNameNotSet || studentNameNotSet || deviceNotSet || !createSessionValues.studentConnected
-                    }
+                    disabled={sessionNameNotSet || studentNameNotSet || !createSessionValues.studentConnected}
                     name="submitBtn"
                     className={classes.btn}
                     style={{marginRight: 8}}
