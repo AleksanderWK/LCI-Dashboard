@@ -340,8 +340,10 @@ export default function CreateSession(): JSX.Element {
                     onClick={() => {
                         if (location.pathname === "/create-session") {
                             history.push("/");
+                            resetCreateSessionValues();
                         } else if (location.pathname === "/session") {
                             setCreateSessionPopupOpen(false);
+                            resetCreateSessionValues();
                         }
                     }}
                     name="cancelBtn"
