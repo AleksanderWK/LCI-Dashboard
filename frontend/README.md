@@ -25,6 +25,8 @@ In the `frontend/` folder, start both the React and Electron application with:
 yarn run dashboard
 ```
 
+**Note**: You may have to refresh the Electron window when the React development server has started. Do this by pressing `Ctrl + R`.
+
 ## Run the Tests
 
 In the `frontend/app/` folder, run the tests with:
