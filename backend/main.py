@@ -104,7 +104,7 @@ class Main():
 
 @click.command(help="Connect to a dashbord with a session code, retrieve data from either devices or a dataset, calculate variables and send the results to the dashboard in real-time.")
 @click.option('--devices', 'device_mode', default=None, help="Retrieve data from devices.")
-@click.option('--dataset', 'dataset_id', type=click.IntRange(1, 15), help="Retrieve data from a dataset (1-15).")
+@click.option('--dataset', 'dataset_id', type=click.IntRange(1, 12), help="Retrieve data from a dataset (1-12).")
 @click.argument("session_code")
 def main(device_mode, dataset_id, session_code):
     main = Main()
