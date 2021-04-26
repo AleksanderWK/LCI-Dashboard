@@ -44,22 +44,20 @@ export default function Header(): JSX.Element {
                     const studentObj = student as Student;
                     const name = studentObj.name;
 
-                    if (sessionInfo.endTime) {
-                        const info: RecordedSessionInfo = {
-                            sessionId: sessionInfo._id,
-                            sessionName: sessionInfo.sessionName,
-                            studentId: sessionInfo.studentId,
-                            eyeTrackingDevice: sessionInfo.eyeTrackingDevice,
-                            date: new Date(sessionInfo.startTime).toDateString().slice(4),
-                            startTime: `${("0" + new Date(sessionInfo.startTime).getHours()).slice(-2)}:${(
-                                "0" + new Date(sessionInfo.startTime).getMinutes()
-                            ).slice(-2)}`,
-                            duration: duration(sessionInfo.startTime, sessionInfo.endTime),
-                            studentName: name
-                        };
+                    const info: RecordedSessionInfo = {
+                        sessionId: sessionInfo._id,
+                        sessionName: sessionInfo.sessionName,
+                        studentId: sessionInfo.studentId,
+                        eyeTrackingDevice: sessionInfo.eyeTrackingDevice,
+                        date: new Date(sessionInfo.startTime).toDateString().slice(4),
+                        startTime: `${("0" + new Date(sessionInfo.startTime).getHours()).slice(-2)}:${(
+                            "0" + new Date(sessionInfo.startTime).getMinutes()
+                        ).slice(-2)}`,
+                        duration: sessionInfo.endTime ? duration(sessionInfo.startTime, sessionInfo.endTime) : "",
+                        studentName: name
+                    };
 
-                        setRecordedSessionInfo(info);
-                    }
+                    setRecordedSessionInfo(info);
                 });
             });
         }
@@ -74,14 +72,16 @@ export default function Header(): JSX.Element {
                         <InfoItem icon={<PersonIcon />} text={recordedSessionInfo?.studentName} />
                         <InfoItem icon={<EventIcon />} text={recordedSessionInfo?.date} />
                         <InfoItem icon={<QueryBuilderIcon />} text={recordedSessionInfo?.startTime} />
-                        <InfoItem icon={<TimerIcon />} text={recordedSessionInfo?.duration} />
+                        {recordedSessionInfo?.duration != "" && (
+                            <InfoItem icon={<TimerIcon />} text={recordedSessionInfo?.duration} />
+                        )}
                     </>
                 }
                 buttonGroup={
                     <>
-                        <StyledTooltipBottom title="Select views">
+                        <StyledTooltipBottom title="Select variables">
                             <IconButton
-                                aria-label="select views"
+                                aria-label="select variables"
                                 onClick={() => {
                                     setSelectChartsPopupOpen(true);
                                 }}
