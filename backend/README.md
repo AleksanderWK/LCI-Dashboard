@@ -37,16 +37,16 @@ Options:
   - Retrieve data from devices
   - Devices must be set up correctly; see the [devices setup](#devices-setup) section below
   - EYETRACKER is the type of eye tracker used, either _stationary_ or _mobile_ (see examples [below](#example:-run-with-devices))
-- --dataset=[id]
+- --dataset ID
   - Retrieve data from a dataset
-  - [id] is the id of the dataset (1-15)
+  - ID is the id of the dataset (1-12)
 
 If no options are specified, dataset 1 will be used.
 
-### Example: Run with Dataset 12
+### Example: Run with Dataset 7
 
 ```
-python main.py SESSION_CODE --dataset=12
+python main.py SESSION_CODE --dataset 7
 ```
 
 ### Example: Run with Devices
