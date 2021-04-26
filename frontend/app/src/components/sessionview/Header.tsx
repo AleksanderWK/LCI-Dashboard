@@ -87,9 +87,9 @@ export default function Header(): JSX.Element {
                     <>
                         {selectedSession != null ? <RecordingButton /> : <></>}
 
-                        <StyledTooltipBottom title="Select views">
+                        <StyledTooltipBottom title="Select variables">
                             <IconButton
-                                aria-label="select views"
+                                aria-label="select variables"
                                 onClick={() => {
                                     setSelectChartsPopupOpen(true);
                                 }}
