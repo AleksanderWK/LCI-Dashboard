@@ -8,7 +8,7 @@ from datamodels.eye_tracking import *
 class FileDatastreams(Datastreams):
 
     """
-    This class takes the data stored in the csv-files and simulates the datastreams as if they were streamed in real-time by the devices.
+    This class is a subclass of Datastreams, and takes the data stored in the csv-files and simulates the datastreams as if they were streamed in real-time by the devices.
     It does this by using an event loop, and scheduling data extraction at the appropriate time intervals (in the frequency of the data).
     The data that is extracted will be stored in the current_data variables as can be seen bellow.
     This data can be cleared, and is supposed to be cleared after it has been used to calculate the MMD Variables and sent to the dashboard (so it is cleared every half a second right now).

@@ -10,6 +10,10 @@ import asyncio
 
 class DeviceDatastreams(Datastreams):
 
+    """
+    This class is a subclass of Datastreams. It gets the datastreams from the devices, and the datastreams for the each individual device is delegated to its respective class.
+    """
+
     openface = None
     openpose = None
     stationary_eye_tracker = None
