@@ -1,5 +1,16 @@
+/**
+ * Database queries for the sessions Datastore.
+ * For more info see NeDB documentation (https://github.com/louischatriot/nedb) for details of query functions and language.
+ * A Promise object is usually wrapped around the query itself, so that the callers can use the functions asynchronously, with for instance .then().
+ */
+
 let { db } = require("./nedb.js");
 
+/**
+ * Gets the auto incremented ID for a session. This is used in subsequent insert queries.
+ * @param {*} cb
+ * @returns
+ */
 db.sessions.getAutoincrementId = function (cb) {
   this.update(
     { _id: "__autoid__" },

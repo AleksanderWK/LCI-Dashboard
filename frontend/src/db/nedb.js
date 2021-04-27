@@ -1,3 +1,7 @@
+/**
+ * Set up the three Datastores with NeDB (for more info: https://github.com/louischatriot/nedb): users, sessions, recordings
+ */
+
 let Datastore = require("nedb");
 let db = {};
 
