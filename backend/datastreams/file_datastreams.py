@@ -70,6 +70,10 @@ class FileDatastreams(Datastreams):
         self.loop = loop
 
     def generate_frequency_datastream(self, data, time, current_data, loop):
+        """
+        This methods populates a list with data from dataset with a constant frequency.
+        It will call it self in a loop based on the frequency.
+        """
         if self.terminated:
             return
         freq = data.loc[0][0]
@@ -79,6 +83,10 @@ class FileDatastreams(Datastreams):
         )
 
     def generate_eye_tracking_datastream(self, data, row, current_data, loop):
+        """
+        This methods populates a list with data from eye_tracking dataset.
+        It will call it self in a loop based on the end_times of the fixations.
+        """
         if self.terminated:
             return
         data_row = data.loc[row]
@@ -91,6 +99,10 @@ class FileDatastreams(Datastreams):
         )
 
     def generate_skeleton_datastream(self, data, row, current_data, loop):
+        """
+        This methods populates a list with data from skeleton dataset with.
+        It will call it self in a loop based on the timestamps of the dataset.
+        """
         if self.terminated:
             return
         row_counter = row
@@ -108,6 +120,9 @@ class FileDatastreams(Datastreams):
         )
 
     def start(self):
+        """
+        Start all the generate-methods, which means that they will start generating data in a loop.
+        """ 
         self.loop.call_soon(
             self.generate_eye_tracking_datastream, self.eye_tracking, 1, self.current_eye_tracking_data, self.loop
         )
@@ -131,10 +146,16 @@ class FileDatastreams(Datastreams):
         )
 
     def terminate(self):
+        """
+        Clear all the data and stop all the loops by setting terminated = True
+        """
         self.clear_current_data()
         self.terminated = True
 
     def clear_current_data(self):
+        """
+        Clears all the current_data lists
+        """
         self.current_acc_data.clear()
         self.current_bvp_data.clear()
         self.current_eda_data.clear()
@@ -145,7 +166,8 @@ class FileDatastreams(Datastreams):
         self.current_skeleton_data.clear()
 
     # ----------------------------------------------------------------------
-    # The following methods are getters so that you get the data as data classes we have made, not the raw data rows.
+    # The following methods are getters so that we get the data as data classes we have made, not the raw data rows.
+    # See the Datastreams-superclass for more info
 
     def get_current_acc_data(self):
         return list(map(lambda row: AccDataPoint(row), self.current_acc_data))

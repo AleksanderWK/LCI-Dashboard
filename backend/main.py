@@ -16,7 +16,7 @@ class Main():
 
     def process_current_data(self):
         """
-        This function will get executed every half a second.
+        This function will get executed every half a second, and is the main part of the program when the session has started.
         """
         # Code for calculating variables based on current_data will be done here.
         mmdv_collection = self.mmdv_calc.calculate_all()
@@ -46,7 +46,7 @@ class Main():
 
     def getHost(self):
         """
-        Gets the dashboard host ip address based on the session code gotten from the command line arguments. If no code is used it will use localhost.
+        Gets the dashboard host ip address based on the session code gotten. If no code is used it will use localhost.
         """
 
         if self.session_code != None:

@@ -11,7 +11,9 @@ import asyncio
 class DeviceDatastreams(Datastreams):
 
     """
-    This class is a subclass of Datastreams. It gets the datastreams from the devices, and the datastreams for the each individual device is delegated to its respective class.
+    This class is a subclass of Datastreams, see datastreams.py for more info and documentation of the individual methods.
+    In this subclass the datastreams comes from the devices, and the datastreams for each individual device is delegated to its respective class.
+    See the devices folder for how each device is handled.
     """
 
     openface = None
@@ -24,6 +26,10 @@ class DeviceDatastreams(Datastreams):
     device_mode = "stationary"
 
     def __init__(self, device_mode, loop):
+        """
+        Here all the devices are setup. device_mode means either "stationary" or "mobile". 
+        "stationary" uses OpenFace and StationaryEyeTracker. "mobile" uses OpenPose and MobileEyeTracker
+        """
         self.loop = loop
         self.device_mode = device_mode
         if self.device_mode == "stationary":
