@@ -1,3 +1,9 @@
+/**
+ * Database queries for the users Datastore.
+ * Function names are self-explanatory, see NeDB documentation (https://github.com/louischatriot/nedb) for details of query functions and language.
+ * A Promise object is usually wrapped around the query itself, so that the callers can use the functions asynchronously, with for instance .then().
+ */
+
 let { db } = require("./nedb.js");
 
 function insertUser(data) {

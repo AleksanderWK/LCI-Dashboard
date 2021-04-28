@@ -1,3 +1,11 @@
+/**
+ * The IPC (Inter Process Communcation) (for more info: https://www.electronjs.org/docs/api/ipc-main) file contains all the events and listeners needed to communcate
+ * with the electron browser window, essentially communcating with the React App.
+ * This includes everything like database interactions, web socket interactions and session code generations that the browser window needs in the application.
+ * The events themselves should have self-explanatory names, and most of code is delegated to other files.
+ * This file is included at the end of the main file after all the application setup.
+ */
+
 const ipc = require("electron").ipcMain;
 const {
   startServer,
