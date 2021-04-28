@@ -29,6 +29,8 @@ class MobileEyeTracker():
 
     temp_data = {}
 
+    # These are the default values for the Tobii Pro Glasses 2. If the student/teacher has changed them
+    # these also needs changing.
     GLASSES_IP = "192.168.71.50"  # IPv4 address
     PORT = 49152
     base_url = 'http://' + GLASSES_IP
@@ -210,6 +212,7 @@ class MobileEyeTracker():
     def check_temp_data(self):
         return (None not in self.temp_data.values() and len(self.temp_data.values()) == 5)
 
+    # Checks if the last eye movement is a fixation or not based on the current data
     def fixation_check(self):
         fx, fy = self.current_gaze_data[3], self.current_gaze_data[4]
 
@@ -221,6 +224,12 @@ class MobileEyeTracker():
             self.fixation_classifier.check_fixation(
                 timestamp, lpup, rpup, fx, fy)
 
+    """
+    Async loop where the data from mobile eye tracker is received. This needs to be async to
+    not block other parts of the app. The UDP datagrams broadcasted from the Tobii recording
+    device are decoded and added to a temp_data variable. This variable is validated, and checked
+    again to see if it is a new fixation.
+    """
     async def data_stream_loop(self, args, loop):
         while(self.running):
             try:
@@ -242,6 +251,7 @@ class MobileEyeTracker():
                 print(e)
                 time.sleep(.1)
 
+    # Calibrates the Tobii Pro Glasses
     def calibrate(self):
         # Get all id
         self.get_ids()
@@ -266,6 +276,7 @@ class MobileEyeTracker():
         else:
             print('Calibration successful')
 
+    # Initializes the socket and datastream loop
     async def run(self, loop):
         self.running = True
         peer = (self.GLASSES_IP, self.PORT)
