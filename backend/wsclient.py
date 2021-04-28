@@ -3,6 +3,11 @@ import websockets
 
 class WebSocketClient:
 
+    """
+    This is a wrapper class for a websocket connection from the websockets package.
+    It has methods for connecting, closing connection, listening for data and a callback that can be implemented/set from the outside for when the socket recives a message.
+    """
+
     wscp = None
 
     async def connect(self, uri):
@@ -23,11 +28,12 @@ class WebSocketClient:
 
     def onMessage(self, wsc, message):
         """
-        This method is supposed to be implemented by the user of the object. It is the callback function called when the web socket connection gets a message.
+        This method is supposed to be implemented/set by the user of the object. It is the callback function called when the web socket connection gets a message.
         """
         pass
 
 
+# Old unused websocket-client implementation
 """
 from autobahn.asyncio.websocket import WebSocketClientProtocol, WebSocketClientFactory
 
