@@ -17,18 +17,24 @@ class EngagementCalculator(MMDVCalculator):
         pass
 
     def calculate_dataset(self, data):
+        # returns -1 as default if no data
         if len(data) == 0:
             return -1
 
         self.updateInterval(data)
 
+        # First cleans the EDA data, then calculates both phasic and tonic EDA values
+        # using the neurokit2 library.
         if (len(self.data_interval) >= self.EDA_FREQUENCY * self.TIME_INTERVAL):
             cleanEDA = nk.eda_clean(self.data_interval[:16])
             phasicEDA = nk.eda_phasic(cleanEDA, sampling_rate=8)
             tonicEDA = sorted(phasicEDA.get("EDA_Tonic").values)
 
+            # Calculates the area under the tonic EDA graph using
+            # the trapezoid rule (https://en.wikipedia.org/wiki/Trapezoidal_rule).
             area = np.trapz(y=tonicEDA, dx=0.125)
 
+            # If tests for when output <= 0. In this weird edge case, the previous value is returned.
             if (area > 0):
                 self.prev_eng = area
                 return area
