@@ -70,6 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+// Interface for columns in the recorded sessions table
 interface Column {
     id: "id" | "sessionName" | "date" | "time" | "duration" | "studentName";
     label: string;
@@ -85,6 +86,7 @@ interface Data {
     studentName: string;
 }
 
+// Defines the columns that are showed in the recorded sessions table
 const columns: Column[] = [
     {
         id: "id",
@@ -131,9 +133,11 @@ export default function StartView(): JSX.Element {
     const [rows, setRows] = useState<Data[]>([]);
 
     useEffect(() => {
+        // Gets previously created students and makes them available in the dropdown
         ipcGet<Student[]>("getUsers").then((students) => {
             setStudents(students);
 
+            // Gets the recorded sessions and inserts them into the recorded sessions table
             ipcGet<Session[]>("getRecordedSessions").then((data) => {
                 setRows(
                     data.map((session) => {
