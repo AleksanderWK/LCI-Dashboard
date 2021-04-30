@@ -35,6 +35,7 @@ export default function SelectCharts(): JSX.Element {
     const [activeContainers, setActiveContainers] = useRecoilState(selectedSessionActiveContainersState);
     const setSelectedSessionLayout = useSetRecoilState(selectedSessionLayoutState);
 
+    // Adds or removes the given variable chart
     const handleCheck = (variable: Variable) => () => {
         let remove = false;
 
@@ -61,6 +62,7 @@ export default function SelectCharts(): JSX.Element {
         }
     };
 
+    // Adds or removes all of the charts
     const handleCheckAll = (checkAll: boolean) => {
         setActiveContainers((prevValue) => {
             return checkAll
@@ -84,10 +86,12 @@ export default function SelectCharts(): JSX.Element {
             <Typography variant="h1">Select Variables</Typography>
             <List style={{maxHeight: "400px", overflowY: "auto"}}>
                 {Object.values(Variable)
+                    // Variables that aren't enabled shouldn't be displayed
                     .filter((variable) => MMDVariables[variable].enabled)
                     .map((variable, index) => {
                         const name = MMDVariables[variable].name;
                         const labelId = `checkbox-list-label-${name}`;
+                        // Generates checkbox and label for each variable
                         return (
                             <ListItem key={index} role={undefined} dense button onClick={handleCheck(variable)}>
                                 <ListItemIcon className={classes.checkbox}>
@@ -107,42 +111,45 @@ export default function SelectCharts(): JSX.Element {
                     })}
             </List>
             <div className={classes.btnGroup}>
-                {Object.values(Variable).filter((variable) => MMDVariables[variable].enabled).length !=
-                activeContainers.length ? (
-                    <Button
-                        className={classes.btn}
-                        data-testid="btn-select-all"
-                        onClick={() => {
-                            handleCheckAll(true);
-                        }}
-                    >
-                        <Checkbox
-                            tabIndex={-1}
-                            disableRipple
-                            checked={false}
-                            className={classes.checkbox}
-                            color="primary"
-                        ></Checkbox>
-                        Select All
-                    </Button>
-                ) : (
-                    <Button
-                        className={classes.btn}
-                        data-testid="btn-remove-all"
-                        onClick={() => {
-                            handleCheckAll(false);
-                        }}
-                    >
-                        <Checkbox
-                            tabIndex={-1}
-                            disableRipple
-                            checked={true}
-                            className={classes.checkbox}
-                            color="primary"
-                        ></Checkbox>
-                        Remove All
-                    </Button>
-                )}
+                {
+                    // Select all and remove all-buttons
+                    Object.values(Variable).filter((variable) => MMDVariables[variable].enabled).length !=
+                    activeContainers.length ? (
+                        <Button
+                            className={classes.btn}
+                            data-testid="btn-select-all"
+                            onClick={() => {
+                                handleCheckAll(true);
+                            }}
+                        >
+                            <Checkbox
+                                tabIndex={-1}
+                                disableRipple
+                                checked={false}
+                                className={classes.checkbox}
+                                color="primary"
+                            ></Checkbox>
+                            Select All
+                        </Button>
+                    ) : (
+                        <Button
+                            className={classes.btn}
+                            data-testid="btn-remove-all"
+                            onClick={() => {
+                                handleCheckAll(false);
+                            }}
+                        >
+                            <Checkbox
+                                tabIndex={-1}
+                                disableRipple
+                                checked={true}
+                                className={classes.checkbox}
+                                color="primary"
+                            ></Checkbox>
+                            Remove All
+                        </Button>
+                    )
+                }
                 <Button
                     className={classes.btn}
                     style={{marginLeft: "auto"}}
