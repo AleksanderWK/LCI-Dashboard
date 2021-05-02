@@ -23,6 +23,13 @@ interface Props {
     id?: number;
 }
 
+/**
+ * An x-range chart for a given variable.
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable to render the x-range chart for
+ * @param {number} props.id - The session ID of the session this x-range chart applies to.
+ * If not set, the selected session is used.
+ */
 function XRangeChart(props: Props): JSX.Element {
     const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
 
@@ -102,6 +109,9 @@ function XRangeChart(props: Props): JSX.Element {
         }
     });
 
+    /**
+     * Gets data stored for the session and variable in state, and inserts it into the chart
+     */
     const updateChart = useRecoilCallback(({snapshot}) => (animationDuration?: number) => {
         if (chart.current) {
             const rawData = props.id
@@ -115,9 +125,11 @@ function XRangeChart(props: Props): JSX.Element {
             chart.current.chart.series[0].setData(processedData, false);
 
             if (rawData.length > 0) {
+                // Graph starts moving after the amount of data points to fill the LIVE_CHART_RANGE is reached
                 chart.current.chart.xAxis[0].setExtremes(
                     rawData.length >= FREQUENCY * LIVE_CHART_RANGE
-                        ? rawData.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0]
+                        ? // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
+                          rawData.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0]
                         : undefined,
                     rawData[rawData.length - 1][0],
                     false
@@ -144,17 +156,21 @@ function XRangeChart(props: Props): JSX.Element {
 
     const selectedSessionId = useRecoilValue(selectedSessionIdState);
 
+    /**
+     * Update chart when session changes
+     * (containers with same variable across sessions are not rerendered, due to performance)
+     */
     useEffect(() => {
-        // Update chart when session changes
-        // (containers with same variable across sessions are not rerendered, due to performance)
         updateChart();
     }, [selectedSessionId]);
 
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
     const layout = useRecoilValue(selectedSessionLayoutState);
 
+    /**
+     * If active containers/layout is changed, reflow graph as container size may have changed
+     */
     useEffect(() => {
-        // If active containers/layouts is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }

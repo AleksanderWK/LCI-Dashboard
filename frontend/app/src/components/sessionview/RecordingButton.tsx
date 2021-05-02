@@ -19,6 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * A button that handles recording of the selected session and shows the recording duration
+ */
 export default function RecordingButton(): JSX.Element {
     const classes = useStyles();
 
@@ -26,12 +29,18 @@ export default function RecordingButton(): JSX.Element {
     const [dur, setDuration] = useState<string>("0:00:00");
     const setSnackOpen = useSetRecoilState(snackOpenState);
 
+    /**
+     * Get recording status for the selected session from state
+     */
     useEffect(() => {
         if (recording.status && recording.startTime) {
             setDuration(duration(recording.startTime.getTime(), undefined, 1));
         }
     }, [recording]);
 
+    /**
+     * An interval that updates the duration of the recording
+     */
     useInterval(
         () => {
             if (recording.startTime) {
@@ -41,6 +50,9 @@ export default function RecordingButton(): JSX.Element {
         recording.status ? 1000 : null
     );
 
+    /**
+     * On recording start, update recording state for the selected session
+     */
     function handleStartRecordingClick(): void {
         const startTime = new Date();
         setRecording((prevVal) => ({
@@ -50,6 +62,9 @@ export default function RecordingButton(): JSX.Element {
         }));
     }
 
+    /**
+     * On recording end, show confirmation snackbar and reset recording state
+     */
     function handleStopRecordingClick(): void {
         setSnackOpen(true);
         setRecording((prevVal) => ({...prevVal, status: false, startTime: null}));
@@ -58,6 +73,9 @@ export default function RecordingButton(): JSX.Element {
         }, 3000);
     }
 
+    /**
+     * Clear duration if session is not being recorded
+     */
     useEffect(() => {
         if (!recording.status) {
             setDuration("0:00:00");

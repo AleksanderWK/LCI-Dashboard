@@ -39,6 +39,13 @@ interface Props {
     variable: Variable;
 }
 
+/**
+ * A container for the session view.
+ * Renders a card with a title, menu with info icon and options to change the view and remove the container,
+ * and either an calculating indicator, X-range chart, line chart or numeric component for the given variable.
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable to render the chart for
+ */
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
@@ -53,7 +60,11 @@ export default function Container(props: Props): JSX.Element {
 
     const menuAnchorElement = useRef<HTMLDivElement | null>(null);
 
+    /**
+     * Removes the container from the dashboard
+     */
     function removeContainer(): void {
+        // Remove from dashboard
         setActiveContainers((prevState) => {
             const newState = [...prevState];
             return newState.filter((item) => item != props.variable);

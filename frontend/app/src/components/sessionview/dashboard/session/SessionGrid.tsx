@@ -29,6 +29,10 @@ const useStyles = makeStyles(() =>
 
 const StaticGridLayout = WidthProvider(GridLayout);
 
+/**
+ * The grid layout for the live session view (a specific session).
+ * Renders draggable and resizable containers.
+ */
 export default function SessionGrid(): JSX.Element {
     const classes = useStyles();
 
@@ -36,10 +40,17 @@ export default function SessionGrid(): JSX.Element {
 
     const [selectedSessionLayout, setSelectedSessionLayout] = useRecoilState(selectedSessionLayoutState);
 
+    /**
+     * Get the layout from state (position, width and height) for a given variable
+     */
     const getLayoutItem = useRecoilCallback(({snapshot}) => (variable: Variable): Layout | undefined => {
         return snapshot.getLoadable(selectedSessionLayoutItemState(variable)).getValue();
     });
 
+    /**
+     * Renders memoized containers for each selected variable
+     * The containers are rerendered only if the selected containers is changed (one is added or removed)
+     */
     const containers = useMemo(() => {
         const layout: Layout[] = [];
         return selectedSessionActiveContainers.map((variable) => {
@@ -67,6 +78,8 @@ export default function SessionGrid(): JSX.Element {
             resizeHandle={<ResizeIcon className={`${classes.resizeIcon} noDrag`} color="action" />}
             layout={selectedSessionLayout}
             onLayoutChange={(layout) => {
+                // Check if the previous layout is different to the new one before updating state
+                // This prevents unnecessary rerenders
                 if (JSON.stringify(layout) !== JSON.stringify(selectedSessionLayout)) {
                     setSelectedSessionLayout(layout);
                 }

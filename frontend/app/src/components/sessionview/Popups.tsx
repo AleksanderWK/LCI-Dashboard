@@ -13,6 +13,9 @@ import CreateSession from "../createsessionview/CreateSession";
 import QuitSession from "./QuitSession";
 import SelectCharts from "./SelectCharts";
 
+/**
+ * Popups shown in SessionView, including QuitSession, SelectCharts, CreateSession and AddStudent.
+ */
 export default function Popups(): JSX.Element {
     const [addStudentPopupOpen, setAddStudentPopupOpen] = useRecoilState(addStudentPopupOpenState);
     const [createSessionPopupOpen, setCreateSessionPopupOpen] = useRecoilState(createSessionPopupOpenState);
