@@ -1,3 +1,9 @@
+/*
+ *  The view for showing a recorded session.
+ *  Gets the data stored for the selected session
+ *  and renders the header, a dashboard and popups.
+ */
+
 import React, {useEffect} from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import Header from "../components/recordedsessionview/Header";
@@ -19,6 +25,7 @@ export default function RecordedSessionView(): JSX.Element {
 
     useEffect(() => {
         if (recordedSessionId) {
+            // When a session is selected, get the data stored for that session ID and store it in the state
             ipcInvoke("getSessionRecording", recordedSessionId).then((session) => {
                 setRecordedSession(session as RecordedSession);
             });

@@ -1,3 +1,8 @@
+/*
+ *  The view for creating a session from the start view.
+ *  Renders the create session form and add student popup.
+ */
+
 import React from "react";
 import {makeStyles, createStyles} from "@material-ui/core";
 import dashboardIllustration from "../assets/images/dashboardIllustration.svg";

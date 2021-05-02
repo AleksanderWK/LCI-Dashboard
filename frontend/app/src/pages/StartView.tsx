@@ -1,3 +1,7 @@
+/*
+ *  Displays all previously recorded sessions and has a button for starting a new live session
+ */
+
 import React, {useEffect, useState} from "react";
 import {makeStyles, createStyles, Theme, Fab, Typography} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
@@ -205,32 +209,37 @@ export default function StartView(): JSX.Element {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody style={{backgroundColor: "white"}}>
-                                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                            return (
-                                                <TableRow
-                                                    hover
-                                                    role="checkbox"
-                                                    tabIndex={-1}
-                                                    key={row.id}
-                                                    className={classes.row}
-                                                    onClick={() => {
-                                                        setSelectedRecordedSessionId(row.id);
-                                                        history.push("/recording");
-                                                    }}
-                                                >
-                                                    {columns.map((column) => {
-                                                        const value = row[column.id];
-                                                        return (
-                                                            <TableCell className={classes.cell} key={column.id}>
-                                                                {column.format && typeof value === "number"
-                                                                    ? column.format(value)
-                                                                    : value}
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            );
-                                        })}
+                                        {
+                                            // Generate the rows in the table
+                                            rows
+                                                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                                .map((row) => {
+                                                    return (
+                                                        <TableRow
+                                                            hover
+                                                            role="checkbox"
+                                                            tabIndex={-1}
+                                                            key={row.id}
+                                                            className={classes.row}
+                                                            onClick={() => {
+                                                                setSelectedRecordedSessionId(row.id);
+                                                                history.push("/recording");
+                                                            }}
+                                                        >
+                                                            {columns.map((column) => {
+                                                                const value = row[column.id];
+                                                                return (
+                                                                    <TableCell className={classes.cell} key={column.id}>
+                                                                        {column.format && typeof value === "number"
+                                                                            ? column.format(value)
+                                                                            : value}
+                                                                    </TableCell>
+                                                                );
+                                                            })}
+                                                        </TableRow>
+                                                    );
+                                                })
+                                        }
                                     </TableBody>
                                 </Table>
                             </TableContainer>
