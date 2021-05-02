@@ -41,23 +41,23 @@ Time 🡺 timestamp seconds
 
 Joint 🡺 joint ID (see the image below)
 
-![](../documentation/dataset-images/image6.png)
+![](../../documentation/dataset-images/image6.png)
 
 Fatigue 🡺 see the attached presentation
 
-![](../documentation/dataset-images/image7.png)
+![](../../documentation/dataset-images/image7.png)
 
 Amount of Motion 🡺 the total distance travelled by each joint, compute the Euclidean distance between the two consecutive positions of each joint and average it over the whole body.
 
-![](../documentation/dataset-images/image1.png)
+![](../../documentation/dataset-images/image1.png)
 
-![](../documentation/dataset-images/image2.png)
+![](../../documentation/dataset-images/image2.png)
 
-![](../documentation/dataset-images/image3.png)
+![](../../documentation/dataset-images/image3.png)
 
-![](../documentation/dataset-images/image4.png)
+![](../../documentation/dataset-images/image4.png)
 
-![](../documentation/dataset-images/image5.png)
+![](../../documentation/dataset-images/image5.png)
 
 Stability of Motion 🡺 compute the Euclidean distance between the two consecutive positions of each joint 🡺 compute 1/(1+distance) and then sum it over the whole body.
 
