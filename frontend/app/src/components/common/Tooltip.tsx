@@ -36,6 +36,12 @@ interface IconProps {
     color?: string;
 }
 
+/**
+ * An icon displaying type of device
+ * @param {object} props - Component props
+ * @param {Device} props.device - The device to display
+ * @param {string} props.color - The color of the icon
+ */
 export function Icon(props: IconProps): JSX.Element {
     const classes = useStyles();
 
@@ -56,6 +62,12 @@ interface Props {
     variable: Variable;
 }
 
+/**
+ * A tooltip showing variable information
+ * @param {object} props - Component props
+ * @param {JSX.Element} props.children - The contents the tooltip applies to
+ * @param {Variable} props.variable - The variable the tooltip applies to
+ */
 export default function Tooltip(props: Props): JSX.Element {
     const classes = useStyles();
 

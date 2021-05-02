@@ -1,3 +1,7 @@
+/*
+ *  A collection of icons used across the application
+ */
+
 import React from "react";
 import {SvgIcon, SvgIconProps} from "@material-ui/core";
 

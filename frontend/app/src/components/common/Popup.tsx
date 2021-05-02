@@ -20,6 +20,11 @@ interface Props {
     children: JSX.Element;
 }
 
+/**
+ * A popup wrapper component
+ * @param {object} props - Component props
+ * @param {JSX.Element} props.children - The content of the popup
+ */
 export default function Popup(props: Props): JSX.Element {
     const classes = useStyles();
 
