@@ -1,9 +1,3 @@
-/*
- *  The live session view.
- *  Handles the incoming data from the backend(s)
- *  and renders the header, dashboard, popups and snackbars.
- */
-
 import React, {useEffect} from "react";
 import {useRecoilCallback} from "recoil";
 import PageContainer from "../components/common/PageContainer";
@@ -46,6 +40,11 @@ export interface DataPayload {
     timestamp: number;
 }
 
+/**
+ *  The live session view.
+ *  Handles the incoming data from the backend(s)
+ *  and renders the header, dashboard, popups and snackbars.
+ */
 export default function SessionView(): JSX.Element {
     // Adds the incoming data point to state
     const addDataPointToState = useRecoilCallback(

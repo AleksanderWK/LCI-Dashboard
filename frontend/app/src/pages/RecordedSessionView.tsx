@@ -1,9 +1,3 @@
-/*
- *  The view for showing a recorded session.
- *  Gets the data stored for the selected session
- *  and renders the header, a dashboard and popups.
- */
-
 import React, {useEffect} from "react";
 import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
 import Header from "../components/recordedsessionview/Header";
@@ -17,6 +11,11 @@ import PopupContainer from "../components/common/PopupContainer";
 import {selectChartsPopupOpenState} from "../state/popup";
 import SelectCharts from "../components/recordedsessionview/SelectCharts";
 
+/**
+ *  The view for showing a recorded session.
+ *  Gets the data stored for the selected session
+ *  and renders the header, a dashboard and popups.
+ */
 export default function RecordedSessionView(): JSX.Element {
     const [selectChartsPopupOpen, setSelectChartsPopupOpen] = useRecoilState(selectChartsPopupOpenState);
 

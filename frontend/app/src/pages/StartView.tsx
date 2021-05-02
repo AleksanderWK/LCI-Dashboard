@@ -1,7 +1,3 @@
-/*
- *  Displays all previously recorded sessions and has a button for starting a new live session
- */
-
 import React, {useEffect, useState} from "react";
 import {makeStyles, createStyles, Theme, Fab, Typography} from "@material-ui/core";
 import Table from "@material-ui/core/Table";
@@ -126,6 +122,9 @@ const columns: Column[] = [
     }
 ];
 
+/**
+ *  Displays all previously recorded sessions and has a button for starting a new live session.
+ */
 export default function StartView(): JSX.Element {
     const classes = useStyles();
     const history = useHistory();
