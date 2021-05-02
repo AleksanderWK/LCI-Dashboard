@@ -49,7 +49,7 @@ export default function RecordedSessionGrid(): JSX.Element {
 
     /**
      * Renders memoized containers for each selected variable
-     * The containers are rerendered only is the selected containers changed (one is added or removed)
+     * The containers are rerendered only if the selected containers is changed (one is added or removed)
      */
     const containers = useMemo(() => {
         const layout: Layout[] = [];
