@@ -24,6 +24,9 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * A component that handles creation of new students
+ */
 export default function AddStudent(): JSX.Element {
     const classes = useStyles();
 
@@ -43,7 +46,7 @@ export default function AddStudent(): JSX.Element {
         } else {
             const student = {name: studentName};
 
-            // Add student
+            // Add student to data store, update application state and close popup
             ipcInvoke("insertUser", student).then((studentId) => {
                 setStudents((prevValue) => [...prevValue, {...student, _id: studentId as string}]);
 
