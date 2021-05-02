@@ -29,12 +29,18 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * Handles selection of charts for the recorded session
+ */
 export default function SelectCharts(): JSX.Element {
     const classes = useStyles();
     const setPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
     const [activeContainers, setActiveContainers] = useRecoilState(selectedRecordingActiveContainersState);
 
-    // Adds or removes the given variable chart
+    /**
+     * Adds or removes the given variable chart
+     * @param {Variable} variable - The variable to be removed
+     */
     const handleCheck = (variable: Variable) => () => {
         setActiveContainers((prevState) => {
             const list = [...prevState];
@@ -47,7 +53,10 @@ export default function SelectCharts(): JSX.Element {
         });
     };
 
-    // Adds or removes all of the charts
+    /**
+     * Adds or removes all of the charts
+     * @param {boolean} checkAll - Whether all should be added (true) or removed (false)
+     */
     const handleCheckAll = (checkAll: boolean) => {
         setActiveContainers((prevValue) => {
             return checkAll

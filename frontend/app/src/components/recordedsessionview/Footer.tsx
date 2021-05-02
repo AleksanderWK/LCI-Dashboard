@@ -18,6 +18,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * The footer of the recorded session view.
+ * Displays an interval slider.
+ */
 export default function Footer(): JSX.Element {
     const classes = useStyles();
 

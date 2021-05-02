@@ -39,6 +39,13 @@ interface Props {
     variable: Variable;
 }
 
+/**
+ * A container for the recorded session view.
+ * Renders a card with a title, menu with info icon and option to remove container,
+ * and either an X-range chart or line chart for the given variable.
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable to render the chart for
+ */
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 
@@ -49,7 +56,11 @@ export default function Container(props: Props): JSX.Element {
     const setSelectedRecordingActiveContainers = useSetRecoilState(selectedRecordingActiveContainersState);
     const setSelectedRecordingLayout = useSetRecoilState(selectedRecordedSessionLayoutState);
 
+    /**
+     * Removes the container from the dashboard
+     */
     function removeContainer(): void {
+        // Remove from dashboard
         setSelectedRecordingActiveContainers((prevState) => {
             const newState = [...prevState];
             return newState.filter((item) => item != props.variable);

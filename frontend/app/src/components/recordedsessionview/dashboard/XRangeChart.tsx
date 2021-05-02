@@ -19,6 +19,11 @@ interface Props {
     variable: Variable;
 }
 
+/**
+ * An x-range chart for a given variable.
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable to render the x-range chart for
+ */
 function XRangeChart(props: Props): JSX.Element {
     const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
 
@@ -92,7 +97,9 @@ function XRangeChart(props: Props): JSX.Element {
     const selectedRecordingActiveContainers = useRecoilValue(selectedRecordingActiveContainersState);
     const selectedRecordingLayout = useRecoilValue(selectedRecordedSessionLayoutState);
 
-    // Listens on change in interval state and sets the x-axis' min and max values accordingly
+    /**
+     * Listens on change in interval state and sets the x-axis' min and max values accordingly
+     */
     useEffect(() => {
         if (chart.current && selectedRecordingInterval) {
             chart.current.chart.xAxis[0].setExtremes(
@@ -103,14 +110,19 @@ function XRangeChart(props: Props): JSX.Element {
         }
     }, [selectedRecordingInterval]);
 
+    /**
+     * Get data from state and insert it into the chart
+     */
     useEffect(() => {
         if (chart.current && props.variable == Variable.EducationalSpecificEmotions && recordedSessionESEXRangeData) {
             chart.current.chart.series[0].setData([...recordedSessionESEXRangeData], true);
         }
     }, [recordedSessionESEXRangeData]);
 
+    /**
+     * If active containers/layout is changed, reflow graph as container size may have changed
+     */
     useEffect(() => {
-        // If active containers/layout is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }

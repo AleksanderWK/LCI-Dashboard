@@ -16,6 +16,11 @@ interface Props {
     variable: Variable;
 }
 
+/**
+ * A line chart for a given variable.
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable to render the line chart for
+ */
 function LineChart(props: Props): JSX.Element {
     const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
 
@@ -127,7 +132,9 @@ function LineChart(props: Props): JSX.Element {
     const selectedRecordingActiveContainers = useRecoilValue(selectedRecordingActiveContainersState);
     const selectedRecordingLayout = useRecoilValue(selectedRecordedSessionLayoutState);
 
-    // Listens on change in interval state and sets the x-axis' min and max values accordingly
+    /**
+     * Listens on change in interval state and sets the x-axis' min and max values accordingly
+     */
     useEffect(() => {
         if (chart.current && selectedRecordingInterval) {
             chart.current.chart.xAxis[0].setExtremes(
@@ -138,6 +145,9 @@ function LineChart(props: Props): JSX.Element {
         }
     }, [selectedRecordingInterval]);
 
+    /**
+     * Insert the data for the selected recording and variable into the chart
+     */
     useEffect(() => {
         if (chart.current && recordedSession) {
             // For each interval in the recording, add a series to the chart
@@ -157,12 +167,15 @@ function LineChart(props: Props): JSX.Element {
                 );
             });
 
+            // Redraw when all intervals has been added
             chart.current.chart.redraw();
         }
     }, [recordedSession]);
 
+    /**
+     * If active containers/layout is changed, reflow graph as container size may have changed
+     */
     useEffect(() => {
-        // If active containers/layout is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }
