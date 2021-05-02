@@ -51,6 +51,7 @@ export const recordedSessionState = atom<RecordedSession | null>({
 
 /*
  *  A selector that returns the ESE data in x-range format for the curently selected recorded session
+ *  It converts the raw data to the correct format to be used by the X-range chart
  */
 export const recordedSessionESEXRangeDataState = selector<Highcharts.XrangePointOptionsObject[] | null>({
     key: "recordedSessionESEXRangeData",
@@ -67,8 +68,11 @@ export const recordedSessionESEXRangeDataState = selector<Highcharts.XrangePoint
                 delight: 0
             };
 
+            // For each interval
             Object.values(recordedSession.data).forEach((intervalData) => {
+                // For each timestamp in the interval
                 intervalData.timestamps.forEach((timestamp, index) => {
+                    // For each emotion value for a timestamp
                     Object.entries(intervalData.ese[index]).forEach(([emotion, value]) => {
                         if (value) {
                             if (prevEmotionsIndex[emotion] > 0) {

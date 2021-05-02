@@ -1,5 +1,5 @@
 /*
- *  State for popups
+ *  State for popups and snackbars; if they are shown or not
  */
 
 import {atom} from "recoil";

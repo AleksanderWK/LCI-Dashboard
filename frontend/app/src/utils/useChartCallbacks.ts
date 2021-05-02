@@ -2,8 +2,9 @@ import {useState} from "react";
 import {useRecoilCallback} from "recoil";
 import {callbackFunctionIdState, callbackFunctionsState} from "../state/chart";
 
-/*
- *  A hook that manages the callback functions to be called on every chart update
+/**
+ * A hook that manages the callback functions to be called on every chart update
+ * @returns The chart id for the inserted chart, a function to insert a callback and a function to remove a callback
  */
 export function useChartCallbacks(): [number | undefined, (callback: () => void) => void, (id: number) => void] {
     const [chartId, setChartId] = useState<number>();

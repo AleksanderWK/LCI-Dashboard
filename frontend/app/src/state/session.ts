@@ -19,7 +19,7 @@ export const selectedSessionIdState = atom<number | null>({
 });
 
 /*
- *  An atom that stores ids for all sessions
+ *  An atom that stores ids for all live sessions
  */
 export const sessionIdsState = atom<number[]>({
     key: "sessionIds",
@@ -38,7 +38,7 @@ export interface Session {
 }
 
 /*
- *  An atomFamily that stores session information for each session
+ *  An atomFamily that stores session information for each live session
  */
 export const sessionState = atomFamily<Session | undefined, number | null>({
     key: "session",

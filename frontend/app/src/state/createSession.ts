@@ -13,6 +13,9 @@ export interface CreateSessionValues {
     studentConnected: boolean;
 }
 
+/*
+ *  An atom that stores the values entered when creating a new session
+ */
 export const createSessionValuesState = atom<CreateSessionValues>({
     key: "createSessionValues",
     default: {
