@@ -1,5 +1,5 @@
 /*
- *  Functions for sending IPC messages to the WebSocket server
+ *  Functions for sending IPC messages to the Electron app
  */
 
 let ipc: any = null;
