@@ -85,7 +85,7 @@ export default function QuitSesson(): JSX.Element {
             return newValue;
         });
 
-        // If there is more sessions, set the selectedSessionId to some of them, else go to StartView
+        // If there are more sessions, set the selectedSessionId to some of them, else go to StartView
         if (sessions.length > 1) {
             set(selectedSessionIdState, sessions.find((session) => session._id != sessionId)?._id as number | null);
         } else {
