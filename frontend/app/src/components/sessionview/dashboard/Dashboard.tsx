@@ -34,6 +34,10 @@ const useStyles = makeStyles(() =>
     })
 );
 
+/**
+ * Renders the dashboard of the session view (either for a specific session or for the "All sessions" view),
+ * or a helper text if no variables are selected.
+ */
 function Dashboard(): JSX.Element {
     const classes = useStyles();
 

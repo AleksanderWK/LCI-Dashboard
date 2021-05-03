@@ -17,6 +17,10 @@ const useStyles = makeStyles(() =>
     })
 );
 
+/**
+ * The grid layout for the all sessions view.
+ * Renders each variable/container in its own column.
+ */
 export default function AllSessionsGrid(): JSX.Element {
     const classes = useStyles();
 

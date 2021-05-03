@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: "30px 0",
             width: "100%",
             height: "100%",
-            backgroundColor: "#E6E6E6", // Background of title bar
+            backgroundColor: "#E6E6E6", // Background color of title bar
             overflow: "scroll",
             gridColumnStart: 1,
             gridColumnEnd: 2,
@@ -51,6 +51,10 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * A menu displaying a button for going to the "All sessions" view,
+ * one button for each live session and a button for creating a new session.
+ */
 export default function Menu(): JSX.Element {
     const classes = useStyles();
 

@@ -12,7 +12,7 @@ class PhysiologicalStressCalculator(MMDVCalculator):
     default_ps = 50
     data_interval = numpy.array([])
     BVP_FREQUENCY = 64
-    TIME_INTERVAL = 120 # in seconds
+    TIME_INTERVAL = 120  # in seconds
     INTERVAL_SIZE = BVP_FREQUENCY * TIME_INTERVAL
 
     def __init__(self):
@@ -32,7 +32,7 @@ class PhysiologicalStressCalculator(MMDVCalculator):
                                self.BVP_FREQUENCY, calc_freq=True)
             # Transform the heart signal to the frequency domain
             wd, m = hp.analysis.calc_fd_measures(
-                method='fft', measures=m, working_data=wd)¨
+                method='fft', measures=m, working_data=wd)
             # Get the LF and HF measures
             lf = m["lf"]
             hf = m["hf"]

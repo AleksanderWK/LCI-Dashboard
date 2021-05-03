@@ -41,6 +41,13 @@ interface Props {
     buttonGroup: JSX.Element;
 }
 
+/**
+ * A header wrapper component containing the logo, a title, an info bar and buttons
+ * @param {object} props - Component props
+ * @param {string | undefined} props.title - Title
+ * @param {JSX.Element} props.infoBar - An element containing InfoItem components to be rendered under the title
+ * @param {JSX.Element} props.buttonGroup - An element containing buttons to be rendered to the right
+ */
 export default function HeaderWrapper(props: Props): JSX.Element {
     const classes = useStyles();
 

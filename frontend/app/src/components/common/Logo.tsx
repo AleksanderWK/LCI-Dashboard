@@ -19,6 +19,12 @@ interface Props {
     absolute?: boolean;
 }
 
+/**
+ * A logo component
+ * @param {object} props Component props
+ * @param {boolean} props.absolute Whether the logo is absolutely positioned
+ * at the top left corner or relatively positioned
+ */
 export default function Logo(props: Props): JSX.Element {
     const classes = useStyles();
 

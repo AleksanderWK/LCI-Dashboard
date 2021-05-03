@@ -33,13 +33,16 @@ const useStyles = makeStyles(() =>
     })
 );
 
-interface Props {
+interface ContainerProps {
     children: JSX.Element;
-    menu?: JSX.Element;
-    footer?: JSX.Element;
 }
 
-function Container(props: {children: JSX.Element}): JSX.Element {
+/**
+ * A container that expands to 100% width and height and adds padding
+ * @param {object} props - Component props
+ * @param {JSX.Element} props.children - The children to be wrapped in the container
+ */
+function Container(props: ContainerProps): JSX.Element {
     const classes = useStyles();
 
     return (
@@ -49,7 +52,20 @@ function Container(props: {children: JSX.Element}): JSX.Element {
     );
 }
 
-export default function PageContainer(props: Props): JSX.Element {
+interface PageContainerProps {
+    children: JSX.Element;
+    menu?: JSX.Element;
+    footer?: JSX.Element;
+}
+
+/**
+ * A page container component that renderes a container with either a menu, footer or nothing
+ * @param {object} props - Component props
+ * @param {JSX.Element} props.children - The children to be wrapped in the container
+ * @param {JSX.Element?} props.menu - The menu component of the page
+ * @param {JSX.Element?} props.footer - The footer component of the page
+ */
+export default function PageContainer(props: PageContainerProps): JSX.Element {
     const classes = useStyles();
 
     if (props.menu) {

@@ -11,9 +11,7 @@ import {
     MenuItem,
     InputLabel,
     FormControl,
-    IconButton,
-    SvgIconProps,
-    SvgIcon
+    IconButton
 } from "@material-ui/core";
 import AddCircleRoundedIcon from "@material-ui/icons/AddCircleRounded";
 import {useRecoilCallback, useRecoilState, useResetRecoilState, useSetRecoilState} from "recoil";
@@ -31,6 +29,7 @@ import {
 } from "../../state/session";
 import {EyeTrackingDevice} from "../../constants";
 import {StyledTooltipBottom, StyledTooltipRight} from "../common/Tooltips";
+import {CopyIcon} from "../common/Icons";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -81,19 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-function CopyIcon(props: SvgIconProps): JSX.Element {
-    return (
-        <SvgIcon {...props}>
-            <path
-                _ngcontent-axr-c9=""
-                clipRule="evenodd"
-                d="M16.4998 14.1666V2.49992C16.4998 1.58325 15.7498 0.833252 14.8332 0.833252H5.6665C4.74984 0.833252 3.99984 1.58325 3.99984 2.49992V14.1666C3.99984 15.0833 4.74984 15.8333 5.6665 15.8333H14.8332C15.7498 15.8333 16.4998 15.0833 16.4998 14.1666ZM13.9998 17.4999H2.33317V5.83325H0.666504V17.4999C0.666504 18.4166 1.4165 19.1666 2.33317 19.1666H13.9998V17.4999ZM5.6665 14.1666H14.8332V2.49992H5.6665V14.1666Z"
-                fillRule="evenodd"
-            ></path>
-        </SvgIcon>
-    );
-}
-
+/**
+ * A component that handles creation of new live sessions
+ */
 export default function CreateSession(): JSX.Element {
     const classes = useStyles();
 
@@ -112,11 +101,12 @@ export default function CreateSession(): JSX.Element {
     const location = useLocation();
 
     useEffect(() => {
-        // Get users from DB when component loads
+        // Get users from data store when component loads
         ipcGet<Student[]>("getUsers").then((students) => {
             setStudents(students);
         });
 
+        // When student has connected, update application state
         ipcOnce("readyConnection", (event: any, data: any) => {
             setCreateSessionValues((prevValues) => ({
                 ...prevValues,
@@ -125,6 +115,11 @@ export default function CreateSession(): JSX.Element {
         });
     }, []);
 
+    /**
+     * Updates create session values state with new values
+     * @param {string} selection - The field that has changed
+     * @param {string} value - The new value of the field that has changed
+     */
     const handleSelectionChange = (selection: string, value: string) => {
         let student = undefined;
 
@@ -143,6 +138,9 @@ export default function CreateSession(): JSX.Element {
         setCreateSessionValues(updatedSessionSelections);
     };
 
+    /**
+     * Updates application state when a new session is made
+     */
     const createSession = useRecoilCallback(({set}) => (session: Session) => {
         set(sessionState(session._id), session);
 
@@ -150,10 +148,15 @@ export default function CreateSession(): JSX.Element {
 
         set(sessionRecordingState(session._id), {status: false, startTime: null, recordingId: null});
 
+        // Select the newly created session
         set(selectedSessionIdState, session._id);
     });
 
+    /**
+     * Handles creation of a new session
+     */
     const handleCreateSession = () => {
+        // Start receiving data from the backend
         ipcSend("startDatastream", createSessionValues.sessionCode);
 
         const session: Partial<Session> = {
@@ -167,14 +170,16 @@ export default function CreateSession(): JSX.Element {
             sessionCode: createSessionValues.sessionCode
         };
 
+        // Insert the session into the data store
         ipcInvoke("insertSession", session).then((sessionId) => {
             session._id = sessionId as number;
             createSession(session as Session);
         });
 
-        // Reset values
+        // Reset create session values (fields)
         resetCreateSessionValues();
 
+        // Go to SessionView if in CreateSessionView, or close the popup if already in SessionView
         if (location.pathname === "/create-session") {
             history.push("session");
         } else if (location.pathname === "/session") {
@@ -182,6 +187,9 @@ export default function CreateSession(): JSX.Element {
         }
     };
 
+    /**
+     * When values are field values are changed, check if inputs are valid
+     */
     useEffect(() => {
         if (createSessionValues.sessionName) {
             setSessionNameNotSet(false);
@@ -273,7 +281,9 @@ export default function CreateSession(): JSX.Element {
             </div>
             {
                 // TODO: Implement constraints in frontend based on the chosen eye tracking device,
-                // i.e. which variables the user can choose to view.
+                // i.e. which variables the user can choose to view. See user story 5.
+                // Selection can either be done in the backend or the frontend.
+                // If done in the frontend, the below code can be used.
                 /*
                 <div>
                     <Typography variant="caption">Eye tracking device</Typography>
@@ -338,6 +348,8 @@ export default function CreateSession(): JSX.Element {
                 </Button>
                 <Button
                     onClick={() => {
+                        // On cancel, either go to the StartView if in CreateSessionView,
+                        // or close the popup if in SessionView
                         if (location.pathname === "/create-session") {
                             history.push("/");
                             resetCreateSessionValues();

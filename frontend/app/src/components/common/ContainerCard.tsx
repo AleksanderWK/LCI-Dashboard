@@ -38,6 +38,11 @@ interface Props {
     children: JSX.Element;
 }
 
+/**
+ * A card wrapper component
+ * @param {object} props - Component props
+ * @param {JSX.Element} children - The children to be wrapped
+ */
 export default function Container(props: Props): JSX.Element {
     const classes = useStyles();
 

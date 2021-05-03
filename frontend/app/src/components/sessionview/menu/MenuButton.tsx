@@ -49,6 +49,13 @@ interface Props {
     onClick: () => void;
 }
 
+/**
+ * A wrapper component for a menu button
+ * @param {object} props - Component props
+ * @param {JSX.Element} props.children - The content of the menu button
+ * @param {boolean} props.selected - Whether this button is selected or not
+ * @param {tring} props.tooltip - Tooltip content for the menu button
+ */
 export default function MenuButton(props: Props): JSX.Element {
     const classes = useStyles();
 

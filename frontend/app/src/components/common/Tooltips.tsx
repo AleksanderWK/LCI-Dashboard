@@ -1,3 +1,7 @@
+/*
+ * Tooltips with custom placements
+ */
+
 import {Tooltip, withStyles} from "@material-ui/core";
 
 export const StyledTooltipBottom = withStyles({

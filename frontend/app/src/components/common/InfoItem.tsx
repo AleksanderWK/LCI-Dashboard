@@ -19,6 +19,12 @@ interface Props {
     text: string | undefined;
 }
 
+/**
+ * An info item with an icon and text
+ * @param {object} props - Component props
+ * @param {JSX.Element} props.icon - Icon element
+ * @param {string | undefined} props.text - Text
+ */
 export default function InfoItem(props: Props): JSX.Element {
     const classes = useStyles();
 

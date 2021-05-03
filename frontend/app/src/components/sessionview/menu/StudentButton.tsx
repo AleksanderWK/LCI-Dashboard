@@ -60,12 +60,24 @@ interface Props {
     studentName: string;
 }
 
+/**
+ * A button with a person icon and the initials of a name
+ * @param {object} props - Component props
+ * @param {number} props.sessionId - The session ID of the session this button represents
+ * @param {boolean} props.selected - Whether this button is selected or not
+ * @param {string} props.studentName - The name of the student of the session this button represents
+ */
 export default function StudentButton(props: Props): JSX.Element {
     const classes = useStyles();
 
     const setSelectedSessionId = useSetRecoilState(selectedSessionIdState);
     const recording = useRecoilValue(sessionRecordingState(props.sessionId));
 
+    /**
+     * Gets the initials of the a full name
+     * @param {string} name - Full name
+     * @returns {string} The initials of the full name
+     */
     const getInitials = (name: string) => {
         const names = name.split(" ");
         let initials = names[0].substring(0, 1).toUpperCase();
@@ -97,6 +109,9 @@ export default function StudentButton(props: Props): JSX.Element {
     );
 }
 
+/**
+ * A blinking recording indicator
+ */
 function RecordingLabel() {
     const classes = useStyles();
     return <div className={classes.recordingLabelContainer} data-testid="REC"></div>;

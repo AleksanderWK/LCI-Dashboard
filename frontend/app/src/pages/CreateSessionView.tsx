@@ -28,6 +28,10 @@ const useStyles = makeStyles(() =>
     })
 );
 
+/**
+ *  The view for creating a session from the start view.
+ *  Renders the create session form and add student popup.
+ */
 export default function CreateSessionView(): JSX.Element {
     const classes = useStyles();
 

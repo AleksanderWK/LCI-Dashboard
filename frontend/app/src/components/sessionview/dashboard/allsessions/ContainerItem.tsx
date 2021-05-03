@@ -29,6 +29,15 @@ interface Props {
     view: View;
 }
 
+/**
+ * A component rendered for each live session in a container in the "All sessions" view.
+ * Renders either a calculating indicator, X-range chart, line chart or numeric component
+ * for the given variable and session id.
+ * @param {object} props - Component props
+ * @param {number} id - The session ID for the session that this container item applies to
+ * @param {Variable} variable - The variable to view the data for
+ * @param {View} view - The type of view for charts
+ */
 export default function ContainerItem(props: Props): JSX.Element {
     const classes = useStyles();
 

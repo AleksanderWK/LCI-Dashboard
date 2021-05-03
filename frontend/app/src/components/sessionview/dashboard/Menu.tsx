@@ -36,6 +36,17 @@ interface Props {
     onMenuClose: () => void;
 }
 
+/**
+ * A dropdown menu for a container in the session view.
+ * Has a buttons to switch type of display and remove container.
+ * @param {object} props - Component props
+ * @param {boolean} props.open - Whether the dropdown is open or not
+ * @param {HTMLElement | null} props.anchorEl - The anchor element for the dropdown menu
+ * @param {() => void} props.onShowMore - A callback function that is called when show more button is clicked
+ * @param {() => void} props.onShowLess - A callback function that is called when show less button is clicked
+ * @param {() => void} props.onRemoveView - A callback function that is called when remove view button is clicked
+ * @param {() => void} props.onMenuClose - A callback function that is called dropdown menu is closed
+ */
 export default function Menu(props: Props): JSX.Element {
     const classes = useStyles();
 

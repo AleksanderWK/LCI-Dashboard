@@ -1,3 +1,7 @@
+/*
+ *  The root of the application
+ */
+
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
@@ -9,7 +13,9 @@ import {RecoilRoot} from "recoil";
 
 ReactDOM.render(
     <React.StrictMode>
+        {/* RecoilRoot sets up the global state management */}
         <RecoilRoot>
+            {/* Application is wrapped in a theme provider, applying the theme on all descendants */}
             <MuiThemeProvider theme={theme}>
                 <App />
             </MuiThemeProvider>

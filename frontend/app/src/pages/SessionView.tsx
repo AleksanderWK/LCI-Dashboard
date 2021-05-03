@@ -40,6 +40,11 @@ export interface DataPayload {
     timestamp: number;
 }
 
+/**
+ *  The live session view.
+ *  Handles the incoming data from the backend(s)
+ *  and renders the header, dashboard, popups and snackbars.
+ */
 export default function SessionView(): JSX.Element {
     // Adds the incoming data point to state
     const addDataPointToState = useRecoilCallback(
@@ -93,10 +98,12 @@ export default function SessionView(): JSX.Element {
     // Convert raw ESE data to correct format for X-range chart and store it for session
     const computeESEXRangeData = useRecoilCallback(
         ({set}) => (timestamp: number, emotions: EducationalSpecificEmotions, sessionId: number) => {
+            // Update the ESE X-range data for the given session ID
             set(sessionESEXRangeDataState(sessionId), (prev) => {
                 const data = [...prev.data];
                 const emotionsIndex = {...prev.prevEmotionsIndex};
 
+                // For each emotion value
                 Object.entries(emotions).forEach(([emotion, value]) => {
                     if (value) {
                         if (prev.prevEmotionsIndex[emotion] > 0) {
@@ -134,6 +141,7 @@ export default function SessionView(): JSX.Element {
 
     useEffect(() => {
         ipcOn("newData", (event: any, data: DataPayload) => {
+            // Called each time new data is being received
             addDataPointToState(data);
         });
 
@@ -142,11 +150,12 @@ export default function SessionView(): JSX.Element {
             updateCharts();
         }, 1000 / FREQUENCY);
 
+        // When leaving session view
         return () => {
             // Remove listener for newData event
             ipcRemoveAllListeners("newData");
 
-            // Stop chart update interval when leaving session view
+            // Stop chart update interval
             clearInterval(updateInterval);
         };
     }, []);

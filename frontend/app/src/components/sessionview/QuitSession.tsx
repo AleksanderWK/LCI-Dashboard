@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * A component notifying and asking for confirmation that one or more sessions are going to be quitted.
+ */
 export default function QuitSesson(): JSX.Element {
     const classes = useStyles();
 
@@ -55,7 +58,9 @@ export default function QuitSesson(): JSX.Element {
 
     const allSessionsRecording = useRecoilValue(allSessionsRecordingState);
 
-    // Stops recording, closes popup, sets session end time, terminates session and goes to the startview
+    /**
+     * Stops recording, closes popup, sets session end time, terminates session and goes to the StartView
+     */
     const quitSession = () => {
         setPopupOpen(false);
 
@@ -69,6 +74,9 @@ export default function QuitSesson(): JSX.Element {
         }
     };
 
+    /**
+     * Remove session from application state
+     */
     const removeSession = useRecoilCallback(({set, reset}) => (sessionId: number) => {
         // Remove this sessionId from the sessionIdsState
         set(sessionIdsState, (prevValue) => {
@@ -77,7 +85,7 @@ export default function QuitSesson(): JSX.Element {
             return newValue;
         });
 
-        // If there is more sessions, set the selectedSessionId to some of them, else go to start view
+        // If there are more sessions, set the selectedSessionId to some of them, else go to StartView
         if (sessions.length > 1) {
             set(selectedSessionIdState, sessions.find((session) => session._id != sessionId)?._id as number | null);
         } else {
@@ -93,6 +101,9 @@ export default function QuitSesson(): JSX.Element {
         ipcSend("terminateSession", sessions.find((session) => session._id == sessionId)?.sessionCode);
     });
 
+    /**
+     * Quits all live sessions and goes to the StartView
+     */
     const quitAllSessions = () => {
         resetAllSessionsData();
         allSessions.forEach((id) => {
@@ -104,10 +115,13 @@ export default function QuitSesson(): JSX.Element {
         removeAllSessions();
         setPopupOpen(false);
 
-        // Navigate to the start view
+        // Navigate to the StartView
         history.push("/");
     };
 
+    /**
+     * Reset all session related state
+     */
     const resetAllSessionsData = useRecoilCallback(({reset}) => () => {
         allSessions.forEach((id) => {
             reset(sessionDataState(id));
@@ -116,6 +130,9 @@ export default function QuitSesson(): JSX.Element {
         });
     });
 
+    /**
+     * Terminate and remove all sessions
+     */
     const removeAllSessions = () => {
         // For each session id send a terminate message to the backend with that id's session code
         allSessions.forEach((id) => {

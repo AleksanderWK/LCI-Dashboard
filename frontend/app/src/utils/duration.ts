@@ -1,5 +1,10 @@
-/*
- *  Calculates duration from a start time to a end time or the current time
+/**
+ * Calculates duration from a start time to a end time or the current time
+ * @param {number} startTime - Start time in milliseconds since the UNIX epoch
+ * @param {number?} endTime - End time in milliseconds since the UNIX epoch
+ * @param {number?} returnType - Format of return value, either "1:20:31" (returnType = 1)
+ * or "1h 20m 31s" (no returnType)
+ * @returns {string} A string representation of the duration
  */
 export const duration = (startTime: number, endTime?: number, returnType?: number): string => {
     let distance = endTime ? endTime - startTime : new Date().getTime() - startTime;

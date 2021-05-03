@@ -37,6 +37,13 @@ interface Props {
     id?: number;
 }
 
+/**
+ * Displays an calculating indicator (progress bar) if no values for the variable is received yet
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable the indicator should display for
+ * @param {number} props.id - The session ID of the session this indicator applies to.
+ * If not set, the selected session is used.
+ */
 function CalculatingIndicator(props: Props): JSX.Element {
     const classes = useStyles();
 
@@ -47,6 +54,10 @@ function CalculatingIndicator(props: Props): JSX.Element {
 
     const calculationTime = MMDVariables[props.variable].calculationTime;
 
+    /**
+     * Calculates the progress of the calculation based on the start time of the session
+     * and the calculation time for the variable set in constants.ts
+     */
     useInterval(
         () => {
             if (session) {
@@ -66,6 +77,9 @@ function CalculatingIndicator(props: Props): JSX.Element {
         intervalStarted ? 100 : null
     );
 
+    /**
+     * Start the progress interval when session information is gathered
+     */
     useEffect(() => {
         if (!intervalStarted && session) {
             setIntervalStarted(true);

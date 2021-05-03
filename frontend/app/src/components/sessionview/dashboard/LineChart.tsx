@@ -14,6 +14,13 @@ interface Props {
     id?: number;
 }
 
+/**
+ * A line chart for a given variable.
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable to render the line chart for
+ * @param {number} props.id - The session ID of the session this line chart applies to.
+ * If not set, the selected session is used.
+ */
 function LineChart(props: Props): JSX.Element {
     const chart = useRef<{chart: Highcharts.Chart; container: RefObject<HTMLDivElement>}>(null);
 
@@ -114,6 +121,9 @@ function LineChart(props: Props): JSX.Element {
         }
     });
 
+    /**
+     * Gets data stored for the session and variable in state, and inserts it into the chart
+     */
     const updateChart = useRecoilCallback(({snapshot}) => (animationDuration?: number) => {
         if (chart.current) {
             const data = props.id
@@ -125,7 +135,7 @@ function LineChart(props: Props): JSX.Element {
             // Update series data
             chart.current.chart.series[0].setData(
                 [...data.slice(Math.max(dataLength - FREQUENCY * LIVE_CHART_RANGE, 0))],
-                false
+                false // Do not redraw
             );
 
             if (dataLength >= FREQUENCY * LIVE_CHART_RANGE) {
@@ -134,12 +144,13 @@ function LineChart(props: Props): JSX.Element {
                     // Set min value on xAxis to be LIVE_CHART_RANGE, from the last data point
                     data.slice(-(FREQUENCY * LIVE_CHART_RANGE))[0][0],
                     undefined,
-                    false
+                    false // Do not redraw
                 );
             } else if (dataLength > 0 && dataLength < FREQUENCY * LIVE_CHART_RANGE) {
                 chart.current.chart.xAxis[0].setExtremes(data[0][0], undefined, false);
             }
 
+            // Redraw when all changes have been made
             chart.current.chart.redraw(animationDuration ? {duration: animationDuration} : false);
         }
     });
@@ -160,17 +171,21 @@ function LineChart(props: Props): JSX.Element {
 
     const selectedSessionId = useRecoilValue(selectedSessionIdState);
 
+    /**
+     * Update chart when session changes
+     * (containers with same variable across sessions are not rerendered, due to performance)
+     */
     useEffect(() => {
-        // Update chart when session changes
-        // (containers with same variable across sessions are not rerendered, due to performance)
         updateChart();
     }, [selectedSessionId]);
 
     const activeContainers = useRecoilValue(selectedSessionActiveContainersState);
     const layout = useRecoilValue(selectedSessionLayoutState);
 
+    /**
+     * If active containers/layout is changed, reflow graph as container size may have changed
+     */
     useEffect(() => {
-        // If active containers/layout is changed, reflow graph as container size may have changed
         if (chart.current) {
             chart.current.chart.reflow();
         }

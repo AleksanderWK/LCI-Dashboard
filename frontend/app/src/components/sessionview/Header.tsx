@@ -34,6 +34,13 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * The header of the session view, either a specific session or the "All sessions" view.
+ *
+ * If a specific session is selected:
+ * Gets information about the selected session from state displays it.
+ * Has buttons for recording the session, selecting variables and quit session.
+ */
 export default function Header(): JSX.Element {
     const classes = useStyles();
 
@@ -44,6 +51,9 @@ export default function Header(): JSX.Element {
     const selectedSessionInfo = useRecoilValue(selectedSessionState);
     const [dur, setDuration] = useState<string>("");
 
+    /**
+     * Keeps track of the duration of the session based on the start time
+     */
     useEffect(() => {
         // Set the current duration initially when the compnent loads
         if (selectedSessionInfo) {

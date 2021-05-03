@@ -1,11 +1,11 @@
 import {Slider, Tooltip} from "@material-ui/core";
 import {makeStyles, Theme, withStyles} from "@material-ui/core/styles";
 import {createStyles} from "@material-ui/styles";
-import React, {ChangeEvent, useEffect} from "react";
-import {useRecoilState, useRecoilValue, useSetRecoilState} from "recoil";
+import React, {ChangeEvent} from "react";
+import {useRecoilValue, useSetRecoilState} from "recoil";
 import {currentRecordingInterval, recordingInterval} from "../../state/recordedSession";
 
-const sliderStyles = makeStyles((theme: Theme) =>
+const sliderStyles = makeStyles(() =>
     createStyles({
         root: {
             paddingTop: "10px",
@@ -14,6 +14,9 @@ const sliderStyles = makeStyles((theme: Theme) =>
     })
 );
 
+/**
+ * A custom styled slider
+ */
 const CustomSlider = withStyles((theme: Theme) =>
     createStyles({
         thumb: {
@@ -44,12 +47,9 @@ const CustomSlider = withStyles((theme: Theme) =>
     })
 )(Slider);
 
-interface Props {
-    children: React.ReactElement;
-    open: boolean;
-    value: number;
-}
-
+/**
+ * A custom styled tooltip
+ */
 const StyledTooltip = withStyles((theme: Theme) =>
     createStyles({
         tooltip: {
@@ -60,6 +60,19 @@ const StyledTooltip = withStyles((theme: Theme) =>
     })
 )(Tooltip);
 
+interface Props {
+    children: React.ReactElement;
+    open: boolean;
+    value: number;
+}
+
+/**
+ * The value shown above a thumb on the slider
+ * @param {object} props - Component props
+ * @param {React.ReactElement} props.children - The content of the value label component
+ * @param {boolean} props.open - Whether the value label component is shown or not
+ * @param {number} props.value - Value to be displayed in tooltip
+ */
 function ValueLabelComponent(props: Props) {
     const {children, open, value} = props;
 
@@ -70,18 +83,29 @@ function ValueLabelComponent(props: Props) {
     );
 }
 
+/**
+ * A slider for selecting an interval to view the data for
+ */
 export default function IntervalSlider(): JSX.Element {
     const classes = sliderStyles();
 
     const setInterval = useSetRecoilState(currentRecordingInterval);
     const completeRecordingInterval = useRecoilValue(recordingInterval);
 
-    // Update state on slider change
+    /**
+     * Update state on slider change
+     * @param {ChangeEvent} event - The change event
+     * @param {number | number[]} value - The new value(s) of the slider
+     */
     const handleChange = (event: ChangeEvent<unknown>, value: number | number[]) => {
         setInterval({start: (value as number[])[0], end: (value as number[])[1]});
     };
 
-    // Converts milliseconds to the hh:mm:ss format to display on the labels
+    /**
+     * Converts milliseconds to the hh:mm:ss format to display on the labels
+     * @param value - Milliseconds
+     * @returns A string representation with format hh:mm:ss
+     */
     function valuetext(value: number) {
         const d = new Date(value);
         return `${("0" + d.getHours()).slice(-2)}:${("0" + d.getMinutes()).slice(-2)}:${("0" + d.getSeconds()).slice(

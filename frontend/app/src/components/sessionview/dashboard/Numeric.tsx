@@ -55,9 +55,21 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-function EmotionsDisplay(props: {emotions: EducationalSpecificEmotions}): JSX.Element {
+interface EmotionsDisplayProps {
+    emotions: EducationalSpecificEmotions;
+}
+
+/**
+ * Displays the emotions for a specific data point.
+ * @param {object} props - Component props
+ * @param {EducationalSpecificEmotions} emotions - The emotions for the data point
+ */
+function EmotionsDisplay(props: EmotionsDisplayProps): JSX.Element {
     const classes = useStyles();
 
+    /**
+     * Maps each emotion that is true to the correct string representation
+     */
     const emotions = Object.entries(props.emotions)
         .filter(([, value]) => value)
         .map(([emotion]) => {
@@ -95,18 +107,26 @@ function EmotionsDisplay(props: {emotions: EducationalSpecificEmotions}): JSX.El
     );
 }
 
-interface Props {
+interface NumericProps {
     variable: Variable;
     id?: number;
 }
 
-function Numeric(props: Props): JSX.Element {
+/**
+ * Displays the last value received for a variable.
+ * @param {object} props - Component props
+ * @param {Variable} props.variable - The variable to get the last value for
+ * @param {number} props.id - The session ID of the session this numeric applies to.
+ * If not set, the selected session is used.
+ */
+function Numeric(props: NumericProps): JSX.Element {
     const classes = useStyles();
 
     const dataPoint = !props.id
         ? useRecoilValue(selectedSessionLastValueState(props.variable))
         : useRecoilValue(sessionVariableDataState([props.variable, props.id])).slice(-1)[0][1];
 
+    // If the variable is Educational-specific Emotions, EmotionsDisplay is used, else, a number is rendered
     return (
         <div className={`${"noDrag"} ${classes.numericWrapper}`}>
             {dataPoint && props.variable !== Variable.EducationalSpecificEmotions ? (

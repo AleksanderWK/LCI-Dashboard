@@ -1,4 +1,5 @@
 // Frequency in Hz (cycles per second)
+// Increase this to poll for new data faster
 export const FREQUENCY = 2;
 
 // Maximum time interval to show on live charts in seconds
@@ -39,6 +40,7 @@ export interface MMDVariableInfo {
     enabled: boolean;
 }
 
+// Object containing information about each variable
 export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     [Variable.CognitiveLoad]: {
         name: "Cognitive Load",
@@ -122,6 +124,7 @@ export const MMDVariables: {[key in Variable]: MMDVariableInfo} = {
     }
 };
 
+// Maps emotions to colors
 export const emotionsColorMapper: {[key: string]: string} = {
     boredom: "#F15025",
     frustration: "#191919",
@@ -129,6 +132,7 @@ export const emotionsColorMapper: {[key: string]: string} = {
     delight: "#6782B7"
 };
 
+// Maps emotions to the correct index
 export const emotionsIndexMapper: {[key: string]: number} = {
     boredom: 0,
     frustration: 1,

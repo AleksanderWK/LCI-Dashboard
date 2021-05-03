@@ -1,3 +1,7 @@
+/*
+ *  Stores the theme for the application, including colors, fonts and font sizes
+ */
+
 import {createMuiTheme} from "@material-ui/core";
 import Raleway from "./assets/fonts/Raleway-VariableFont_wght.ttf";
 
@@ -19,11 +23,11 @@ declare module "@material-ui/core/styles/createPalette" {
 const theme = createMuiTheme({
     palette: {
         primary: {
-            main: "#FAA61A",
+            main: "#FAA61A", // Orange
             dark: "#e19005"
         },
         secondary: {
-            main: "#00509E"
+            main: "#00509E" // Blue
         },
         background: {
             default: "#F6F7F8",

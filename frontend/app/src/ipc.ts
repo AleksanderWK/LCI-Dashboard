@@ -1,3 +1,7 @@
+/*
+ *  Functions for sending IPC messages to the Electron app
+ */
+
 let ipc: any = null;
 if (window.require != null) {
     const electron = window.require("electron");

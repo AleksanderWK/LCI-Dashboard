@@ -23,6 +23,11 @@ import {StyledTooltipBottom} from "../common/Tooltips";
 import {duration} from "../../utils/duration";
 import {selectChartsPopupOpenState} from "../../state/popup";
 
+/**
+ * The header of the recorded session view.
+ * Gets information about the selected session from the data store and displays it.
+ * Has buttons for selecting variables and go back to the StartView.
+ */
 export default function Header(): JSX.Element {
     const history = useHistory();
 
@@ -34,6 +39,9 @@ export default function Header(): JSX.Element {
     const resetInterval = useResetRecoilState(currentRecordingInterval);
     const setSelectChartsPopupOpen = useSetRecoilState(selectChartsPopupOpenState);
 
+    /**
+     * Get session and user information from data store and store it in application state
+     */
     useEffect(() => {
         if (recordedSessionId) {
             ipcInvoke("getSession", recordedSessionId).then((session) => {
